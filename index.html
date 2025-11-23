@@ -651,768 +651,611 @@
   </div>
 
   <script>
-    // -----------------------------
-    // ۱) تعریف تیم‌ها + لوگو (ایموجی)
-    // -----------------------------
-    const teams = [
-      { id: 1,  name: "کافه لوین",                     shortName: "LVN",  color: "#0ea5e9", logo: "☕" },
-      { id: 2,  name: "استودیو نامبر وان",            shortName: "NUO",  color: "#22c55e", logo: "🎬" },
-      { id: 3,  name: "زنده یاد سید مهدی نبوی",       shortName: "SMN",  color: "#f97316", logo: "✨" },
-      { id: 4,  name: "زنده یاد مجید جعفری",          shortName: "MJA",  color: "#a855f7", logo: "🌟" },
-      { id: 5,  name: "زنده یاد بهمن و مصطفی جعفری",  shortName: "BMJ",  color: "#eab308", logo: "💎" },
-      { id: 6,  name: "پیشکسوتان نیزوا",              shortName: "NZV",  color: "#ec4899", logo: "🛡️" },
-      { id: 7,  name: "زنده یاد محمدرضا جعفری",       shortName: "MRJ",  color: "#6366f1", logo: "💫" },
-      { id: 8,  name: "شهید نجفعلی قادری",            shortName: "NGH",  color: "#14b8a6", logo: "🕊️" },
-      { id: 9,  name: "زنده یاد هادی قادری",          shortName: "HGH",  color: "#facc15", logo: "🌙" },
-      { id: 10, name: "امامزاده پیش",                 shortName: "EZP",  color: "#4ade80", logo: "🕌" },
-      { id: 11, name: "شهید سید احسان موسوی",         shortName: "SEM",  color: "#fb7185", logo: "🎖️" },
-      { id: 12, name: "هیئت جوانان",                  shortName: "JVN",  color: "#2dd4bf", logo: "🔥" }
-    ];
+  const { createClient } = supabase;
 
-    // -----------------------------
-    // ۲) تعریف بازی‌ها (هفته ۱، ۲، ۳)
-    // -----------------------------
-    // status: "upcoming" | "live" | "finished"
-    const matches = [
-      // هفته ۱ - بازی‌های انجام‌شده
-      {
-        id: 1,
-        week: 1,
-        homeTeamId: 3,
-        awayTeamId: 10,
-        date: "1404-08-30",
-        time: "15:00",
-        stadium: "سالن شهید صحافی",
-        status: "finished",
-        homeScore: 3,
-        awayScore: 0
-      },
-      {
-        id: 2,
-        week: 1,
-        homeTeamId: 2,
-        awayTeamId: 11,
-        date: "1404-08-30",
-        time: "15:45",
-        stadium: "سالن شهید صحافی",
-        status: "finished",
-        homeScore: 3,
-        awayScore: 0
-      },
-      {
-        id: 3,
-        week: 1,
-        homeTeamId: 9,
-        awayTeamId: 4,
-        date: "1404-08-30",
-        time: "16:50",
-        stadium: "سالن شهید صحافی",
-        status: "finished",
-        homeScore: 2,
-        awayScore: 4
-      },
-      {
-        id: 4,
-        week: 1,
-        homeTeamId: 7,
-        awayTeamId: 5,
-        date: "1404-08-30",
-        time: "17:45",
-        stadium: "سالن شهید صحافی",
-        status: "finished",
-        homeScore: 1,
-        awayScore: 2
-      },
-      {
-        id: 5,
-        week: 1,
-        homeTeamId: 12,
-        awayTeamId: 1,
-        date: "1404-08-30",
-        time: "18:30",
-        stadium: "سالن شهید صحافی",
-        status: "finished",
-        homeScore: 1,
-        awayScore: 5
-      },
-      {
-        id: 6,
-        week: 1,
-        homeTeamId: 6,
-        awayTeamId: 8,
-        date: "1404-08-30",
-        time: "19:15",
-        stadium: "سالن شهید صحافی",
-        status: "finished",
-        homeScore: 1,
-        awayScore: 0
-      },
+  const SUPABASE_URL = "YOUR_SUPABASE_URL";          // مثلا: https://abcdxyz.supabase.co
+  const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; // anon key خودت
 
-      // هفته ۲ - نمونه بازی آینده
-      {
-        id: 7,
-        week: 2,
-        homeTeamId: 1,   // کافه لوین
-        awayTeamId: 4,   // زنده یاد مجید جعفری
-        date: "1404-09-01",
-        time: "18:00",
-        stadium: "سالن شهید صحافی",
-        status: "upcoming"
-      },
+  const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-      // هفته ۳ - نمونه بازی آینده
-      {
-        id: 8,
-        week: 3,
-        homeTeamId: 8,   // شهید نجفعلی قادری
-        awayTeamId: 2,   // استودیو نامبر وان
-        date: "1404-09-05",
-        time: "19:00",
-        stadium: "سالن شهید صحافی",
-        status: "upcoming"
-      }
-    ];
+  // ---------- تیم‌ها ----------
+  const teams = [
+    { id: 1,  name: "کافه لوین",                   shortName: "LVN",  color: "#0ea5e9" },
+    { id: 2,  name: "استودیو نامبر وان",           shortName: "NUO",  color: "#22c55e" },
+    { id: 3,  name: "زنده یاد سید مهدی نبوی",      shortName: "SMN",  color: "#f97316" },
+    { id: 4,  name: "زنده یاد مجید جعفری",        shortName: "MJA",  color: "#a855f7" },
+    { id: 5,  name: "زنده یاد بهمن و مصطفی جعفری", shortName: "BMJ",  color: "#eab308" },
+    { id: 6,  name: "پیشکسوتان نیزوا",            shortName: "NZV",  color: "#ec4899" },
+    { id: 7,  name: "زنده یاد محمدرضا جعفری",     shortName: "MRJ",  color: "#6366f1" },
+    { id: 8,  name: "شهید نجفعلی قادری",          shortName: "NGH",  color: "#14b8a6" },
+    { id: 9,  name: "زنده یاد هادی قادری",        shortName: "HGH",  color: "#facc15" },
+    { id: 10, name: "امامزاده پیش",               shortName: "EZP",  color: "#4ade80" },
+    { id: 11, name: "شهید سید احسان موسوی",       shortName: "SEM",  color: "#fb7185" },
+    { id: 12, name: "هیئت جوانان",                shortName: "JVN",  color: "#2dd4bf" }
+  ];
 
-    // -----------------------------
-    // ۳) توابع کمکی ساده
-    // -----------------------------
-    function getTeamById(id) {
-      return teams.find(t => t.id === id);
-    }
+  // ---------- بازی‌ها (دیتای نمونه) ----------
+  const matches = [
+    { id: 1, week: 1, homeTeamId: 3,  awayTeamId: 10, date: "1404-08-30", time: "15:00", stadium: "سالن شهید صحافی", status: "finished", homeScore: 3, awayScore: 0 },
+    { id: 2, week: 1, homeTeamId: 2,  awayTeamId: 11, date: "1404-08-30", time: "15:45", stadium: "سالن شهید صحافی", status: "finished", homeScore: 3, awayScore: 0 },
+    { id: 3, week: 1, homeTeamId: 9,  awayTeamId: 4,  date: "1404-08-30", time: "16:50", stadium: "سالن شهید صحافی", status: "finished", homeScore: 2, awayScore: 4 },
+    { id: 4, week: 1, homeTeamId: 7,  awayTeamId: 5,  date: "1404-08-30", time: "17:45", stadium: "سالن شهید صحافی", status: "finished", homeScore: 1, awayScore: 2 },
+    { id: 5, week: 1, homeTeamId: 12, awayTeamId: 1,  date: "1404-08-30", time: "18:30", stadium: "سالن شهید صحافی", status: "finished", homeScore: 1, awayScore: 5 },
+    { id: 6, week: 1, homeTeamId: 6,  awayTeamId: 8,  date: "1404-08-30", time: "19:15", stadium: "سالن شهید صحافی", status: "finished", homeScore: 1, awayScore: 0 },
 
-    function formatDate(dateStr) {
-      const [y, m, d] = dateStr.split("-");
-      return `${d} / ${m}`;
-    }
+    { id: 7, week: 2, homeTeamId: 1, awayTeamId: 2, date: "1404-09-01", time: "15:00", stadium: "سالن شهید صحافی", status: "upcoming", homeScore: null, awayScore: null },
+    { id: 8, week: 2, homeTeamId: 3, awayTeamId: 4, date: "1404-09-01", time: "15:45", stadium: "سالن شهید صحافی", status: "upcoming", homeScore: null, awayScore: null },
+    { id: 9, week: 3, homeTeamId: 5, awayTeamId: 6, date: "1404-09-05", time: "16:00", stadium: "سالن شهید صحافی", status: "upcoming", homeScore: null, awayScore: null }
+  ];
 
-    function getStatusLabel(status) {
-      switch (status) {
-        case "finished": return "پایان یافته";
-        case "live":     return "زنده";
-        case "upcoming":
-        default:         return "بازی آتی";
-      }
-    }
+  // ---------- توابع ساده ----------
+  function getTeamById(id) {
+    return teams.find(t => t.id === id);
+  }
 
-    function getStatusClass(status) {
-      switch (status) {
-        case "finished": return "status-finished";
-        case "live":     return "status-live";
-        case "upcoming":
-        default:         return "status-upcoming";
-      }
-    }
+  function formatDate(dateStr) {
+    const [y, m, d] = dateStr.split("-");
+    return `${d} / ${m}`;
+  }
 
-    // -----------------------------
-    // ۴) استوریج برای پیش‌بینی و کامنت
-    // -----------------------------
-    const STORAGE_KEYS = {
-      predictions: "kaliga_predictions",
-      comments: "kaliga_comments",
-      username: "kaliga_username"
-    };
+  function getStatusLabel(status) {
+    if (status === "finished") return "پایان یافته";
+    if (status === "live")     return "زنده";
+    return "بازی آتی";
+  }
 
-    function loadFromStorage(key) {
-      try {
-        const raw = localStorage.getItem(key);
-        return raw ? JSON.parse(raw) : [];
-      } catch (e) {
-        return [];
-      }
-    }
+  function getStatusClass(status) {
+    if (status === "finished") return "status-finished";
+    if (status === "live")     return "status-live";
+    return "status-upcoming";
+  }
 
-    function saveToStorage(key, value) {
-      try {
-        localStorage.setItem(key, JSON.stringify(value));
-      } catch (e) {}
-    }
+  // ---------- نام کاربری لوکال ----------
+  const USERNAME_KEY = "kaliga_username";
+  function getSavedUsername() { return localStorage.getItem(USERNAME_KEY) || ""; }
+  function setSavedUsername(n) { localStorage.setItem(USERNAME_KEY, n); }
 
-    function getSavedUsername() {
-      return localStorage.getItem(STORAGE_KEYS.username) || "";
-    }
-
-    function setSavedUsername(name) {
-      try {
-        localStorage.setItem(STORAGE_KEYS.username, name);
-      } catch (e) {}
-    }
-
-    function escapeHtml(text) {
-      if (!text) return "";
-      return text.replace(/[&<>"']/g, ch => {
-        const map = { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;" };
-        return map[ch] || ch;
-      });
-    }
-
-    // ---- پیش‌بینی‌ها
-    function loadPredictions() {
-      return loadFromStorage(STORAGE_KEYS.predictions);
-    }
-
-    function savePredictions(preds) {
-      saveToStorage(STORAGE_KEYS.predictions, preds);
-    }
-
-    function savePrediction(matchId, homeScore, awayScore) {
-      let preds = loadPredictions();
+  // ---------- پیش‌بینی در Supabase ----------
+  async function savePredictionToDB(matchId, homeScore, awayScore) {
+    try {
       const username = getSavedUsername() || null;
-      const newPred = { matchId, homeScore, awayScore, username, t: Date.now() };
+      const { error } = await db
+        .from("predictions")
+        .insert({ match_id: matchId, username, home_score: homeScore, away_score: awayScore });
 
-      if (username) {
-        preds = preds.filter(p => !(p.matchId === matchId && p.username === username));
+      if (error) {
+        console.error(error);
+        alert("خطا در ذخیره پیش‌بینی");
       }
-      preds.push(newPred);
-      savePredictions(preds);
+    } catch (e) {
+      console.error(e);
+      alert("مشکل ارتباط با سرور");
     }
+  }
 
-    function getPredictionStats(matchId) {
-      const preds = loadPredictions().filter(p => p.matchId === matchId);
-      if (preds.length === 0) return null;
+  async function getPredictionStats(matchId) {
+    try {
+      const { data, error } = await db
+        .from("predictions")
+        .select("home_score, away_score")
+        .eq("match_id", matchId);
+
+      if (error) {
+        console.error(error);
+        return null;
+      }
+      if (!data || data.length === 0) return null;
+
       let home = 0, draw = 0, away = 0;
-      preds.forEach(p => {
-        if (p.homeScore > p.awayScore) home++;
-        else if (p.homeScore < p.awayScore) away++;
+      data.forEach(r => {
+        if (r.home_score > r.away_score) home++;
+        else if (r.home_score < r.away_score) away++;
         else draw++;
       });
-      const total = home + draw + away;
-      if (!total) return null;
-      const homePercent = Math.round(home * 100 / total);
-      const drawPercent = Math.round(draw * 100 / total);
-      const awayPercent = Math.round(away * 100 / total);
-      return { homePercent, drawPercent, awayPercent, total };
-    }
 
-    // ---- کامنت‌ها
-    function loadComments() {
-      return loadFromStorage(STORAGE_KEYS.comments);
+      const total = data.length;
+      return {
+        total,
+        homePercent: Math.round(home * 100 / total),
+        drawPercent: Math.round(draw * 100 / total),
+        awayPercent: Math.round(away * 100 / total)
+      };
+    } catch (e) {
+      console.error(e);
+      return null;
     }
+  }
 
-    function saveComments(list) {
-      saveToStorage(STORAGE_KEYS.comments, list);
-    }
+  // ---------- کامنت‌ها ----------
+  async function fetchComments(matchId) {
+    try {
+      const { data, error } = await db
+        .from("comments")
+        .select("id, username, body, created_at")
+        .eq("match_id", matchId)
+        .order("created_at", { ascending: true });
 
-    function renderCommentsHtml(matchId) {
-      const all = loadComments().filter(c => c.matchId === matchId);
-      const username = getSavedUsername();
-      let html = `<div class="comments-list">`;
-      if (all.length === 0) {
-        html += `<div class="comment-empty">هنوز نظری برای این بازی ثبت نشده است.</div>`;
-      } else {
-        all.forEach(c => {
-          const name = c.username || "کاربر مهمان";
-          html += `
-            <div class="comment-item">
-              <div class="comment-header">${escapeHtml(name)}</div>
-              <div class="comment-body">${escapeHtml(c.text)}</div>
-            </div>
-          `;
-        });
+      if (error) {
+        console.error(error);
+        return [];
       }
-      html += `</div>`;
-      html += `
-        <div class="comment-form">
-          <div class="comment-username">
-            <label>نام کاربری:</label>
-            <input type="text" id="username-input-${matchId}" value="${escapeHtml(username)}" placeholder="مثلاً kaliga_fan" />
-            <button type="button" onclick="saveUsernameFromInput(${matchId})">ثبت</button>
-          </div>
-          <textarea id="comment-input-${matchId}" rows="2" placeholder="نظر خود را درباره این بازی بنویسید..."></textarea>
-          <button type="button" onclick="submitComment(${matchId})">ارسال نظر</button>
-        </div>
-      `;
-      return html;
+      return data || [];
+    } catch (e) {
+      console.error(e);
+      return [];
     }
+  }
 
-    function toggleComments(matchId) {
-      const el = document.getElementById(`comments-${matchId}`);
-      if (!el) return;
-      if (el.style.display === "none" || !el.style.display) {
-        el.style.display = "block";
-        el.innerHTML = renderCommentsHtml(matchId);
-      } else {
-        el.style.display = "none";
+  async function addComment(matchId, text) {
+    const username = getSavedUsername().trim();
+    if (!username) {
+      alert("اول نام کاربری ذخیره کن");
+      return;
+    }
+    if (!text.trim()) return;
+
+    try {
+      const { error } = await db
+        .from("comments")
+        .insert({ match_id: matchId, username, body: text.trim() });
+
+      if (error) {
+        console.error(error);
+        alert("خطا در ثبت کامنت");
       }
+    } catch (e) {
+      console.error(e);
+      alert("مشکل ارتباط با سرور");
     }
+  }
 
-    function saveUsernameFromInput(matchId) {
-      const inp = document.getElementById(`username-input-${matchId}`);
-      if (!inp) return;
-      const name = inp.value.trim();
-      if (!name) {
-        alert("نام کاربری نمی‌تواند خالی باشد.");
-        return;
-      }
-      setSavedUsername(name);
-      alert("نام کاربری ذخیره شد.");
-      const el = document.getElementById(`comments-${matchId}`);
-      if (el) el.innerHTML = renderCommentsHtml(matchId);
-    }
+  async function loadAndRenderComments(matchId) {
+    const box = document.getElementById(`comments-${matchId}`);
+    if (!box) return;
 
-    function submitComment(matchId) {
-      const username = getSavedUsername().trim();
-      if (!username) {
-        alert("قبل از ارسال نظر، ابتدا نام کاربری را ثبت کن.");
-        return;
-      }
-      const textarea = document.getElementById(`comment-input-${matchId}`);
-      if (!textarea) return;
-      const text = textarea.value.trim();
-      if (!text) {
-        alert("متن نظر نمی‌تواند خالی باشد.");
-        return;
-      }
-      const all = loadComments();
-      all.push({ matchId, username, text, t: Date.now() });
-      saveComments(all);
-      textarea.value = "";
-      const el = document.getElementById(`comments-${matchId}`);
-      if (el) el.innerHTML = renderCommentsHtml(matchId);
-    }
+    const list = await fetchComments(matchId);
+    const username = getSavedUsername();
 
-    // -----------------------------
-    // ۵) رندر برنامه بازی‌ها (آتی + زنده)
-    // -----------------------------
-    function renderFixturesPage() {
-      const container = document.getElementById("page-content");
-      const upcoming = matches.filter(m => m.status === "upcoming" || m.status === "live");
-      const finished = matches.filter(m => m.status === "finished");
+    let html = `
+      <div style="margin-bottom:6px;font-size:11px;color:#a1a5b5">
+        برای ثبت نظر، نام کاربری انتخاب کن و بعد متن نظر را ارسال کن.
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:6px;">
+        <input id="username-input-${matchId}" placeholder="نام کاربری"
+          value="${username}"
+          style="flex:1;padding:4px 8px;border-radius:999px;border:1px solid #4b5563;background:#020617;color:#e5e7eb;font-size:11px;">
+        <button onclick="saveUsernameFromInput(${matchId})"
+          style="padding:4px 10px;border-radius:999px;border:none;background:#22c55e;font-size:11px;cursor:pointer;">
+          ذخیره نام
+        </button>
+      </div>
+      <textarea id="comment-input-${matchId}" rows="2"
+        style="width:100%;padding:4px 8px;border-radius:10px;border:1px solid #4b5563;background:#020617;color:#e5e7eb;font-size:12px;margin-bottom:4px;"
+        placeholder="نظر خود را درباره این بازی بنویسید..."></textarea>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+        <button onclick="submitComment(${matchId})"
+          style="padding:4px 10px;border-radius:999px;border:none;background:#0ea5e9;font-size:11px;color:#e0f2fe;cursor:pointer;">
+          ارسال نظر
+        </button>
+      </div>
+    `;
 
-      let html = "";
-
-      html += `
-        <div class="section-title">
-          <span class="dot"></span>
-          <span>برنامه بازی‌های آتی و درحال برگزاری</span>
-        </div>
-      `;
-
-      if (upcoming.length === 0) {
-        html += `<div class="card">در حال حاضر بازی آتی ثبت نشده است.</div>`;
-      } else {
-        upcoming.forEach(match => {
-          const home = getTeamById(match.homeTeamId);
-          const away = getTeamById(match.awayTeamId);
-          const stats = getPredictionStats(match.id);
-
-          html += `
-            <div class="card">
-              <div class="match-row">
-                <div class="team-side team-home">
-                  <div class="team-logo" style="background:${home.color}">${home.logo}</div>
-                  <div class="team-name">${home.name}</div>
-                </div>
-                <div class="match-center">
-          `;
-
-          if (match.status === "upcoming") {
-            html += `
-                  <div class="match-score">- : -</div>
-                  <div class="match-status ${getStatusClass(match.status)}">
-                    ${getStatusLabel(match.status)}
-                  </div>
-            `;
-          } else {
-            html += `
-                  <div class="match-score">${match.homeScore} : ${match.awayScore}</div>
-                  <div class="match-status ${getStatusClass(match.status)}">
-                    ${getStatusLabel(match.status)}
-                  </div>
-            `;
-          }
-
-          html += `
-                </div>
-                <div class="team-side team-away">
-                  <div class="team-name">${away.name}</div>
-                  <div class="team-logo" style="background:${away.color}">${away.logo}</div>
-                </div>
-              </div>
-              <div class="match-meta">
-                <span>هفته ${match.week} • ${match.stadium}</span>
-                <span>تاریخ: ${formatDate(match.date)} • ${match.time}</span>
-              </div>
-          `;
-
-          if (stats) {
-            html += `
-              <div class="prediction-summary">
-                <div>پیش‌بینی کاربران (تعداد ${stats.total}):</div>
-                <div class="prediction-bars">
-                  <div class="prediction-bar">
-                    <div class="prediction-fill prediction-fill-home" style="width:${stats.homePercent}%"></div>
-                    <div class="prediction-label">برد میزبان ${stats.homePercent}%</div>
-                  </div>
-                  <div class="prediction-bar">
-                    <div class="prediction-fill prediction-fill-draw" style="width:${stats.drawPercent}%"></div>
-                    <div class="prediction-label">مساوی ${stats.drawPercent}%</div>
-                  </div>
-                  <div class="prediction-bar">
-                    <div class="prediction-fill prediction-fill-away" style="width:${stats.awayPercent}%"></div>
-                    <div class="prediction-label">برد مهمان ${stats.awayPercent}%</div>
-                  </div>
-                </div>
-              </div>
-            `;
-          }
-
-          html += `
-              <div class="match-actions">
-                <button class="action-btn" onclick="handlePrediction(${match.id})">📊 ثبت پیش‌بینی</button>
-              </div>
-            </div>
-          `;
-        });
-      }
-
-      // آخرین نتایج (خلاصه)
-      html += `
-        <div class="section-title" style="margin-top:14px;">
-          <span class="dot"></span>
-          <span>آخرین نتایج</span>
-        </div>
-      `;
-
-      if (finished.length === 0) {
-        html += `<div class="card">فعلاً بازی پایان یافته‌ای ثبت نشده است.</div>`;
-      } else {
-        finished.slice(-3).reverse().forEach(match => {
-          const home = getTeamById(match.homeTeamId);
-          const away = getTeamById(match.awayTeamId);
-
-          html += `
-            <div class="card">
-              <div class="match-row">
-                <div class="team-side team-home">
-                  <div class="team-logo" style="background:${home.color}">${home.logo}</div>
-                  <div class="team-name">${home.name}</div>
-                </div>
-                <div class="match-center">
-                  <div class="match-score">${match.homeScore} : ${match.awayScore}</div>
-                  <div class="match-status status-finished">پایان یافته</div>
-                </div>
-                <div class="team-side team-away">
-                  <div class="team-name">${away.name}</div>
-                  <div class="team-logo" style="background:${away.color}">${away.logo}</div>
-                </div>
-              </div>
-              <div class="match-meta">
-                <span>هفته ${match.week}</span>
-                <span>${formatDate(match.date)}</span>
-              </div>
-            </div>
-          `;
-        });
-      }
-
-      container.innerHTML = html;
-    }
-
-    // -----------------------------
-    // ۶) رندر صفحه نتایج (با کامنت)
-    // -----------------------------
-    function renderResultsPage() {
-      const container = document.getElementById("page-content");
-      const finished = matches.filter(m => m.status === "finished");
-
-      let html = `
-        <div class="section-title">
-          <span class="dot"></span>
-          <span>نتایج کامل • همه‌ی هفته‌ها</span>
-        </div>
-      `;
-
-      if (finished.length === 0) {
-        html += `<div class="card">فعلاً نتیجه نهایی ثبت نشده است.</div>`;
-      } else {
-        finished.forEach(match => {
-          const home = getTeamById(match.homeTeamId);
-          const away = getTeamById(match.awayTeamId);
-
-          html += `
-            <div class="card">
-              <div class="match-row">
-                <div class="team-side team-home">
-                  <div class="team-logo" style="background:${home.color}">${home.logo}</div>
-                  <div class="team-name">${home.name}</div>
-                </div>
-                <div class="match-center">
-                  <div class="match-score">${match.homeScore} : ${match.awayScore}</div>
-                  <div class="match-status status-finished">پایان یافته</div>
-                </div>
-                <div class="team-side team-away">
-                  <div class="team-name">${away.name}</div>
-                  <div class="team-logo" style="background:${away.color}">${away.logo}</div>
-                </div>
-              </div>
-              <div class="match-meta">
-                <span>هفته ${match.week} • ${match.stadium}</span>
-                <span>تاریخ: ${formatDate(match.date)} • ${match.time}</span>
-              </div>
-              <div class="match-actions">
-                <button class="action-btn" onclick="toggleComments(${match.id})">💬 نظرات بازی</button>
-              </div>
-              <div class="comments-section" id="comments-${match.id}" style="display:none;"></div>
-            </div>
-          `;
-        });
-      }
-
-      container.innerHTML = html;
-    }
-
-    // -----------------------------
-    // ۷) جدول لیگ
-    // -----------------------------
-    function calculateTable() {
-      const stats = new Map();
-      teams.forEach(team => {
-        stats.set(team.id, {
-          teamId: team.id,
-          played: 0,
-          wins: 0,
-          draws: 0,
-          losses: 0,
-          goalsFor: 0,
-          goalsAgainst: 0,
-          points: 0
-        });
-      });
-
-      matches.filter(m => m.status === "finished").forEach(match => {
-        const homeStat = stats.get(match.homeTeamId);
-        const awayStat = stats.get(match.awayTeamId);
-
-        homeStat.played += 1;
-        awayStat.played += 1;
-
-        homeStat.goalsFor += match.homeScore;
-        homeStat.goalsAgainst += match.awayScore;
-
-        awayStat.goalsFor += match.awayScore;
-        awayStat.goalsAgainst += match.homeScore;
-
-        if (match.homeScore > match.awayScore) {
-          homeStat.wins += 1;
-          awayStat.losses += 1;
-          homeStat.points += 3;
-        } else if (match.homeScore < match.awayScore) {
-          awayStat.wins += 1;
-          homeStat.losses += 1;
-          awayStat.points += 3;
-        } else {
-          homeStat.draws += 1;
-          awayStat.draws += 1;
-          homeStat.points += 1;
-          awayStat.points += 1;
-        }
-      });
-
-      const tableArray = Array.from(stats.values());
-      tableArray.sort((a, b) => {
-        const gdA = a.goalsFor - a.goalsAgainst;
-        const gdB = b.goalsFor - b.goalsAgainst;
-        if (b.points !== a.points) return b.points - a.points;
-        if (gdB !== gdA) return gdB - gdA;
-        if (b.goalsFor !== a.goalsFor) return b.goalsFor - a.goalsFor;
-        const teamA = getTeamById(a.teamId).name;
-        const teamB = getTeamById(b.teamId).name;
-        return teamA.localeCompare(teamB, "fa");
-      });
-
-      return tableArray;
-    }
-
-    function getPosClass(pos) {
-      if (pos <= 4) return "pos-top";
-      if (pos >= 10) return "pos-bottom";
-      return "pos-mid";
-    }
-
-    function renderTablePage() {
-      const container = document.getElementById("page-content");
-      const tableData = calculateTable();
-
-      let html = `
-        <div class="section-title">
-          <span class="dot"></span>
-          <span>جدول لیگ</span>
-        </div>
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>تیم</th>
-                <th>بازی</th>
-                <th>برد</th>
-                <th>مساوی</th>
-                <th>باخت</th>
-                <th>گل زده</th>
-                <th>گل خورده</th>
-                <th>تفاضل</th>
-                <th>امتیاز</th>
-              </tr>
-            </thead>
-            <tbody>
-      `;
-
-      tableData.forEach((row, index) => {
-        const team = getTeamById(row.teamId);
-        const pos = index + 1;
-        const gd = row.goalsFor - row.goalsAgainst;
-
+    if (list.length === 0) {
+      html += `<div style="font-size:11px;color:#9ca3af;border:1px dashed #4b5563;border-radius:10px;padding:6px 8px;">
+        هنوز نظری ثبت نشده است.
+      </div>`;
+    } else {
+      html += `<div style="display:flex;flex-direction:column;gap:6px;">`;
+      list.forEach(c => {
         html += `
-          <tr>
-            <td><span class="pos-pill ${getPosClass(pos)}">${pos}</span></td>
-            <td>
-              <div class="team-cell">
-                <div class="team-logo" style="width:22px;height:22px;font-size:15px;background:${team.color}">${team.logo}</div>
-                <span class="team-name-sm">${team.name}</span>
-              </div>
-            </td>
-            <td>${row.played}</td>
-            <td>${row.wins}</td>
-            <td>${row.draws}</td>
-            <td>${row.losses}</td>
-            <td>${row.goalsFor}</td>
-            <td>${row.goalsAgainst}</td>
-            <td>${gd}</td>
-            <td>${row.points}</td>
-          </tr>
+          <div style="border-radius:10px;border:1px solid #1f2937;padding:6px 8px;background:#020617;">
+            <div style="font-size:11px;color:#9ca3af;margin-bottom:2px;">
+              <strong style="color:#e5e7eb;">${c.username}</strong>
+              <span style="opacity:.7;"> • ${new Date(c.created_at).toLocaleString("fa-IR")}</span>
+            </div>
+            <div style="font-size:12px;color:#e5e7eb;">${c.body}</div>
+          </div>
         `;
       });
-
-      html += `
-            </tbody>
-          </table>
-        </div>
-      `;
-
-      container.innerHTML = html;
+      html += `</div>`;
     }
 
-    // -----------------------------
-    // ۸) صفحه تیم‌ها
-    // -----------------------------
-    function renderTeamsPage() {
-      const container = document.getElementById("page-content");
+    box.innerHTML = html;
+  }
 
-      let html = `
-        <div class="section-title">
-          <span class="dot"></span>
-          <span>معرفی تیم‌ها</span>
-        </div>
-        <div class="teams-grid">
-      `;
+  function toggleComments(matchId) {
+    const wrap = document.getElementById(`comments-box-${matchId}`);
+    if (!wrap) return;
+    const isHidden = !wrap.style.display || wrap.style.display === "none";
+    if (isHidden) {
+      wrap.style.display = "block";
+      loadAndRenderComments(matchId);
+    } else {
+      wrap.style.display = "none";
+    }
+  }
 
-      teams.forEach(team => {
+  function saveUsernameFromInput(matchId) {
+    const inp = document.getElementById(`username-input-${matchId}`);
+    if (!inp) return;
+    const val = inp.value.trim();
+    if (!val) { alert("نام کاربری خالی است."); return; }
+    setSavedUsername(val);
+    alert("نام کاربری ذخیره شد.");
+  }
+
+  async function submitComment(matchId) {
+    const ta = document.getElementById(`comment-input-${matchId}`);
+    if (!ta) return;
+    const txt = ta.value;
+    await addComment(matchId, txt);
+    ta.value = "";
+    await loadAndRenderComments(matchId);
+  }
+
+  // ---------- رندر صفحات ----------
+  async function renderFixturesPage() {
+    const container = document.getElementById("page-content");
+    const upcoming = matches.filter(m => m.status !== "finished");
+    const finished = matches.filter(m => m.status === "finished");
+
+    let html = `
+      <div class="section-title">
+        <span class="dot"></span>
+        <span>برنامه بازی‌های آتی و درحال برگزاری</span>
+      </div>
+    `;
+
+    if (upcoming.length === 0) {
+      html += `<div class="card">فعلاً بازی آتی ثبت نشده است.</div>`;
+    } else {
+      for (const match of upcoming) {
+        const home = getTeamById(match.homeTeamId);
+        const away = getTeamById(match.awayTeamId);
+        const stats = await getPredictionStats(match.id);
+
         html += `
-          <div class="team-card">
-            <div class="team-header">
-              <div class="team-line">
-                <div class="team-logo" style="background:${team.color}">${team.logo}</div>
-                <div class="team-name">${team.name}</div>
+          <div class="card">
+            <div class="match-row">
+              <div class="match-teams">
+                <div class="team-line">
+                  <div class="team-logo" style="background:${home.color}">${home.shortName}</div>
+                  <div class="team-name">${home.name}</div>
+                </div>
+                <div class="team-line">
+                  <div class="team-logo" style="background:${away.color}">${away.shortName}</div>
+                  <div class="team-name">${away.name}</div>
+                </div>
+                <div class="match-meta">
+                  <span>ورزشگاه: ${match.stadium}</span>
+                  <span>تاریخ: ${formatDate(match.date)} • ${match.time}</span>
+                </div>
               </div>
-              <span class="badge">کد تیم: ${team.shortName}</span>
+              <div class="match-center">
+                <div style="margin-bottom:6px;">
+                  <div style="font-size:11px;color:#a1a5b5;margin-bottom:2px;">پیش‌بینی خودت:</div>
+                  <div style="display:flex;align-items:center;justify-content:center;gap:4px;margin-bottom:4px;">
+                    <span style="font-size:11px;">${home.shortName}</span>
+                    <input id="home-score-${match.id}" type="number" min="0"
+                      style="width:34px;text-align:center;border-radius:8px;border:1px solid #374151;background:#020617;color:#e5e7eb;font-size:12px;padding:2px 0;">
+                    <span style="font-size:12px;">:</span>
+                    <input id="away-score-${match.id}" type="number" min="0"
+                      style="width:34px;text-align:center;border-radius:8px;border:1px solid #374151;background:#020617;color:#e5e7eb;font-size:12px;padding:2px 0;">
+                    <span style="font-size:11px;">${away.shortName}</span>
+                  </div>
+                  <button onclick="handlePrediction(${match.id})"
+                    style="padding:3px 10px;border-radius:999px;border:none;background:#22c55e;font-size:11px;color:#052e16;cursor:pointer;">
+                    ثبت پیش‌بینی
+                  </button>
+                </div>
+                <div class="match-status ${getStatusClass(match.status)}">
+                  ${getStatusLabel(match.status)}
+                </div>
+        `;
+
+        if (stats) {
+          html += `
+            <div style="margin-top:6px;font-size:10px;color:#9ca3af;">
+              <div>${stats.total} پیش‌بینی ثبت شده</div>
+              <div style="display:flex;gap:6px;margin-top:2px;">
+                <span>برد ${home.shortName}: ${stats.homePercent}%</span>
+                <span>مساوی: ${stats.drawPercent}%</span>
+                <span>برد ${away.shortName}: ${stats.awayPercent}%</span>
+              </div>
             </div>
-            <div style="font-size:11px;color:var(--text-soft);">
-              این متن دمو است. می‌تونی این توضیحات را با تاریخچه، شهر، یا هر اطلاعات دلخواه درباره این تیم عوض کنی.
+          `;
+        }
+
+        html += `
+              </div>
+              <div></div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    html += `
+      <div class="section-title" style="margin-top:14px;">
+        <span class="dot"></span>
+        <span>آخرین نتایج</span>
+      </div>
+    `;
+
+    if (finished.length === 0) {
+      html += `<div class="card">فعلاً بازی پایان یافته‌ای ثبت نشده است.</div>`;
+    } else {
+      finished.slice(-3).reverse().forEach(match => {
+        const home = getTeamById(match.homeTeamId);
+        const away = getTeamById(match.awayTeamId);
+        html += `
+          <div class="card">
+            <div class="match-row">
+              <div class="match-teams">
+                <div class="team-line">
+                  <div class="team-logo" style="background:${home.color}">${home.shortName}</div>
+                  <div class="team-name">${home.name}</div>
+                </div>
+                <div class="team-line">
+                  <div class="team-logo" style="background:${away.color}">${away.shortName}</div>
+                  <div class="team-name">${away.name}</div>
+                </div>
+                <div class="match-meta">
+                  <span>هفته ${match.week}</span>
+                  <span>${formatDate(match.date)}</span>
+                </div>
+              </div>
+              <div class="match-center">
+                <div class="match-score">${match.homeScore} : ${match.awayScore}</div>
+                <div class="match-status status-finished">پایان یافته</div>
+              </div>
+              <div></div>
             </div>
           </div>
         `;
       });
-
-      html += `</div>`;
-
-      container.innerHTML = html;
     }
 
-    // -----------------------------
-    // ۹) اکشن پیش‌بینی
-    // -----------------------------
-    function handlePrediction(matchId) {
-      const match = matches.find(m => m.id === matchId);
-      if (!match) return;
-      const home = getTeamById(match.homeTeamId);
-      const away = getTeamById(match.awayTeamId);
+    container.innerHTML = html;
+  }
 
-      let hs = prompt(`گل‌های ${home.name} را برای پیش‌بینی وارد کن:`, "0");
-      if (hs === null) return;
-      let as = prompt(`گل‌های ${away.name} را برای پیش‌بینی وارد کن:`, "0");
-      if (as === null) return;
+  function renderResultsPage() {
+    const container = document.getElementById("page-content");
+    const finished = matches.filter(m => m.status === "finished");
 
-      hs = parseInt(hs, 10);
-      as = parseInt(as, 10);
-      if (isNaN(hs) || isNaN(as) || hs < 0 || as < 0) {
-        alert("لطفاً فقط عدد صحیح مثبت وارد کن.");
-        return;
-      }
+    let html = `
+      <div class="section-title">
+        <span class="dot"></span>
+        <span>نتایج کامل</span>
+      </div>
+    `;
 
-      savePrediction(matchId, hs, as);
-      alert("پیش‌بینی شما ذخیره شد.");
-
-      const activeBtn = document.querySelector(".tab-btn.active");
-      if (activeBtn) setActivePage(activeBtn.dataset.page);
-    }
-
-    // -----------------------------
-    // ۱۰) مدیریت تب‌ها + موسیقی
-    // -----------------------------
-    function setActivePage(page) {
-      document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.page === page);
+    if (finished.length === 0) {
+      html += `<div class="card">فعلاً نتیجه نهایی ثبت نشده است.</div>`;
+    } else {
+      finished.forEach(match => {
+        const home = getTeamById(match.homeTeamId);
+        const away = getTeamById(match.awayTeamId);
+        html += `
+          <div class="card">
+            <div class="match-row">
+              <div class="match-teams">
+                <div class="team-line">
+                  <div class="team-logo" style="background:${home.color}">${home.shortName}</div>
+                  <div class="team-name">${home.name}</div>
+                </div>
+                <div class="team-line">
+                  <div class="team-logo" style="background:${away.color}">${away.shortName}</div>
+                  <div class="team-name">${away.name}</div>
+                </div>
+                <div class="match-meta">
+                  <span>ورزشگاه: ${match.stadium}</span>
+                  <span>تاریخ: ${formatDate(match.date)} • ${match.time}</span>
+                </div>
+              </div>
+              <div class="match-center">
+                <div class="match-score">${match.homeScore} : ${match.awayScore}</div>
+                <div class="match-status status-finished">پایان یافته</div>
+                <button onclick="toggleComments(${match.id})"
+                  style="margin-top:6px;padding:4px 10px;border-radius:999px;border:none;background:#4b5563;color:#e5e7eb;font-size:11px;cursor:pointer;">
+                  نظرات بازی
+                </button>
+              </div>
+              <div></div>
+            </div>
+            <div id="comments-box-${match.id}" style="display:none;margin-top:8px;border-top:1px solid #1f2937;padding-top:8px;">
+              <div id="comments-${match.id}"></div>
+            </div>
+          </div>
+        `;
       });
-
-      if (page === "fixtures") renderFixturesPage();
-      else if (page === "results") renderResultsPage();
-      else if (page === "table") renderTablePage();
-      else if (page === "teams") renderTeamsPage();
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-      // تب‌ها
-      document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-          setActivePage(btn.dataset.page);
-        });
+    container.innerHTML = html;
+  }
+
+  function calculateTable() {
+    const stats = new Map();
+    teams.forEach(team => {
+      stats.set(team.id, {
+        teamId: team.id,
+        played: 0,
+        wins: 0,
+        draws: 0,
+        losses: 0,
+        goalsFor: 0,
+        goalsAgainst: 0,
+        points: 0
       });
-      setActivePage("fixtures");
+    });
 
-      // موسیقی
-      const audio = document.getElementById("bg-audio");
-      const audioToggle = document.getElementById("audio-toggle");
+    matches.filter(m => m.status === "finished").forEach(match => {
+      const home = stats.get(match.homeTeamId);
+      const away = stats.get(match.awayTeamId);
 
-      if (audio && audioToggle) {
-        audio.volume = 0.4;
+      home.played++; away.played++;
+      home.goalsFor += match.homeScore;
+      home.goalsAgainst += match.awayScore;
+      away.goalsFor += match.awayScore;
+      away.goalsAgainst += match.homeScore;
 
-        // تلاش برای پخش خودکار (ممکن است بلاک شود)
-        audio.play().catch(() => {});
-
-        function updateAudioButton() {
-          if (audio.paused) {
-            audioToggle.textContent = "🔈 موسیقی خاموش";
-            audioToggle.classList.remove("active");
-          } else {
-            audioToggle.textContent = "🔊 موسیقی روشن";
-            audioToggle.classList.add("active");
-          }
-        }
-
-        updateAudioButton();
-
-        audioToggle.addEventListener("click", () => {
-          if (audio.paused) {
-            audio.play().catch(() => {});
-          } else {
-            audio.pause();
-          }
-          updateAudioButton();
-        });
+      if (match.homeScore > match.awayScore) {
+        home.wins++; away.losses++; home.points += 3;
+      } else if (match.homeScore < match.awayScore) {
+        away.wins++; home.losses++; away.points += 3;
+      } else {
+        home.draws++; away.draws++; home.points++; away.points++;
       }
     });
-  </script>
+
+    const arr = Array.from(stats.values());
+    arr.sort((a, b) => {
+      const gdA = a.goalsFor - a.goalsAgainst;
+      const gdB = b.goalsFor - b.goalsAgainst;
+      if (b.points !== a.points) return b.points - a.points;
+      if (gdB !== gdA) return gdB - gdA;
+      if (b.goalsFor !== a.goalsFor) return b.goalsFor - a.goalsFor;
+      const nameA = getTeamById(a.teamId).name;
+      const nameB = getTeamById(b.teamId).name;
+      return nameA.localeCompare(nameB, "fa");
+    });
+    return arr;
+  }
+
+  function getPosClass(pos) {
+    if (pos <= 4) return "pos-top";
+    if (pos >= 10) return "pos-bottom";
+    return "pos-mid";
+  }
+
+  function renderTablePage() {
+    const container = document.getElementById("page-content");
+    const data = calculateTable();
+
+    let html = `
+      <div class="section-title">
+        <span class="dot"></span>
+        <span>جدول لیگ</span>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>تیم</th>
+              <th>بازی</th>
+              <th>برد</th>
+              <th>مساوی</th>
+              <th>باخت</th>
+              <th>گل زده</th>
+              <th>گل خورده</th>
+              <th>تفاضل</th>
+              <th>امتیاز</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+
+    data.forEach((row, idx) => {
+      const team = getTeamById(row.teamId);
+      const pos = idx + 1;
+      const gd = row.goalsFor - row.goalsAgainst;
+      html += `
+        <tr>
+          <td><span class="pos-pill ${getPosClass(pos)}">${pos}</span></td>
+          <td>
+            <div class="team-cell">
+              <div class="team-logo" style="width:22px;height:22px;font-size:10px;background:${team.color}">${team.shortName}</div>
+              <span class="team-name-sm">${team.name}</span>
+            </div>
+          </td>
+          <td>${row.played}</td>
+          <td>${row.wins}</td>
+          <td>${row.draws}</td>
+          <td>${row.losses}</td>
+          <td>${row.goalsFor}</td>
+          <td>${row.goalsAgainst}</td>
+          <td>${gd}</td>
+          <td>${row.points}</td>
+        </tr>
+      `;
+    });
+
+    html += `
+          </tbody>
+        </table>
+      </div>
+    `;
+
+    container.innerHTML = html;
+  }
+
+  function renderTeamsPage() {
+    const container = document.getElementById("page-content");
+    let html = `
+      <div class="section-title">
+        <span class="dot"></span>
+        <span>معرفی تیم‌ها</span>
+      </div>
+      <div class="teams-grid">
+    `;
+    teams.forEach(team => {
+      html += `
+        <div class="team-card">
+          <div class="team-header">
+            <div class="team-line">
+              <div class="team-logo" style="background:${team.color}">${team.shortName}</div>
+              <div class="team-name">${team.name}</div>
+            </div>
+            <span class="badge">کد تیم: ${team.shortName}</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-soft);">
+            این متن دمو است. می‌تونی این توضیحات را با تاریخچه، شهر، یا هر اطلاعات دلخواه درباره این تیم عوض کنی.
+          </div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+    container.innerHTML = html;
+  }
+
+  async function handlePrediction(matchId) {
+    const hi = document.getElementById(`home-score-${matchId}`);
+    const ai = document.getElementById(`away-score-${matchId}`);
+    if (!hi || !ai) return;
+    const hs = parseInt(hi.value, 10);
+    const as = parseInt(ai.value, 10);
+    if (isNaN(hs) || isNaN(as) || hs < 0 || as < 0) {
+      alert("نتیجه را به صورت عدد مثبت وارد کن.");
+      return;
+    }
+    await savePredictionToDB(matchId, hs, as);
+    alert("پیش‌بینی شما ذخیره شد.");
+    setActivePage("fixtures");
+  }
+
+  function setActivePage(page) {
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.page === page);
+    });
+    if (page === "fixtures") renderFixturesPage();
+    else if (page === "results") renderResultsPage();
+    else if (page === "table") renderTablePage();
+    else if (page === "teams") renderTeamsPage();
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        setActivePage(btn.dataset.page);
+      });
+    });
+    setActivePage("fixtures");
+  });
+</script>
+
 </body>
 </html>
+
 
 
