@@ -13,18 +13,19 @@
 
   <style>
     :root {
-      --bg: #0b1020;
-      --bg-soft: #151a2c;
-      --card: #1d2236;
-      --accent: #18a34a;
-      --accent-soft: rgba(24, 163, 74, 0.2);
+      /* پالت الهام‌گرفته از لیگ قهرمانان */
+      --bg: #020617;                 
+      --bg-soft: #050b24;            
+      --card: #050b30;               
+      --accent: #38bdf8;             
+      --accent-soft: rgba(56, 189, 248, 0.18);
       --text: #f9fafb;
-      --text-soft: #a1a5b5;
-      --danger: #ef4444;
-      --border: #262c46;
+      --text-soft: #a5b4fc;
+      --danger: #f97373;
+      --border: rgba(129, 140, 248, 0.4);
       --radius-lg: 18px;
       --radius-full: 999px;
-      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.45);
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.85);
     }
 
     * {
@@ -32,11 +33,39 @@
       font-family: "Vazirmatn", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
+    /* 🔵 این همون قسمتیه که برات ادیت کردم (بکگراند توپ لیگ قهرمانان) */
     body {
       margin: 0;
       padding: 0;
-      background: radial-gradient(circle at top, #1d2545, #050816 55%);
+
+      /* رنگ پایه */
+      background-color: #020617;
+
+      /* گرادیِنت‌ها + عکس توپ */
+      background-image:
+        radial-gradient(circle at 10% 0, rgba(56, 189, 248, 0.25), transparent 55%),
+        radial-gradient(circle at 90% 0, rgba(129, 140, 248, 0.32), transparent 55%),
+        radial-gradient(circle at 50% 100%, rgba(59, 130, 246, 0.35), transparent 60%),
+        url("ucl-ball.png"); /* توپ لیگ قهرمانان */
+
+      background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+
+      /* جای لایه‌ها: سه‌تا نور، توپ وسط بالا */
+      background-position:
+        10% 0,
+        90% 0,
+        50% 100%,
+        center 20%;
+
+      /* سایز: توپ نسبتاً بزرگ */
+      background-size:
+        auto,
+        auto,
+        auto,
+        1550px auto;
+
       color: var(--text);
+      min-height: 100vh;
     }
 
     .app {
@@ -60,24 +89,34 @@
     }
 
     .brand-logo {
-      width: 40px;
-      height: 40px;
-      border-radius: 16px;
-      background: conic-gradient(from 160deg, #18a34a, #06b6d4, #6366f1, #18a34a);
+      width: 65px;
+      height: 65px;
+      border-radius: 22px;
+      background: radial-gradient(circle at 30% 0, rgba(56, 189, 248, 0.5), transparent 55%),
+                  radial-gradient(circle at 80% 120%, rgba(168, 85, 247, 0.6), transparent 55%),
+                  #020617;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: var(--shadow-soft);
+      box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
+      overflow: hidden;
+      padding: 4px;
+      border: 1px solid rgba(129, 140, 248, 0.7);
     }
 
-    .brand-logo span {
-      font-weight: 800;
-      font-size: 18px;
+    .brand-logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
     }
 
     .brand-text-title {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 700;
+      letter-spacing: 0.03em;
+      color: #e5e7eb;
+      text-shadow: 0 0 16px rgba(56, 189, 248, 0.6);
     }
 
     .brand-text-sub {
@@ -97,10 +136,12 @@
     .live-pill {
       padding: 2px 10px;
       border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent);
+      background: linear-gradient(135deg, rgba(8, 47, 73, 0.6), rgba(37, 99, 235, 0.7));
+      color: #e0f2fe;
       font-weight: 600;
       font-size: 11px;
+      box-shadow: 0 0 18px rgba(59, 130, 246, 0.8);
+      border: 1px solid rgba(56, 189, 248, 0.7);
     }
 
     .audio-toggle {
@@ -108,28 +149,32 @@
       padding: 4px 10px;
       border-radius: 999px;
       border: 1px solid rgba(148, 163, 184, 0.6);
-      background: rgba(15, 23, 42, 0.9);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.85));
       color: var(--text-soft);
       font-size: 11px;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .audio-toggle.active {
-      background: var(--accent-soft);
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.4), rgba(15, 23, 42, 0.95));
       color: var(--accent);
-      border-color: rgba(34, 197, 94, 0.8);
+      border-color: rgba(56, 189, 248, 0.9);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.8);
     }
 
     nav {
       display: flex;
       gap: 8px;
       padding: 4px;
-      background: rgba(9, 12, 24, 0.85);
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.18), rgba(15, 23, 42, 0.95));
       border-radius: var(--radius-lg);
-      border: 1px solid rgba(56, 63, 99, 0.8);
-      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(129, 140, 248, 0.7);
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.9);
       margin-bottom: 18px;
-      backdrop-filter: blur(14px);
+      backdrop-filter: blur(16px);
     }
 
     nav button {
@@ -151,6 +196,7 @@
 
     nav button .nav-icon {
       font-size: 16px;
+      filter: drop-shadow(0 0 6px rgba(15, 23, 42, 0.8));
     }
 
     nav button .nav-label {
@@ -158,18 +204,18 @@
     }
 
     nav button.active {
-      background: linear-gradient(135deg, #18a34a, #22c55e);
-      color: #ecfdf3;
-      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.55);
+      background: radial-gradient(circle at 0 0, #38bdf8, #4f46e5);
+      color: #ecfeff;
+      box-shadow: 0 10px 26px rgba(56, 189, 248, 0.7);
     }
 
     nav button.active .nav-icon {
-      filter: drop-shadow(0 0 6px rgba(22, 163, 74, 0.8));
+      filter: drop-shadow(0 0 10px rgba(248, 250, 252, 0.9));
     }
 
     nav button:hover:not(.active) {
-      background: rgba(37, 44, 79, 0.75);
-      color: var(--text);
+      background: rgba(15, 23, 42, 0.9);
+      color: #e5e7eb;
     }
 
     main {
@@ -189,13 +235,17 @@
       height: 7px;
       border-radius: 999px;
       background: var(--accent);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.9);
     }
 
     .card {
-      background: radial-gradient(circle at top left, #242b46, #111425 55%);
+      background:
+        radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.18), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(129, 140, 248, 0.24), transparent 55%),
+        #020617;
       border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(51, 65, 85, 0.9);
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.95);
       padding: 12px 14px;
       margin-bottom: 10px;
     }
@@ -250,8 +300,9 @@
       font-size: 16px;
       font-weight: 700;
       color: #f9fafb;
-      border: 1px solid rgba(15, 23, 42, 0.6);
-      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.5);
+      border: 1px solid rgba(15, 23, 42, 0.8);
+      box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.7),
+                  0 0 18px rgba(37, 99, 235, 0.7);
     }
 
     .match-center {
@@ -262,6 +313,8 @@
       font-weight: 700;
       font-size: 15px;
       letter-spacing: 1px;
+      color: #e5e7eb;
+      text-shadow: 0 0 10px rgba(248, 250, 252, 0.9);
     }
 
     .match-status {
@@ -275,21 +328,24 @@
     }
 
     .status-finished {
-      background: rgba(37, 99, 235, 0.12);
-      color: #60a5fa;
+      background: rgba(37, 99, 235, 0.2);
+      color: #bfdbfe;
+      border: 1px solid rgba(59, 130, 246, 0.6);
     }
 
     .status-live {
-      background: rgba(248, 113, 113, 0.1);
-      color: #f87171;
+      background: rgba(236, 72, 153, 0.18);
+      color: #f9a8d4;
+      border: 1px solid rgba(236, 72, 153, 0.7);
+      box-shadow: 0 0 14px rgba(236, 72, 153, 0.9);
     }
 
     .status-upcoming {
-      background: rgba(148, 163, 184, 0.12);
+      background: rgba(148, 163, 184, 0.18);
       color: #e5e7eb;
+      border: 1px solid rgba(148, 163, 184, 0.6);
     }
 
-    /* پیش‌بینی‌ها */
     .prediction-summary {
       margin-top: 6px;
       font-size: 11px;
@@ -304,11 +360,12 @@
 
     .prediction-bar {
       flex: 1;
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(15, 23, 42, 0.95);
       border-radius: 999px;
       overflow: hidden;
       position: relative;
       height: 16px;
+      border: 1px solid rgba(75, 85, 99, 0.8);
     }
 
     .prediction-fill {
@@ -320,15 +377,15 @@
     }
 
     .prediction-fill-home {
-      background: rgba(34, 197, 94, 0.5);
+      background: linear-gradient(90deg, rgba(74, 222, 128, 0.8), rgba(22, 163, 74, 0.9));
     }
 
     .prediction-fill-draw {
-      background: rgba(148, 163, 184, 0.6);
+      background: linear-gradient(90deg, rgba(148, 163, 184, 0.85), rgba(148, 163, 184, 0.95));
     }
 
     .prediction-fill-away {
-      background: rgba(59, 130, 246, 0.5);
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.85), rgba(30, 64, 175, 0.95));
     }
 
     .prediction-label {
@@ -339,7 +396,6 @@
       line-height: 16px;
     }
 
-    /* اکشن‌ها و کامنت‌ها */
     .match-actions {
       margin-top: 8px;
       display: flex;
@@ -351,15 +407,19 @@
     .action-btn {
       padding: 4px 10px;
       border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: radial-gradient(circle at 0 0, rgba(30, 64, 175, 0.9), rgba(15, 23, 42, 0.98));
       color: var(--text-soft);
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .action-btn:hover {
-      background: rgba(30, 64, 175, 0.7);
-      color: #e5e7eb;
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.8), rgba(30, 64, 175, 1));
+      color: #ecfeff;
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.8);
     }
 
     .comments-section {
@@ -378,7 +438,8 @@
       margin-bottom: 6px;
       padding: 6px 8px;
       border-radius: 10px;
-      background: rgba(15, 23, 42, 0.85);
+      background: radial-gradient(circle at 0 0, rgba(79, 70, 229, 0.4), rgba(15, 23, 42, 0.95));
+      border: 1px solid rgba(129, 140, 248, 0.6);
     }
 
     .comment-header {
@@ -389,6 +450,7 @@
 
     .comment-body {
       font-size: 12px;
+      color: #e5e7eb;
     }
 
     .comment-empty {
@@ -414,8 +476,8 @@
       flex: 1;
       padding: 3px 6px;
       border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      background: rgba(15, 23, 42, 0.96);
       color: var(--text);
       font-size: 11px;
     }
@@ -425,8 +487,8 @@
       min-height: 40px;
       padding: 4px 6px;
       border-radius: 10px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.96);
       color: var(--text);
       font-size: 12px;
     }
@@ -436,17 +498,21 @@
       padding: 4px 10px;
       border-radius: 999px;
       border: none;
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-      color: #ecfdf3;
+      background: radial-gradient(circle at 0 0, #38bdf8, #4f46e5);
+      color: #ecfeff;
       font-size: 11px;
       cursor: pointer;
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.85);
     }
 
     .table-wrapper {
-      background: radial-gradient(circle at top left, #202744, #101322 58%);
+      background:
+        radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.15), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(79, 70, 229, 0.3), transparent 55%),
+        #020617;
       border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.95);
       padding: 8px 0 4px;
       overflow: hidden;
     }
@@ -458,13 +524,13 @@
     }
 
     thead {
-      background: rgba(15, 23, 42, 0.95);
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.4), rgba(15, 23, 42, 1));
     }
 
     th, td {
       padding: 7px 10px;
       text-align: center;
-      border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+      border-bottom: 1px solid rgba(30, 64, 175, 0.9);
     }
 
     th:first-child, td:first-child {
@@ -473,15 +539,15 @@
 
     th {
       font-weight: 600;
-      color: var(--text-soft);
+      color: #c7d2fe;
     }
 
     tbody tr:nth-child(even) {
-      background: rgba(15, 23, 42, 0.7);
+      background: rgba(15, 23, 42, 0.96);
     }
 
     tbody tr:nth-child(odd) {
-      background: rgba(15, 23, 42, 0.4);
+      background: rgba(15, 23, 42, 0.9);
     }
 
     .pos-pill {
@@ -496,17 +562,18 @@
     }
 
     .pos-top {
-      background: rgba(34, 197, 94, 0.16);
-      color: #4ade80;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.35), rgba(59, 130, 246, 0.9));
+      color: #e0f2fe;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.9);
     }
 
     .pos-mid {
-      background: rgba(59, 130, 246, 0.12);
-      color: #93c5fd;
+      background: rgba(79, 70, 229, 0.35);
+      color: #c7d2fe;
     }
 
     .pos-bottom {
-      background: rgba(248, 113, 113, 0.12);
+      background: rgba(248, 113, 113, 0.25);
       color: #fecaca;
     }
 
@@ -527,14 +594,18 @@
     }
 
     .team-card {
-      background: radial-gradient(circle at top, #252b42, #121626 58%);
+      background:
+        radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.15), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(129, 140, 248, 0.2), transparent 55%),
+        #020617;
       border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(75, 85, 99, 0.9);
       padding: 10px;
       display: flex;
       flex-direction: column;
       gap: 6px;
       font-size: 12px;
+      box-shadow: 0 14px 38px rgba(15, 23, 42, 0.95);
     }
 
     .team-header {
@@ -548,8 +619,9 @@
       font-size: 10px;
       padding: 2px 8px;
       border-radius: 999px;
-      background: rgba(148, 163, 184, 0.14);
+      background: rgba(15, 23, 42, 0.9);
       color: var(--text-soft);
+      border: 1px solid rgba(129, 140, 248, 0.7);
     }
 
     .tip-box {
@@ -559,16 +631,44 @@
       border-radius: 14px;
       border: 1px dashed rgba(148, 163, 184, 0.6);
       padding: 8px 10px;
-      background: rgba(15, 23, 42, 0.7);
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.12), rgba(15, 23, 42, 0.95));
     }
 
     .tip-box code {
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(15, 23, 42, 0.96);
       padding: 2px 4px;
       border-radius: 6px;
       direction: ltr;
       display: inline-block;
       font-size: 10px;
+    }
+
+    /* اسپلش موشن‌گرافیک */
+    #splash-screen {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 10% 0, rgba(56, 189, 248, 0.25), transparent 55%),
+        radial-gradient(circle at 90% 0, rgba(129, 140, 248, 0.32), transparent 55%),
+        #020617;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.4s ease;
+    }
+
+    #splash-screen video {
+      max-width: 80vw;
+      max-height: 80vh;
+      border-radius: 18px;
+      box-shadow: 0 0 45px rgba(56, 189, 248, 0.9);
+      border: 1px solid rgba(129, 140, 248, 0.8);
+    }
+
+    #splash-screen.hidden {
+      opacity: 0;
+      pointer-events: none;
     }
 
     @media (max-width: 680px) {
@@ -595,10 +695,20 @@
         gap: 2px;
         align-items: flex-start;
       }
+      #splash-screen video {
+        max-width: 90vw;
+        max-height: 60vh;
+      }
     }
   </style>
 </head>
 <body>
+
+  <!-- اسپلش اسکرین موشن‌گرافیک (۲ ثانیه اول) -->
+  <div id="splash-screen">
+    <video src="intro.mp4" autoplay muted playsinline></video>
+  </div>
+
   <div class="app">
     <!-- آهنگ پس‌زمینه: فایل music.mp3 را کنار index.html قرار بده -->
     <audio id="bg-audio" src="music.mp3" loop></audio>
@@ -606,7 +716,7 @@
     <header>
       <div class="brand">
         <div class="brand-logo">
-          <span>LM</span>
+          <img src="logo.png" alt="لوگوی لیگ فوتسال روستای چاشم" class="brand-logo-img" />
         </div>
         <div>
           <div class="brand-text-title">کالیگا</div>
@@ -644,16 +754,10 @@
       <!-- محتوا با جاوااسکریپت تزریق می‌شود -->
     </main>
 
-    <div class="tip-box">
-      <strong>راهنمای سریع:</strong> بازی‌های آینده و گذشته در آرایه <code>matches</code> تعریف می‌شوند.  
-      برای هر هفته‌ی جدید، یک آبجکت با <code>week</code>، تیم‌ها، تاریخ، ساعت و <code>status</code> بسازید.
-    </div>
+
   </div>
 
   <script>
-    // -----------------------------
-    // ۰) اتصال به Supabase
-    // -----------------------------
     const { createClient } = supabase;
 
     const SUPABASE_URL = "https://lznrwbrxzgnczfqgamxp.supabase.co";
@@ -661,9 +765,6 @@
 
     const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // -----------------------------
-    // ۱) تعریف تیم‌ها + لوگو (ایموجی)
-    // -----------------------------
     const teams = [
       { id: 1,  name: "کافه لوین",                     shortName: "LVN",  color: "#0ea5e9", logo: "☕" },
       { id: 2,  name: "استودیو نامبر وان",            shortName: "NUO",  color: "#22c55e", logo: "🎬" },
@@ -679,11 +780,7 @@
       { id: 12, name: "هیئت جوانان",                  shortName: "JVN",  color: "#2dd4bf", logo: "🔥" }
     ];
 
-    // -----------------------------
-    // ۲) تعریف بازی‌ها (هفته ۱، ۲، ۳)
-    // -----------------------------
     const matches = [
-      // هفته ۱ - بازی‌های انجام‌شده
       {
         id: 1,
         week: 1,
@@ -756,25 +853,21 @@
         homeScore: 1,
         awayScore: 0
       },
-
-      // هفته ۲ - نمونه بازی آینده
       {
         id: 7,
         week: 2,
-        homeTeamId: 1,   // کافه لوین
-        awayTeamId: 4,   // زنده یاد مجید جعفری
+        homeTeamId: 1,
+        awayTeamId: 4,
         date: "1404-09-01",
         time: "18:00",
         stadium: "سالن شهید صحافی",
         status: "upcoming"
       },
-
-      // هفته ۳ - نمونه بازی آینده
       {
         id: 8,
         week: 3,
-        homeTeamId: 8,   // شهید نجفعلی قادری
-        awayTeamId: 2,   // استودیو نامبر وان
+        homeTeamId: 8,
+        awayTeamId: 2,
         date: "1404-09-05",
         time: "19:00",
         stadium: "سالن شهید صحافی",
@@ -782,9 +875,6 @@
       }
     ];
 
-    // -----------------------------
-    // ۳) توابع کمکی ساده
-    // -----------------------------
     function getTeamById(id) {
       return teams.find(t => t.id === id);
     }
@@ -820,9 +910,6 @@
       });
     }
 
-    // -----------------------------
-    // ۴) نام‌کاربری (لوکال) + تابع‌های Supabase
-    // -----------------------------
     const USERNAME_KEY = "kaliga_username";
 
     function getSavedUsername() {
@@ -839,7 +926,6 @@
       } catch {}
     }
 
-    // ---- پیش‌بینی‌ها در Supabase
     async function savePredictionToDB(matchId, homeScore, awayScore) {
       try {
         const username = getSavedUsername() || null;
@@ -899,7 +985,6 @@
       }
     }
 
-    // ---- کامنت‌ها در Supabase
     async function fetchComments(matchId) {
       try {
         const { data, error } = await db
@@ -1028,9 +1113,6 @@
       await loadAndRenderComments(matchId);
     }
 
-    // -----------------------------
-    // ۵) رندر برنامه بازی‌ها (آتی + زنده) + درصد پیش‌بینی
-    // -----------------------------
     async function renderFixturesPage() {
       const container = document.getElementById("page-content");
       const upcoming = matches.filter(m => m.status === "upcoming" || m.status === "live");
@@ -1121,7 +1203,6 @@
         }
       }
 
-      // آخرین نتایج
       html += `
         <div class="section-title" style="margin-top:14px;">
           <span class="dot"></span>
@@ -1164,9 +1245,6 @@
       container.innerHTML = html;
     }
 
-    // -----------------------------
-    // ۶) رندر صفحه نتایج (با کامنت)
-    // -----------------------------
     function renderResultsPage() {
       const container = document.getElementById("page-content");
       const finished = matches.filter(m => m.status === "finished");
@@ -1217,9 +1295,6 @@
       container.innerHTML = html;
     }
 
-    // -----------------------------
-    // ۷) جدول لیگ
-    // -----------------------------
     function calculateTable() {
       const stats = new Map();
       teams.forEach(team => {
@@ -1348,9 +1423,6 @@
       container.innerHTML = html;
     }
 
-    // -----------------------------
-    // ۸) صفحه تیم‌ها
-    // -----------------------------
     function renderTeamsPage() {
       const container = document.getElementById("page-content");
 
@@ -1384,9 +1456,6 @@
       container.innerHTML = html;
     }
 
-    // -----------------------------
-    // ۹) اکشن پیش‌بینی
-    // -----------------------------
     async function handlePrediction(matchId) {
       const match = matches.find(m => m.id === matchId);
       if (!match) return;
@@ -1410,13 +1479,9 @@
       await savePredictionToDB(matchId, hs, as);
       alert("پیش‌بینی شما ذخیره شد.");
 
-      // برای به‌روزرسانی درصدها
       setActivePage("fixtures");
     }
 
-    // -----------------------------
-    // ۱۰) مدیریت تب‌ها + موسیقی
-    // -----------------------------
     function setActivePage(page) {
       document.querySelectorAll(".tab-btn").forEach(btn => {
         btn.classList.toggle("active", btn.dataset.page === page);
@@ -1429,7 +1494,18 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      // تب‌ها
+      const splash = document.getElementById("splash-screen");
+      const app = document.querySelector(".app");
+
+      if (splash && app) {
+        app.style.visibility = "hidden";
+
+        setTimeout(() => {
+          splash.classList.add("hidden");
+          app.style.visibility = "visible";
+        }, 2000);
+      }
+
       document.querySelectorAll(".tab-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           setActivePage(btn.dataset.page);
@@ -1437,7 +1513,6 @@
       });
       setActivePage("fixtures");
 
-      // موسیقی
       const audio = document.getElementById("bg-audio");
       const audioToggle = document.getElementById("audio-toggle");
 
