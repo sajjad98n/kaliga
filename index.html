@@ -13,19 +13,18 @@
 
   <style>
     :root {
-      /* پالت الهام‌گرفته از لیگ قهرمانان */
-      --bg: #020617;                 
-      --bg-soft: #050b24;            
-      --card: #050b30;               
-      --accent: #38bdf8;             
-      --accent-soft: rgba(56, 189, 248, 0.18);
+      --bg: #0b1020;
+      --bg-soft: #151a2c;
+      --card: #1d2236;
+      --accent: #18a34a;
+      --accent-soft: rgba(24, 163, 74, 0.2);
       --text: #f9fafb;
-      --text-soft: #a5b4fc;
-      --danger: #f97373;
-      --border: rgba(129, 140, 248, 0.4);
+      --text-soft: #a1a5b5;
+      --danger: #ef4444;
+      --border: #262c46;
       --radius-lg: 18px;
       --radius-full: 999px;
-      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.85);
+      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.45);
     }
 
     * {
@@ -33,39 +32,60 @@
       font-family: "Vazirmatn", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    /* 🔵 این همون قسمتیه که برات ادیت کردم (بکگراند توپ لیگ قهرمانان) */
     body {
       margin: 0;
       padding: 0;
-
-      /* رنگ پایه */
-      background-color: #020617;
-
-      /* گرادیِنت‌ها + عکس توپ */
-      background-image:
-        radial-gradient(circle at 10% 0, rgba(56, 189, 248, 0.25), transparent 55%),
-        radial-gradient(circle at 90% 0, rgba(129, 140, 248, 0.32), transparent 55%),
-        radial-gradient(circle at 50% 100%, rgba(59, 130, 246, 0.35), transparent 60%),
-        url("ucl-ball.png"); /* توپ لیگ قهرمانان */
-
-      background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
-
-      /* جای لایه‌ها: سه‌تا نور، توپ وسط بالا */
-      background-position:
-        10% 0,
-        90% 0,
-        50% 100%,
-        center 20%;
-
-      /* سایز: توپ نسبتاً بزرگ */
-      background-size:
-        auto,
-        auto,
-        auto,
-        1550px auto;
-
+      background: radial-gradient(circle at top, var(--bg-soft), var(--bg) 55%);
       color: var(--text);
-      min-height: 100vh;
+    }
+
+    /* لایه موشن‌گرافی ورود */
+    .intro-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, #020617, #000000);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    .intro-frame {
+      padding: 10px;
+      border-radius: 26px;
+      background: radial-gradient(circle at top, #1f2937, #020617 70%);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      max-width: 90vw;
+      max-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .intro-video {
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+      border-radius: 18px;
+      box-shadow: 0 0 30px rgba(15, 23, 42, 0.9);
+    }
+
+    .intro-skip {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(15, 23, 42, 0.9);
+      color: #f9fafb;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      cursor: pointer;
+      direction: ltr;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
     }
 
     .app {
@@ -91,17 +111,14 @@
     .brand-logo {
       width: 65px;
       height: 65px;
-      border-radius: 22px;
-      background: radial-gradient(circle at 30% 0, rgba(56, 189, 248, 0.5), transparent 55%),
-                  radial-gradient(circle at 80% 120%, rgba(168, 85, 247, 0.6), transparent 55%),
-                  #020617;
+      border-radius: 20px;
+      background: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
+      box-shadow: var(--shadow-soft);
       overflow: hidden;
-      padding: 4px;
-      border: 1px solid rgba(129, 140, 248, 0.7);
+      padding: 0;
     }
 
     .brand-logo-img {
@@ -112,11 +129,8 @@
     }
 
     .brand-text-title {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 700;
-      letter-spacing: 0.03em;
-      color: #e5e7eb;
-      text-shadow: 0 0 16px rgba(56, 189, 248, 0.6);
     }
 
     .brand-text-sub {
@@ -136,45 +150,44 @@
     .live-pill {
       padding: 2px 10px;
       border-radius: 999px;
-      background: linear-gradient(135deg, rgba(8, 47, 73, 0.6), rgba(37, 99, 235, 0.7));
-      color: #e0f2fe;
+      background: var(--accent-soft);
+      color: var(--accent);
       font-weight: 600;
       font-size: 11px;
-      box-shadow: 0 0 18px rgba(59, 130, 246, 0.8);
-      border: 1px solid rgba(56, 189, 248, 0.7);
     }
 
-    .audio-toggle {
+    .audio-toggle,
+    .mode-toggle {
       margin-top: 4px;
       padding: 4px 10px;
       border-radius: 999px;
       border: 1px solid rgba(148, 163, 184, 0.6);
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.85));
+      background: rgba(15, 23, 42, 0.9);
       color: var(--text-soft);
       font-size: 11px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
     }
 
-    .audio-toggle.active {
-      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.4), rgba(15, 23, 42, 0.95));
+    .audio-toggle.active,
+    .mode-toggle.active {
+      background: var(--accent-soft);
       color: var(--accent);
-      border-color: rgba(56, 189, 248, 0.9);
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.8);
+      border-color: rgba(34, 197, 94, 0.8);
     }
 
     nav {
       display: flex;
       gap: 8px;
       padding: 4px;
-      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.18), rgba(15, 23, 42, 0.95));
+      background: rgba(9, 12, 24, 0.85);
       border-radius: var(--radius-lg);
-      border: 1px solid rgba(129, 140, 248, 0.7);
-      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(56, 63, 99, 0.8);
+      box-shadow: var(--shadow-soft);
       margin-bottom: 18px;
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(14px);
     }
 
     nav button {
@@ -196,7 +209,6 @@
 
     nav button .nav-icon {
       font-size: 16px;
-      filter: drop-shadow(0 0 6px rgba(15, 23, 42, 0.8));
     }
 
     nav button .nav-label {
@@ -204,18 +216,18 @@
     }
 
     nav button.active {
-      background: radial-gradient(circle at 0 0, #38bdf8, #4f46e5);
-      color: #ecfeff;
-      box-shadow: 0 10px 26px rgba(56, 189, 248, 0.7);
+      background: linear-gradient(135deg, var(--accent), #22c55e);
+      color: #ecfdf3;
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.55);
     }
 
     nav button.active .nav-icon {
-      filter: drop-shadow(0 0 10px rgba(248, 250, 252, 0.9));
+      filter: drop-shadow(0 0 6px rgba(22, 163, 74, 0.8));
     }
 
     nav button:hover:not(.active) {
-      background: rgba(15, 23, 42, 0.9);
-      color: #e5e7eb;
+      background: rgba(37, 44, 79, 0.75);
+      color: var(--text);
     }
 
     main {
@@ -235,17 +247,13 @@
       height: 7px;
       border-radius: 999px;
       background: var(--accent);
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.9);
     }
 
     .card {
-      background:
-        radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.18), transparent 55%),
-        radial-gradient(circle at 100% 100%, rgba(129, 140, 248, 0.24), transparent 55%),
-        #020617;
+      background: radial-gradient(circle at top left, var(--card), var(--bg-soft) 55%);
       border-radius: var(--radius-lg);
-      border: 1px solid rgba(51, 65, 85, 0.9);
-      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
       padding: 12px 14px;
       margin-bottom: 10px;
     }
@@ -300,9 +308,8 @@
       font-size: 16px;
       font-weight: 700;
       color: #f9fafb;
-      border: 1px solid rgba(15, 23, 42, 0.8);
-      box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.7),
-                  0 0 18px rgba(37, 99, 235, 0.7);
+      border: 1px solid rgba(15, 23, 42, 0.6);
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.5);
     }
 
     .match-center {
@@ -313,8 +320,6 @@
       font-weight: 700;
       font-size: 15px;
       letter-spacing: 1px;
-      color: #e5e7eb;
-      text-shadow: 0 0 10px rgba(248, 250, 252, 0.9);
     }
 
     .match-status {
@@ -328,24 +333,45 @@
     }
 
     .status-finished {
-      background: rgba(37, 99, 235, 0.2);
-      color: #bfdbfe;
-      border: 1px solid rgba(59, 130, 246, 0.6);
+      background: rgba(37, 99, 235, 0.12);
+      color: #60a5fa;
     }
 
     .status-live {
-      background: rgba(236, 72, 153, 0.18);
-      color: #f9a8d4;
-      border: 1px solid rgba(236, 72, 153, 0.7);
-      box-shadow: 0 0 14px rgba(236, 72, 153, 0.9);
+      background: rgba(248, 113, 113, 0.1);
+      color: #f87171;
     }
 
     .status-upcoming {
-      background: rgba(148, 163, 184, 0.18);
+      background: rgba(148, 163, 184, 0.12);
       color: #e5e7eb;
-      border: 1px solid rgba(148, 163, 184, 0.6);
     }
 
+    /* تب‌های هفته‌ها */
+    .week-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .week-btn {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text-soft);
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .week-btn.active {
+      background: var(--accent);
+      color: #ecfdf3;
+      border-color: transparent;
+    }
+
+    /* پیش‌بینی‌ها */
     .prediction-summary {
       margin-top: 6px;
       font-size: 11px;
@@ -360,12 +386,11 @@
 
     .prediction-bar {
       flex: 1;
-      background: rgba(15, 23, 42, 0.95);
+      background: rgba(15, 23, 42, 0.9);
       border-radius: 999px;
       overflow: hidden;
       position: relative;
       height: 16px;
-      border: 1px solid rgba(75, 85, 99, 0.8);
     }
 
     .prediction-fill {
@@ -377,15 +402,15 @@
     }
 
     .prediction-fill-home {
-      background: linear-gradient(90deg, rgba(74, 222, 128, 0.8), rgba(22, 163, 74, 0.9));
+      background: rgba(34, 197, 94, 0.5);
     }
 
     .prediction-fill-draw {
-      background: linear-gradient(90deg, rgba(148, 163, 184, 0.85), rgba(148, 163, 184, 0.95));
+      background: rgba(148, 163, 184, 0.6);
     }
 
     .prediction-fill-away {
-      background: linear-gradient(90deg, rgba(59, 130, 246, 0.85), rgba(30, 64, 175, 0.95));
+      background: rgba(59, 130, 246, 0.5);
     }
 
     .prediction-label {
@@ -396,6 +421,7 @@
       line-height: 16px;
     }
 
+    /* اکشن‌ها و کامنت‌ها */
     .match-actions {
       margin-top: 8px;
       display: flex;
@@ -407,19 +433,15 @@
     .action-btn {
       padding: 4px 10px;
       border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background: radial-gradient(circle at 0 0, rgba(30, 64, 175, 0.9), rgba(15, 23, 42, 0.98));
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.8);
       color: var(--text-soft);
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
     }
 
     .action-btn:hover {
-      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.8), rgba(30, 64, 175, 1));
-      color: #ecfeff;
-      box-shadow: 0 0 18px rgba(56, 189, 248, 0.8);
+      background: rgba(30, 64, 175, 0.7);
+      color: #e5e7eb;
     }
 
     .comments-section {
@@ -438,8 +460,7 @@
       margin-bottom: 6px;
       padding: 6px 8px;
       border-radius: 10px;
-      background: radial-gradient(circle at 0 0, rgba(79, 70, 229, 0.4), rgba(15, 23, 42, 0.95));
-      border: 1px solid rgba(129, 140, 248, 0.6);
+      background: rgba(15, 23, 42, 0.85);
     }
 
     .comment-header {
@@ -450,7 +471,6 @@
 
     .comment-body {
       font-size: 12px;
-      color: #e5e7eb;
     }
 
     .comment-empty {
@@ -476,8 +496,8 @@
       flex: 1;
       padding: 3px 6px;
       border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.8);
-      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.9);
       color: var(--text);
       font-size: 11px;
     }
@@ -487,8 +507,8 @@
       min-height: 40px;
       padding: 4px 6px;
       border-radius: 10px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.9);
       color: var(--text);
       font-size: 12px;
     }
@@ -498,21 +518,17 @@
       padding: 4px 10px;
       border-radius: 999px;
       border: none;
-      background: radial-gradient(circle at 0 0, #38bdf8, #4f46e5);
-      color: #ecfeff;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #ecfdf3;
       font-size: 11px;
       cursor: pointer;
-      box-shadow: 0 0 14px rgba(56, 189, 248, 0.85);
     }
 
     .table-wrapper {
-      background:
-        radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.15), transparent 55%),
-        radial-gradient(circle at 100% 100%, rgba(79, 70, 229, 0.3), transparent 55%),
-        #020617;
+      background: radial-gradient(circle at top left, var(--card), var(--bg-soft) 58%);
       border-radius: var(--radius-lg);
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
       padding: 8px 0 4px;
       overflow: hidden;
     }
@@ -524,13 +540,14 @@
     }
 
     thead {
-      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.4), rgba(15, 23, 42, 1));
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text);
     }
 
     th, td {
       padding: 7px 10px;
       text-align: center;
-      border-bottom: 1px solid rgba(30, 64, 175, 0.9);
+      border-bottom: 1px solid rgba(31, 41, 55, 0.9);
     }
 
     th:first-child, td:first-child {
@@ -539,15 +556,15 @@
 
     th {
       font-weight: 600;
-      color: #c7d2fe;
+      color: var(--text-soft);
     }
 
     tbody tr:nth-child(even) {
-      background: rgba(15, 23, 42, 0.96);
+      background: rgba(15, 23, 42, 0.7);
     }
 
     tbody tr:nth-child(odd) {
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(15, 23, 42, 0.4);
     }
 
     .pos-pill {
@@ -562,18 +579,17 @@
     }
 
     .pos-top {
-      background: linear-gradient(135deg, rgba(56, 189, 248, 0.35), rgba(59, 130, 246, 0.9));
-      color: #e0f2fe;
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.9);
+      background: rgba(34, 197, 94, 0.16);
+      color: #4ade80;
     }
 
     .pos-mid {
-      background: rgba(79, 70, 229, 0.35);
-      color: #c7d2fe;
+      background: rgba(59, 130, 246, 0.12);
+      color: #93c5fd;
     }
 
     .pos-bottom {
-      background: rgba(248, 113, 113, 0.25);
+      background: rgba(248, 113, 113, 0.12);
       color: #fecaca;
     }
 
@@ -587,25 +603,22 @@
       font-size: 12px;
     }
 
+    /* گرید تیم‌ها: ۴ ردیف ۳تایی */
     .teams-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
     }
 
     .team-card {
-      background:
-        radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.15), transparent 55%),
-        radial-gradient(circle at 100% 100%, rgba(129, 140, 248, 0.2), transparent 55%),
-        #020617;
+      background: radial-gradient(circle at top, var(--card), var(--bg-soft) 58%);
       border-radius: var(--radius-lg);
-      border: 1px solid rgba(75, 85, 99, 0.9);
+      border: 1px solid var(--border);
       padding: 10px;
       display: flex;
       flex-direction: column;
       gap: 6px;
       font-size: 12px;
-      box-shadow: 0 14px 38px rgba(15, 23, 42, 0.95);
     }
 
     .team-header {
@@ -619,9 +632,17 @@
       font-size: 10px;
       padding: 2px 8px;
       border-radius: 999px;
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(148, 163, 184, 0.14);
       color: var(--text-soft);
-      border: 1px solid rgba(129, 140, 248, 0.7);
+      cursor: pointer;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      transition: 0.2s ease;
+    }
+
+    .badge:hover {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-color: var(--accent);
     }
 
     .tip-box {
@@ -631,11 +652,11 @@
       border-radius: 14px;
       border: 1px dashed rgba(148, 163, 184, 0.6);
       padding: 8px 10px;
-      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.12), rgba(15, 23, 42, 0.95));
+      background: rgba(15, 23, 42, 0.7);
     }
 
     .tip-box code {
-      background: rgba(15, 23, 42, 0.96);
+      background: rgba(15, 23, 42, 0.9);
       padding: 2px 4px;
       border-radius: 6px;
       direction: ltr;
@@ -643,32 +664,54 @@
       font-size: 10px;
     }
 
-    /* اسپلش موشن‌گرافیک */
-    #splash-screen {
+    .footer-credit {
+      margin-top: 10px;
+      font-size: 10px;
+      color: rgba(148, 163, 184, 0.7);
+      text-align: left;
+      direction: ltr;
+    }
+
+    /* پنجره نمایش عکس تیم‌ها */
+    .team-image-overlay {
       position: fixed;
       inset: 0;
-      background:
-        radial-gradient(circle at 10% 0, rgba(56, 189, 248, 0.25), transparent 55%),
-        radial-gradient(circle at 90% 0, rgba(129, 140, 248, 0.32), transparent 55%),
-        #020617;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9998;
+    }
+
+    .team-image-dialog {
+      background: #000;
+      border-radius: 22px;
+      padding: 10px;
+      max-width: min(340px, 90vw);
+      max-height: 80vh;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 9999;
-      transition: opacity 0.4s ease;
     }
 
-    #splash-screen video {
-      max-width: 80vw;
-      max-height: 80vh;
-      border-radius: 18px;
-      box-shadow: 0 0 45px rgba(56, 189, 248, 0.9);
-      border: 1px solid rgba(129, 140, 248, 0.8);
+    .team-image-dialog img {
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+      border-radius: 16px;
     }
 
-    #splash-screen.hidden {
-      opacity: 0;
-      pointer-events: none;
+    @media (max-width: 900px) {
+      .teams-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      .teams-grid {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
     }
 
     @media (max-width: 680px) {
@@ -695,18 +738,16 @@
         gap: 2px;
         align-items: flex-start;
       }
-      #splash-screen video {
-        max-width: 90vw;
-        max-height: 60vh;
-      }
     }
   </style>
 </head>
 <body>
-
-  <!-- اسپلش اسکرین موشن‌گرافیک (۲ ثانیه اول) -->
-  <div id="splash-screen">
-    <video src="intro.mp4" autoplay muted playsinline></video>
+  <!-- موشن‌گرافی ورود -->
+  <div id="intro-overlay" class="intro-overlay">
+    <div class="intro-frame">
+      <video id="intro-video" class="intro-video" src="intro.mp4" autoplay muted></video>
+    </div>
+    <div class="intro-skip" onclick="hideIntro()">Skip ▶</div>
   </div>
 
   <div class="app">
@@ -728,6 +769,7 @@
         <div>به‌روزرسانی نمونه دیتا برای تست</div>
         <div class="live-pill">نمایش دمو • آنلاین</div>
         <button id="audio-toggle" class="audio-toggle">🔈 موسیقی خاموش</button>
+        <button id="mode-toggle" class="mode-toggle">🌙 حالت تیره</button>
       </div>
     </header>
 
@@ -754,10 +796,27 @@
       <!-- محتوا با جاوااسکریپت تزریق می‌شود -->
     </main>
 
+    <div class="tip-box">
+      <strong>راهنمای سریع:</strong> بازی‌های آینده و گذشته در آرایه <code>matches</code> تعریف می‌شوند.  
+      برای هر هفته‌ی جدید، یک آبجکت با <code>week</code>، تیم‌ها، تاریخ، ساعت و <code>status</code> بسازید.
+    </div>
 
+    <div class="footer-credit">
+      Designed &amp; built by Sajad Nabavi
+    </div>
+  </div>
+
+  <!-- پنجره نمایش عکس تیم‌ها -->
+  <div id="team-image-overlay" class="team-image-overlay" onclick="hideTeamImage()">
+    <div class="team-image-dialog" onclick="event.stopPropagation()">
+      <img id="team-image-img" src="" alt="Team image" />
+    </div>
   </div>
 
   <script>
+    // -----------------------------
+    // ۰) اتصال به Supabase
+    // -----------------------------
     const { createClient } = supabase;
 
     const SUPABASE_URL = "https://lznrwbrxzgnczfqgamxp.supabase.co";
@@ -765,6 +824,9 @@
 
     const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    // -----------------------------
+    // ۱) تعریف تیم‌ها + لوگو (ایموجی)
+    // -----------------------------
     const teams = [
       { id: 1,  name: "کافه لوین",                     shortName: "LVN",  color: "#0ea5e9", logo: "☕" },
       { id: 2,  name: "استودیو نامبر وان",            shortName: "NUO",  color: "#22c55e", logo: "🎬" },
@@ -780,7 +842,11 @@
       { id: 12, name: "هیئت جوانان",                  shortName: "JVN",  color: "#2dd4bf", logo: "🔥" }
     ];
 
+    // -----------------------------
+    // ۲) تعریف بازی‌ها (هفته ۱، ۲، ۳)
+    // -----------------------------
     const matches = [
+      // هفته ۱ - بازی‌های انجام‌شده
       {
         id: 1,
         week: 1,
@@ -853,28 +919,88 @@
         homeScore: 1,
         awayScore: 0
       },
+
+      // هفته ۲
       {
         id: 7,
         week: 2,
-        homeTeamId: 1,
-        awayTeamId: 4,
-        date: "1404-09-01",
-        time: "18:00",
+        homeTeamId: 11,
+        awayTeamId: 8,
+        date: "1404-09-07",
+        time: "14:30",
         stadium: "سالن شهید صحافی",
         status: "upcoming"
       },
       {
         id: 8,
+        week: 2,
+        homeTeamId: 7,
+        awayTeamId: 3,
+        date: "1404-09-07",
+        time: "15:15",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 9,
+        week: 2,
+        homeTeamId: 10,
+        awayTeamId: 2,
+        date: "1404-09-07",
+        time: "16:00",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 10,
+        week: 2,
+        homeTeamId: 12,
+        awayTeamId: 5,
+        date: "1404-09-07",
+        time: "16:45",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 11,
+        week: 2,
+        homeTeamId: 4,
+        awayTeamId: 6,
+        date: "1404-09-07",
+        time: "17:30",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 12,
+        week: 2,
+        homeTeamId: 9,
+        awayTeamId: 1,
+        date: "1404-09-07",
+        time: "18:15",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+
+      // هفته ۳
+      {
+        id: 13,
         week: 3,
         homeTeamId: 8,
         awayTeamId: 2,
-        date: "1404-09-05",
+        date: "1404-09-14",
         time: "19:00",
         stadium: "سالن شهید صحافی",
         status: "upcoming"
       }
     ];
 
+    // هفته فعلی برای تب برنامه بازی‌ها
+    let currentWeek = 1;
+
+    // -----------------------------
+    // ۳) توابع کمکی ساده
+    // -----------------------------
     function getTeamById(id) {
       return teams.find(t => t.id === id);
     }
@@ -910,6 +1036,9 @@
       });
     }
 
+    // -----------------------------
+    // ۴) نام‌کاربری (لوکال) + تابع‌های Supabase
+    // -----------------------------
     const USERNAME_KEY = "kaliga_username";
 
     function getSavedUsername() {
@@ -926,6 +1055,7 @@
       } catch {}
     }
 
+    // ---- پیش‌بینی‌ها در Supabase
     async function savePredictionToDB(matchId, homeScore, awayScore) {
       try {
         const username = getSavedUsername() || null;
@@ -985,6 +1115,7 @@
       }
     }
 
+    // ---- کامنت‌ها در Supabase
     async function fetchComments(matchId) {
       try {
         const { data, error } = await db
@@ -1113,25 +1244,46 @@
       await loadAndRenderComments(matchId);
     }
 
+    // -----------------------------
+    // ۵) رندر برنامه بازی‌ها (با انتخاب هفته)
+    // -----------------------------
     async function renderFixturesPage() {
       const container = document.getElementById("page-content");
-      const upcoming = matches.filter(m => m.status === "upcoming" || m.status === "live");
-      const finished = matches.filter(m => m.status === "finished");
+
+      // دکمه‌های هفته‌ها (۱ تا ۱۱)
+      let weeksHtml = "";
+      for (let w = 1; w <= 11; w++) {
+        weeksHtml += `
+          <button class="week-btn ${w === currentWeek ? "active" : ""}" data-week="${w}">
+            هفته ${w}
+          </button>
+        `;
+      }
 
       let html = `
         <div class="section-title">
           <span class="dot"></span>
-          <span>برنامه بازی‌های آتی و درحال برگزاری</span>
+          <span>برنامه بازی‌ها • هفته ${currentWeek}</span>
+        </div>
+        <div class="week-tabs">
+          ${weeksHtml}
         </div>
       `;
 
-      if (!upcoming.length) {
-        html += `<div class="card">در حال حاضر بازی آتی ثبت نشده است.</div>`;
+      const matchesOfWeek = matches.filter(m => m.week === currentWeek);
+
+      if (!matchesOfWeek.length) {
+        html += `<div class="card">برای این هفته هنوز بازی ثبت نشده است.</div>`;
       } else {
-        for (const match of upcoming) {
+        for (const match of matchesOfWeek) {
           const home = getTeamById(match.homeTeamId);
           const away = getTeamById(match.awayTeamId);
-          const stats = await getPredictionStats(match.id);
+
+          let stats = null;
+          // ✅ این‌جا اصلاح شد: پرانتز اضافه حذف شد
+          if (match.status === "upcoming" || match.status === "live") {
+            stats = await getPredictionStats(match.id);
+          }
 
           html += `
             <div class="card">
@@ -1194,57 +1346,36 @@
             `;
           }
 
-          html += `
+          if (match.status === "upcoming" || match.status === "live") {
+            html += `
               <div class="match-actions">
                 <button class="action-btn" onclick="handlePrediction(${match.id})">📊 ثبت پیش‌بینی</button>
               </div>
-            </div>
-          `;
+            `;
+          }
+
+          html += `</div>`;
         }
       }
 
-      html += `
-        <div class="section-title" style="margin-top:14px;">
-          <span class="dot"></span>
-          <span>آخرین نتایج</span>
-        </div>
-      `;
-
-      if (!finished.length) {
-        html += `<div class="card">فعلاً بازی پایان یافته‌ای ثبت نشده است.</div>`;
-      } else {
-        finished.slice(-3).reverse().forEach(match => {
-          const home = getTeamById(match.homeTeamId);
-          const away = getTeamById(match.awayTeamId);
-
-          html += `
-            <div class="card">
-              <div class="match-row">
-                <div class="team-side team-home">
-                  <div class="team-logo" style="background:${home.color}">${home.logo}</div>
-                  <div class="team-name">${home.name}</div>
-                </div>
-                <div class="match-center">
-                  <div class="match-score">${match.homeScore} : ${match.awayScore}</div>
-                  <div class="match-status status-finished">پایان یافته</div>
-                </div>
-                <div class="team-side team-away">
-                  <div class="team-name">${away.name}</div>
-                  <div class="team-logo" style="background:${away.color}">${away.logo}</div>
-                </div>
-              </div>
-              <div class="match-meta">
-                <span>هفته ${match.week}</span>
-                <span>${formatDate(match.date)}</span>
-              </div>
-            </div>
-          `;
-        });
-      }
-
       container.innerHTML = html;
+
+      // لیسنر برای دکمه‌های هفته
+      const weekButtons = container.querySelectorAll(".week-btn");
+      weekButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const w = parseInt(btn.dataset.week, 10);
+          if (!isNaN(w)) {
+            currentWeek = w;
+            renderFixturesPage();
+          }
+        });
+      });
     }
 
+    // -----------------------------
+    // ۶) رندر صفحه نتایج (با کامنت)
+    // -----------------------------
     function renderResultsPage() {
       const container = document.getElementById("page-content");
       const finished = matches.filter(m => m.status === "finished");
@@ -1295,6 +1426,9 @@
       container.innerHTML = html;
     }
 
+    // -----------------------------
+    // ۷) جدول لیگ
+    // -----------------------------
     function calculateTable() {
       const stats = new Map();
       teams.forEach(team => {
@@ -1423,6 +1557,9 @@
       container.innerHTML = html;
     }
 
+    // -----------------------------
+    // ۸) صفحه تیم‌ها
+    // -----------------------------
     function renderTeamsPage() {
       const container = document.getElementById("page-content");
 
@@ -1442,7 +1579,9 @@
                 <div class="team-logo" style="background:${team.color}">${team.logo}</div>
                 <div class="team-name">${team.name}</div>
               </div>
-              <span class="badge">کد تیم: ${team.shortName}</span>
+              <span class="badge" onclick="showTeamImage(${team.id})">
+                کد تیم: ${team.shortName}
+              </span>
             </div>
             <div style="font-size:11px;color:var(--text-soft);">
               این متن دمو است. می‌تونی این توضیحات را با تاریخچه، شهر، یا هر اطلاعات دلخواه درباره این تیم عوض کنی.
@@ -1456,6 +1595,9 @@
       container.innerHTML = html;
     }
 
+    // -----------------------------
+    // ۹) اکشن پیش‌بینی
+    // -----------------------------
     async function handlePrediction(matchId) {
       const match = matches.find(m => m.id === matchId);
       if (!match) return;
@@ -1482,6 +1624,199 @@
       setActivePage("fixtures");
     }
 
+    // -----------------------------
+    // ۱۰) سیستم تم تیره/روشن + چرخش تم
+    // -----------------------------
+    const darkThemes = [
+      {
+        name: "dark-purple",
+        bg: "#130720",
+        bgSoft: "#1b1033",
+        card: "#130720",
+        accent: "#a855f7",
+        accentSoft: "rgba(168, 85, 247, 0.25)",
+        text: "#f9fafb",
+        textSoft: "#e9d5ff",
+        border: "rgba(168, 85, 247, 0.6)"
+      },
+      {
+        name: "dark-indigo",
+        bg: "#020617",
+        bgSoft: "#020617",
+        card: "#020617",
+        accent: "#6366f1",
+        accentSoft: "rgba(99, 102, 241, 0.25)",
+        text: "#f9fafb",
+        textSoft: "#c7d2fe",
+        border: "rgba(129, 140, 248, 0.7)"
+      },
+      {
+        name: "dark-blue",
+        bg: "#020617",
+        bgSoft: "#020617",
+        card: "#020617",
+        accent: "#0ea5e9",
+        accentSoft: "rgba(14, 165, 233, 0.25)",
+        text: "#f9fafb",
+        textSoft: "#bae6fd",
+        border: "rgba(56, 189, 248, 0.7)"
+      },
+      {
+        name: "dark-green",
+        bg: "#022c22",
+        bgSoft: "#022c22",
+        card: "#022c22",
+        accent: "#22c55e",
+        accentSoft: "rgba(34, 197, 94, 0.25)",
+        text: "#f9fafb",
+        textSoft: "#bbf7d0",
+        border: "rgba(34, 197, 94, 0.7)"
+      },
+      {
+        name: "dark-black",
+        bg: "#000000",
+        bgSoft: "#020617",
+        card: "#020617",
+        accent: "#facc15",
+        accentSoft: "rgba(250, 204, 21, 0.25)",
+        text: "#f9fafb",
+        textSoft: "#e5e7eb",
+        border: "rgba(148, 163, 184, 0.7)"
+      },
+      {
+        name: "dark-gray",
+        bg: "#111827",
+        bgSoft: "#020617",
+        card: "#020617",
+        accent: "#6b7280",
+        accentSoft: "rgba(107, 114, 128, 0.35)",
+        text: "#f9fafb",
+        textSoft: "#e5e7eb",
+        border: "rgba(75, 85, 99, 0.9)"
+      }
+    ];
+
+    const lightThemes = [
+      {
+        name: "light-pink",
+        bg: "#fecdd3",
+        bgSoft: "#fee2e2",
+        card: "#ffffff",
+        accent: "#fb7185",
+        accentSoft: "rgba(251, 113, 133, 0.30)",
+        text: "#4a044e",
+        textSoft: "#7f1d1d",
+        border: "rgba(244, 63, 94, 0.6)"
+      },
+      {
+        name: "light-red",
+        bg: "#fee2e2",
+        bgSoft: "#fecaca",
+        card: "#ffffff",
+        accent: "#ef4444",
+        accentSoft: "rgba(239, 68, 68, 0.30)",
+        text: "#7f1d1d",
+        textSoft: "#7f1d1d",
+        border: "rgba(248, 113, 113, 0.7)"
+      },
+      {
+        name: "light-green",
+        bg: "#dcfce7",
+        bgSoft: "#bbf7d0",
+        card: "#ffffff",
+        accent: "#22c55e",
+        accentSoft: "rgba(34, 197, 94, 0.28)",
+        text: "#14532d",
+        textSoft: "#166534",
+        border: "rgba(34, 197, 94, 0.7)"
+      },
+      {
+        name: "light-blue",
+        bg: "#dbeafe",
+        bgSoft: "#bfdbfe",
+        card: "#ffffff",
+        accent: "#3b82f6",
+        accentSoft: "rgba(59, 130, 246, 0.30)",
+        text: "#1e3a8a",
+        textSoft: "#1e40af",
+        border: "rgba(59, 130, 246, 0.7)"
+      },
+      {
+        name: "cream",
+        bg: "#fff7ed",
+        bgSoft: "#fed7aa",
+        card: "#ffffff",
+        accent: "#ea580c",
+        accentSoft: "rgba(234, 88, 12, 0.25)",
+        text: "#7c2d12",
+        textSoft: "#9a3412",
+        border: "rgba(248, 153, 56, 0.7)"
+      },
+      {
+        name: "white",
+        bg: "#f9fafb",
+        bgSoft: "#e5e7eb",
+        card: "#ffffff",
+        accent: "#64748b",
+        accentSoft: "rgba(100, 116, 139, 0.25)",
+        text: "#0f172a",
+        textSoft: "#475569",
+        border: "rgba(148, 163, 184, 0.8)"
+      }
+    ];
+
+    let currentMode = "dark";
+    let currentThemeIndex = 0;
+
+    function getCurrentThemeList() {
+      return currentMode === "dark" ? darkThemes : lightThemes;
+    }
+
+    function applyTheme(theme) {
+      const root = document.documentElement;
+      root.style.setProperty("--bg", theme.bg);
+      root.style.setProperty("--bg-soft", theme.bgSoft);
+      root.style.setProperty("--card", theme.card);
+      root.style.setProperty("--accent", theme.accent);
+      root.style.setProperty("--accent-soft", theme.accentSoft);
+      root.style.setProperty("--text", theme.text || "#f9fafb");
+      root.style.setProperty("--text-soft", theme.textSoft || "#a1a5b5");
+      root.style.setProperty("--border", theme.border);
+
+      document.body.style.background =
+        `radial-gradient(circle at top, ${theme.bgSoft}, ${theme.bg} 55%)`;
+    }
+
+    function initTheme() {
+      const list = getCurrentThemeList();
+      if (!list.length) return;
+      applyTheme(list[currentThemeIndex]);
+    }
+
+    function rotateTheme() {
+      const list = getCurrentThemeList();
+      if (!list.length) return;
+      currentThemeIndex = (currentThemeIndex + 1) % list.length;
+      applyTheme(list[currentThemeIndex]);
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      currentThemeIndex = 0;
+      initTheme();
+      const modeToggle = document.getElementById("mode-toggle");
+      if (modeToggle) {
+        if (currentMode === "dark") {
+          modeToggle.textContent = "🌙 حالت تیره";
+        } else {
+          modeToggle.textContent = "☀️ حالت روشن";
+        }
+      }
+    }
+
+    // -----------------------------
+    // ۱۱) مدیریت تب‌ها
+    // -----------------------------
     function setActivePage(page) {
       document.querySelectorAll(".tab-btn").forEach(btn => {
         btn.classList.toggle("active", btn.dataset.page === page);
@@ -1493,26 +1828,80 @@
       else if (page === "teams") renderTeamsPage();
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-      const splash = document.getElementById("splash-screen");
-      const app = document.querySelector(".app");
+    // -----------------------------
+    // ۱۲) نمایش/مخفی کردن عکس تیم
+    // -----------------------------
+    function showTeamImage(teamId) {
+      const overlay = document.getElementById("team-image-overlay");
+      const img = document.getElementById("team-image-img");
+      const dialog = document.querySelector(".team-image-dialog");
+      if (!overlay || !img || !dialog) return;
 
-      if (splash && app) {
-        app.style.visibility = "hidden";
+      overlay.style.display = "flex";
+      dialog.style.background = "#000";
+      img.style.display = "block";
 
-        setTimeout(() => {
-          splash.classList.add("hidden");
-          app.style.visibility = "visible";
-        }, 2000);
+      let triedPng = false;
+      img.onerror = () => {
+        if (!triedPng) {
+          triedPng = true;
+          img.src = `pic${teamId}.png`;
+        } else {
+          img.style.display = "none";
+          dialog.style.background = "#000";
+        }
+      };
+
+      img.src = `pic${teamId}.jpg`;
+    }
+
+    function hideTeamImage() {
+      const overlay = document.getElementById("team-image-overlay");
+      if (overlay) overlay.style.display = "none";
+    }
+
+    // -----------------------------
+    // ۱۳) مخفی کردن موشن‌گرافی
+    // -----------------------------
+    function hideIntro() {
+      const overlay = document.getElementById("intro-overlay");
+      const video = document.getElementById("intro-video");
+      if (video) {
+        video.pause();
       }
+      if (overlay) {
+        overlay.style.opacity = "0";
+        setTimeout(() => {
+          overlay.style.display = "none";
+        }, 300);
+      }
+    }
 
+    // -----------------------------
+    // ۱۴) شروع کار: تب‌ها، تم، موسیقی، موشن
+    // -----------------------------
+    document.addEventListener("DOMContentLoaded", () => {
+      // تم اولیه: حالت تیره
+      setMode("dark");
+
+      // تب‌ها + چرخش تم روی هر کلیک
       document.querySelectorAll(".tab-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           setActivePage(btn.dataset.page);
+          rotateTheme();
         });
       });
       setActivePage("fixtures");
 
+      // سوئیچ حالت تیره/روشن
+      const modeToggle = document.getElementById("mode-toggle");
+      if (modeToggle) {
+        modeToggle.addEventListener("click", () => {
+          setMode(currentMode === "dark" ? "light" : "dark");
+        });
+      }
+
+      // موسیقی
       const audio = document.getElementById("bg-audio");
       const audioToggle = document.getElementById("audio-toggle");
 
@@ -1542,6 +1931,15 @@
           updateAudioButton();
         });
       }
+
+      // موشن‌گرافی ورود: ۳ ثانیه بعد مخفی شود
+      const introVideo = document.getElementById("intro-video");
+      if (introVideo) {
+        introVideo.play().catch(() => {});
+      }
+      setTimeout(() => {
+        hideIntro();
+      }, 3000);
     });
   </script>
 </body>
