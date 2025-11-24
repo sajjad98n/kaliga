@@ -667,9 +667,20 @@
     .footer-credit {
       margin-top: 10px;
       font-size: 10px;
-      color: rgba(148, 163, 184, 0.7);
+      color: rgba(148, 163, 184, 0.8);
       text-align: left;
       direction: ltr;
+      line-height: 1.6;
+    }
+
+    .footer-credit a {
+      color: rgba(148, 163, 184, 0.95);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .footer-credit a:hover {
+      text-decoration: underline;
     }
 
     /* پنجره نمایش عکس تیم‌ها */
@@ -700,6 +711,193 @@
       max-height: 100%;
       display: block;
       border-radius: 16px;
+    }
+
+    /* دکمه منوی کناری */
+    .menu-toggle-btn {
+      position: fixed;
+      top: 18px;
+      left: 16px;
+      z-index: 9000;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-soft);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .side-menu-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      display: none;
+      z-index: 8990;
+    }
+
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 240px;
+      max-width: 80vw;
+      height: 100%;
+      background: radial-gradient(circle at top left, var(--card), var(--bg-soft) 65%);
+      box-shadow: 8px 0 30px rgba(0, 0, 0, 0.7);
+      transform: translateX(-100%);
+      transition: transform 0.2s ease-out;
+      z-index: 9001;
+      padding: 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 12px;
+    }
+
+    .side-menu.open {
+      transform: translateX(0);
+    }
+
+    .side-menu-header {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .side-menu-close {
+      align-self: flex-end;
+      border: none;
+      background: transparent;
+      color: var(--text-soft);
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .side-menu-nav {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .side-menu-item {
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text-soft);
+    }
+
+    .side-menu-item:hover {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* پنجره جزئیات بازی */
+    .match-details-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9500;
+    }
+
+    .match-details-dialog {
+      background: radial-gradient(circle at top, var(--card), var(--bg-soft) 60%);
+      border-radius: 20px;
+      padding: 14px 16px;
+      max-width: 420px;
+      width: 90vw;
+      max-height: 80vh;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      font-size: 12px;
+    }
+
+    .match-details-close {
+      border: none;
+      background: transparent;
+      color: var(--text-soft);
+      font-size: 18px;
+      cursor: pointer;
+      float: left;
+    }
+
+    .match-details-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .match-details-section-title {
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 8px;
+      margin-bottom: 4px;
+    }
+
+    .match-details-list {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    /* رسانه و اطلاعیه‌ها */
+    .media-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .media-item-title {
+      font-weight: 500;
+    }
+
+    .media-tag {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.16);
+      margin-left: 4px;
+    }
+
+    /* آمار لیگ */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 10px;
+    }
+
+    .stats-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    .stats-table th,
+    .stats-table td {
+      padding: 4px 6px;
+      border-bottom: 1px solid rgba(31, 41, 55, 0.7);
+      text-align: center;
+    }
+
+    .stats-table th {
+      color: var(--text-soft);
     }
 
     @media (max-width: 900px) {
@@ -750,8 +948,31 @@
     <div class="intro-skip" onclick="hideIntro()">Skip ▶</div>
   </div>
 
+  <!-- دکمه منوی کناری -->
+  <button id="menu-toggle" class="menu-toggle-btn">☰</button>
+
+  <!-- منوی کناری -->
+  <div id="side-menu-backdrop" class="side-menu-backdrop" onclick="closeSideMenu()"></div>
+  <div id="side-menu" class="side-menu">
+    <button class="side-menu-close" onclick="closeSideMenu()">×</button>
+    <div class="side-menu-header">منوی لیگ</div>
+    <div class="side-menu-nav">
+      <div class="side-menu-item" onclick="navigateMenu('home')">🏠 صفحه اصلی</div>
+      <div class="side-menu-item" onclick="navigateMenu('media')">📰 رسانه و اطلاعیه‌ها</div>
+      <div class="side-menu-item" onclick="navigateMenu('stats')">📈 آمار لیگ</div>
+    </div>
+  </div>
+
+  <!-- پنجره نمایش جزئیات بازی -->
+  <div id="match-details-overlay" class="match-details-overlay" onclick="closeMatchDetails()">
+    <div class="match-details-dialog" onclick="event.stopPropagation()">
+      <button class="match-details-close" onclick="closeMatchDetails()">×</button>
+      <div id="match-details-content"></div>
+    </div>
+  </div>
+
   <div class="app">
-    <!-- آهنگ پس‌زمینه: فایل music.mp3 را کنار index.html قرار بده -->
+    <!-- آهنگ پس‌زمینه -->
     <audio id="bg-audio" src="music.mp3" loop></audio>
 
     <header>
@@ -790,14 +1011,20 @@
         <span class="nav-icon">👥</span>
         <span class="nav-label">تیم‌ها</span>
       </button>
+      <button class="tab-btn" data-page="media">
+        <span class="nav-icon">📰</span>
+        <span class="nav-label">رسانه و اطلاعیه‌ها</span>
+      </button>
     </nav>
 
     <main id="page-content">
       <!-- محتوا با جاوااسکریپت تزریق می‌شود -->
     </main>
 
+
     <div class="footer-credit">
-      Designed &amp; built by Sajjad Nabavi
+      <div>Designed &amp; built by <strong>Sajjad&nbsp;Nabavi</strong></div>
+      <div>Contact us:&nbsp;<a href="mailto:sajjad.n.ch@gmail.com">sajjad.n.ch@gmail.com</a></div>
     </div>
   </div>
 
@@ -837,8 +1064,24 @@
       { id: 12, name: "هیئت جوانان",                  shortName: "JVN",  color: "#2dd4bf", logo: "🔥" }
     ];
 
+    // توضیحات جداگانه برای هر تیم (بعداً اسامی و توضیحات رو اینجا عوض کن)
+    const teamDescriptions = {
+      1: "تیم ۱ - سید سعید نبوی، متین احمدیان، سید حسین نبوی، طاها جعفری، محمد احمدیان، ربیع الله احمدیان، سید جمال نبوی، سید سپهر نبوی، سید عماد(امید)نبوی.",
+      2: "تیم ۲ - معرفی استودیو نامبر وان، ترکیب، مربی و ...",
+      3: "تیم ۳ - سید علی نبوی، سید محمد نبوی، سید محمود نبوی، سید صمد نبوی، سید علیرضا موسوی، سید مهدی نبوی، علی احمدیان، سینا احمدیان.",
+      4: "تیم ۴ - فردین احمدیان، علی سام احمدیان، سعید جعفری، ابوالفضل احمدیان، محمد علی احمدیان، روح الله احمدیان، علی احمدیان، سید علی اکبر عمادی، اسماعیل احمدیان.",
+      5: "تیم ۵ - امیر خادم، سیروس جعفری، سید حسین نبوی، کمال جعفری، بهزاد رضائیان، احمد جعفری، سید حامد نبوی، پرهام جعفری، عارف جعفری.",
+      6: "تیم ۶ -سید محمد نبوی، سید امیر علی نبوی، سید سینا نبوی، سید سبحان عمادی، سید نورالله نبوی، سید محمد نبوی، سید محمد نبوی، حسن مذهبدار، سید تقی نبوی، سید فرزاد نبوی.",
+      7: "تیم ۷ - معرفی تیم زنده یاد محمدرضا جعفری.",
+      8: "تیم ۸ - توضیحات تیم شهید نجفعلی قادری.",
+      9: "تیم ۹ - آرش(قاسم) قادری، امیر قادری، عارف قادری، میلاد قادری، عباس قادری، فرهاد قادری، مهدی قادری، ماهان قادری، سید ایلیا نبوی.",
+      10:"تیم ۱۰ - معرفی تیم امامزاده پیش.",
+      11:"تیم ۱۱ - سید سهیل موسوی، سید عسگری موسوی، رضا قادری، علی جعفری، دانیال مداحی، نصرالله( مهدی) جعفری، عبدالله جعفری پور، سید مرتضی نبوی.",
+      12:"تیم ۱۲ - معرفی تیم هیئت جوانان و اعضا."
+    };
+
     // -----------------------------
-    // ۲) تعریف بازی‌ها (هفته ۱، ۲، ۳)
+    // ۲) تعریف بازی‌ها
     // -----------------------------
     const matches = [
       // هفته ۱ - بازی‌های انجام‌شده
@@ -989,6 +1232,26 @@
         status: "upcoming"
       }
     ];
+
+    // -----------------------------
+    // ۲-ب) جزئیات بازی‌ها (گلزن‌ها و کارت‌ها)
+    // بعداً این آرایه رو با اسم‌ها و تعداد گل‌ها و کارت‌ها پر کن
+    // -----------------------------
+    const matchDetails = {
+      1: {
+        homeScorers: ["گلزن‌های تیم زنده یاد سید مهدی نبوی: ..."],
+        awayScorers: ["گلزن‌های تیم امامزاده پیش: ..."],
+        yellowCards: ["کارت زرد: ..."],
+        redCards: ["کارت قرمز: ..."]
+      },
+      2: {
+        homeScorers: ["گلزن‌های تیم استودیو نامبر وان: ..."],
+        awayScorers: ["گلزن‌های تیم شهید سید احسان موسوی: ..."],
+        yellowCards: ["کارت زرد: ..."],
+        redCards: ["کارت قرمز: ..."]
+      }
+      // برای بقیه بازی‌ها هم هر وقت خواستی اضافه کن
+    };
 
     // هفته فعلی برای تب برنامه بازی‌ها
     let currentWeek = 1;
@@ -1275,7 +1538,6 @@
           const away = getTeamById(match.awayTeamId);
 
           let stats = null;
-          // ✅ این‌جا اصلاح شد: پرانتز اضافه حذف شد
           if (match.status === "upcoming" || match.status === "live") {
             stats = await getPredictionStats(match.id);
           }
@@ -1347,6 +1609,12 @@
                 <button class="action-btn" onclick="handlePrediction(${match.id})">📊 ثبت پیش‌بینی</button>
               </div>
             `;
+          } else if (match.status === "finished") {
+            html += `
+              <div class="match-actions">
+                <button class="action-btn" onclick="showMatchDetails(${match.id})">📋 جزئیات بازی</button>
+              </div>
+            `;
           }
 
           html += `</div>`;
@@ -1369,7 +1637,7 @@
     }
 
     // -----------------------------
-    // ۶) رندر صفحه نتایج (با کامنت)
+    // ۶) رندر صفحه نتایج (با کامنت و جزئیات)
     // -----------------------------
     function renderResultsPage() {
       const container = document.getElementById("page-content");
@@ -1411,6 +1679,7 @@
               </div>
               <div class="match-actions">
                 <button class="action-btn" onclick="toggleComments(${match.id})">💬 نظرات بازی</button>
+                <button class="action-btn" onclick="showMatchDetails(${match.id})">📋 جزئیات بازی</button>
               </div>
               <div class="comments-section" id="comments-${match.id}" style="display:none;"></div>
             </div>
@@ -1567,6 +1836,7 @@
       `;
 
       teams.forEach(team => {
+        const desc = teamDescriptions[team.id] || "برای این تیم هنوز توضیحاتی ثبت نشده است.";
         html += `
           <div class="team-card">
             <div class="team-header">
@@ -1579,7 +1849,7 @@
               </span>
             </div>
             <div style="font-size:11px;color:var(--text-soft);">
-              این متن دمو است. می‌تونی این توضیحات را با تاریخچه، شهر، یا هر اطلاعات دلخواه درباره این تیم عوض کنی.
+              ${escapeHtml(desc)}
             </div>
           </div>
         `;
@@ -1591,7 +1861,197 @@
     }
 
     // -----------------------------
-    // ۹) اکشن پیش‌بینی
+    // ۹) صفحه رسانه و اطلاعیه‌ها
+    // -----------------------------
+    function renderMediaPage() {
+      const container = document.getElementById("page-content");
+
+      // این آرایه‌ها رو بعداً با اطلاعیه‌ها، لینک عکس و کلیپ‌ها پر کن
+      const announcements = [
+        { title: "نمونه اطلاعیه شماره ۱", body: "اینجا متن یک اطلاعیه مهم درباره برنامه لیگ قرار می‌گیرد." },
+        { title: "نمونه اطلاعیه شماره ۲", body: "ساعت شروع بازی‌ها، قوانین جدید یا نکات مهم سالن." }
+      ];
+
+      const galleryPlaceholders = [
+        "اینجا بعداً عکس شماره ۱ را قرار بده.",
+        "اینجا بعداً عکس شماره ۲ را قرار بده.",
+        "اینجا بعداً عکس شماره ۳ را قرار بده."
+      ];
+
+      const clipsPlaceholders = [
+        "کلیپ گل‌های برتر هفته ۱ (مثلاً: highlight_week1.mp4)",
+        "کلیپ صحنه‌های جذاب (مثلاً: best_moments.mp4)"
+      ];
+
+      let html = `
+        <div class="section-title">
+          <span class="dot"></span>
+          <span>رسانه و اطلاعیه‌ها</span>
+        </div>
+
+        <div class="card">
+          <div style="font-weight:600;font-size:13px;margin-bottom:6px;">📢 اطلاعیه‌ها</div>
+          <div class="media-list">
+      `;
+
+      announcements.forEach(item => {
+        html += `
+          <div>
+            <div class="media-item-title">${escapeHtml(item.title)}</div>
+            <div style="font-size:11px;color:var(--text-soft);">${escapeHtml(item.body)}</div>
+          </div>
+        `;
+      });
+
+      html += `
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="font-weight:600;font-size:13px;margin-bottom:6px;">🖼️ گالری تصاویر</div>
+          <div class="media-list">
+      `;
+
+      galleryPlaceholders.forEach(text => {
+        html += `
+          <div>
+            <span class="media-tag">Photo</span>
+            <span style="font-size:11px;color:var(--text-soft);">${escapeHtml(text)}</span>
+          </div>
+        `;
+      });
+
+      html += `
+          </div>
+          <div style="font-size:10px;color:var(--text-soft);margin-top:6px;">
+            بعداً می‌تونیم <code>&lt;img&gt;</code> و آدرس فایل‌های واقعی جایگزین کنیم.
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="font-weight:600;font-size:13px;margin-bottom:6px;">🎬 کلیپ‌ها و ویدیوها</div>
+          <div class="media-list">
+      `;
+
+      clipsPlaceholders.forEach(text => {
+        html += `
+          <div>
+            <span class="media-tag">Video</span>
+            <span style="font-size:11px;color:var(--text-soft);">${escapeHtml(text)}</span>
+          </div>
+        `;
+      });
+
+      html += `
+          </div>
+          <div style="font-size:10px;color:var(--text-soft);margin-top:6px;">
+             این قسمت را با ویدئوی آپلودشده یا لینک یوتیوب/آپارات جایگزین میکنیم.
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    // -----------------------------
+    // ۱۰) صفحه آمار لیگ (گلزنان برتر + کارت‌ها)
+    // -----------------------------
+    function renderStatsPage() {
+      const container = document.getElementById("page-content");
+
+      // این دو آرایه فقط دمو هستن؛ بعداً خودت با اسم بازیکن‌ها و تعداد گل و کارت پرشون کن
+      const topScorersDemo = [
+        { player: "نمونه بازیکن ۱", team: "کافه لوین", goals: 5 },
+        { player: "نمونه بازیکن ۲", team: "استودیو نامبر وان", goals: 3 }
+      ];
+
+      const cardsDemo = [
+        { player: "نمونه بازیکن ۳", team: "هیئت جوانان", yellow: 2, red: 0 },
+        { player: "نمونه بازیکن ۴", team: "پیشکسوتان نیزوا", yellow: 1, red: 1 }
+      ];
+
+      let html = `
+        <div class="section-title">
+          <span class="dot"></span>
+          <span>آمار لیگ</span>
+        </div>
+
+        <div class="stats-grid">
+          <div class="card">
+            <div style="font-weight:600;font-size:13px;margin-bottom:6px;">⚽ گلزنان برتر</div>
+            <table class="stats-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>بازیکن</th>
+                  <th>تیم</th>
+                  <th>گل</th>
+                </tr>
+              </thead>
+              <tbody>
+      `;
+
+      topScorersDemo.forEach((item, idx) => {
+        html += `
+          <tr>
+            <td>${idx + 1}</td>
+            <td>${escapeHtml(item.player)}</td>
+            <td>${escapeHtml(item.team)}</td>
+            <td>${item.goals}</td>
+          </tr>
+        `;
+      });
+
+      html += `
+              </tbody>
+            </table>
+            <div style="font-size:10px;color:var(--text-soft);margin-top:6px;">
+              بعدا واقعی میشود  <code></code> 
+            </div>
+          </div>
+
+          <div class="card">
+            <div style="font-weight:600;font-size:13px;margin-bottom:6px;">🟨🟥 کارت‌های زرد و قرمز</div>
+            <table class="stats-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>بازیکن</th>
+                  <th>تیم</th>
+                  <th>زرد</th>
+                  <th>قرمز</th>
+                </tr>
+              </thead>
+              <tbody>
+      `;
+
+      cardsDemo.forEach((item, idx) => {
+        html += `
+          <tr>
+            <td>${idx + 1}</td>
+            <td>${escapeHtml(item.player)}</td>
+            <td>${escapeHtml(item.team)}</td>
+            <td>${item.yellow}</td>
+            <td>${item.red}</td>
+          </tr>
+        `;
+      });
+
+      html += `
+              </tbody>
+            </table>
+            <div style="font-size:10px;color:var(--text-soft);margin-top:6px;">
+              این بخش هم بعداً با لیست واقعی بازیکنانی که کارت گرفتن جایگزین می‌شود.
+            </div>
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    // -----------------------------
+    // ۱۱) اکشن پیش‌بینی
     // -----------------------------
     async function handlePrediction(matchId) {
       const match = matches.find(m => m.id === matchId);
@@ -1620,7 +2080,7 @@
     }
 
     // -----------------------------
-    // ۱۰) سیستم تم تیره/روشن + چرخش تم
+    // ۱۲) سیستم تم تیره/روشن + چرخش تم
     // -----------------------------
     const darkThemes = [
       {
@@ -1810,7 +2270,7 @@
     }
 
     // -----------------------------
-    // ۱۱) مدیریت تب‌ها
+    // ۱۳) مدیریت تب‌ها
     // -----------------------------
     function setActivePage(page) {
       document.querySelectorAll(".tab-btn").forEach(btn => {
@@ -1821,10 +2281,12 @@
       else if (page === "results") renderResultsPage();
       else if (page === "table") renderTablePage();
       else if (page === "teams") renderTeamsPage();
+      else if (page === "media") renderMediaPage();
+      else if (page === "stats") renderStatsPage();
     }
 
     // -----------------------------
-    // ۱۲) نمایش/مخفی کردن عکس تیم
+    // ۱۴) نمایش/مخفی کردن عکس تیم
     // -----------------------------
     function showTeamImage(teamId) {
       const overlay = document.getElementById("team-image-overlay");
@@ -1856,7 +2318,116 @@
     }
 
     // -----------------------------
-    // ۱۳) مخفی کردن موشن‌گرافی
+    // ۱۵) جزئیات بازی (گلزن‌ها + کارت‌ها)
+    // -----------------------------
+    function showMatchDetails(matchId) {
+      const overlay = document.getElementById("match-details-overlay");
+      const content = document.getElementById("match-details-content");
+      if (!overlay || !content) return;
+
+      const match = matches.find(m => m.id === matchId);
+      if (!match) return;
+
+      const home = getTeamById(match.homeTeamId);
+      const away = getTeamById(match.awayTeamId);
+
+      const d = matchDetails[matchId] || {
+        homeScorers: [`گلزن‌های تیم ${home.name}: ...`],
+        awayScorers: [`گلزن‌های تیم ${away.name}: ...`],
+        yellowCards: ["کارت زرد: ..."],
+        redCards: ["کارت قرمز: ..."]
+      };
+
+      let html = `
+        <div class="match-details-title">
+          جزئیات بازی: ${escapeHtml(home.name)} ${match.homeScore} - ${match.awayScore} ${escapeHtml(away.name)}
+        </div>
+        <div style="font-size:11px;color:var(--text-soft);margin-bottom:6px;">
+          هفته ${match.week} • ${escapeHtml(match.stadium)} • ${formatDate(match.date)} • ${match.time}
+        </div>
+
+        <div class="match-details-section-title">گلزن‌های ${escapeHtml(home.name)}</div>
+        <ul class="match-details-list">
+      `;
+
+      (d.homeScorers || []).forEach(item => {
+        html += `<li>${escapeHtml(item)}</li>`;
+      });
+
+      html += `
+        </ul>
+
+        <div class="match-details-section-title">گلزن‌های ${escapeHtml(away.name)}</div>
+        <ul class="match-details-list">
+      `;
+
+      (d.awayScorers || []).forEach(item => {
+        html += `<li>${escapeHtml(item)}</li>`;
+      });
+
+      html += `
+        </ul>
+
+        <div class="match-details-section-title">کارت‌های زرد</div>
+        <ul class="match-details-list">
+      `;
+
+      (d.yellowCards || []).forEach(item => {
+        html += `<li>${escapeHtml(item)}</li>`;
+      });
+
+      html += `
+        </ul>
+
+        <div class="match-details-section-title">کارت‌های قرمز</div>
+        <ul class="match-details-list">
+      `;
+
+      (d.redCards || []).forEach(item => {
+        html += `<li>${escapeHtml(item)}</li>`;
+      });
+
+      html += `</ul>`;
+
+      content.innerHTML = html;
+      overlay.style.display = "flex";
+    }
+
+    function closeMatchDetails() {
+      const overlay = document.getElementById("match-details-overlay");
+      if (overlay) overlay.style.display = "none";
+    }
+
+    // -----------------------------
+    // ۱۶) منوی کناری
+    // -----------------------------
+    function openSideMenu() {
+      const menu = document.getElementById("side-menu");
+      const backdrop = document.getElementById("side-menu-backdrop");
+      if (menu && backdrop) {
+        menu.classList.add("open");
+        backdrop.style.display = "block";
+      }
+    }
+
+    function closeSideMenu() {
+      const menu = document.getElementById("side-menu");
+      const backdrop = document.getElementById("side-menu-backdrop");
+      if (menu && backdrop) {
+        menu.classList.remove("open");
+        backdrop.style.display = "none";
+      }
+    }
+
+    function navigateMenu(where) {
+      if (where === "home") setActivePage("fixtures");
+      else if (where === "media") setActivePage("media");
+      else if (where === "stats") setActivePage("stats");
+      closeSideMenu();
+    }
+
+    // -----------------------------
+    // ۱۷) مخفی کردن موشن‌گرافی
     // -----------------------------
     function hideIntro() {
       const overlay = document.getElementById("intro-overlay");
@@ -1873,7 +2444,19 @@
     }
 
     // -----------------------------
-    // ۱۴) شروع کار: تب‌ها، تم، موسیقی، موشن
+    // ۱۸) ثبت بازدید (فقط در Supabase، بدون نمایش)
+    // جدول پیشنهادی: page_views با ستون id و created_at
+    // -----------------------------
+    async function incrementPageView() {
+      try {
+        await db.from("page_views").insert({});
+      } catch (e) {
+        console.error("خطا در ثبت بازدید:", e);
+      }
+    }
+
+    // -----------------------------
+    // ۱۹) شروع کار: تب‌ها، تم، موسیقی، موشن، ویو، منو
     // -----------------------------
     document.addEventListener("DOMContentLoaded", () => {
       // تم اولیه: حالت تیره
@@ -1935,8 +2518,16 @@
       setTimeout(() => {
         hideIntro();
       }, 3000);
+
+      // منوی کناری
+      const menuToggle = document.getElementById("menu-toggle");
+      if (menuToggle) {
+        menuToggle.addEventListener("click", openSideMenu);
+      }
+
+      // ثبت یک بازدید در Supabase
+      incrementPageView();
     });
   </script>
 </body>
 </html>
-
