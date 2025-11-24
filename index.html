@@ -37,6 +37,7 @@
       padding: 0;
       background: radial-gradient(circle at top, var(--bg-soft), var(--bg) 55%);
       color: var(--text);
+      overflow-x: hidden; /* جلوگیری از اسکرول افقی در موبایل */
     }
 
     /* لایه موشن‌گرافی ورود */
@@ -900,6 +901,14 @@
       color: var(--text-soft);
     }
 
+    /* جلوگیری از شکستن بد فرم متن‌ها در دیالوگ و رسانه */
+    .match-details-dialog,
+    .media-list,
+    .media-list div {
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
     @media (max-width: 900px) {
       .teams-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -935,6 +944,61 @@
         flex-direction: column;
         gap: 2px;
         align-items: flex-start;
+      }
+    }
+
+    /* بهینه‌سازی فقط برای موبایل عمودی */
+    @media (max-width: 768px) and (orientation: portrait) {
+      .app {
+        padding: 0 10px;
+        margin: 16px auto 28px;
+      }
+
+      nav {
+        flex-wrap: wrap;
+      }
+
+      nav button {
+        flex: 1 1 48%;
+        font-size: 12px;
+        padding: 7px 0;
+      }
+
+      .card {
+        padding: 10px 10px;
+      }
+
+      .section-title {
+        font-size: 14px;
+      }
+
+      .match-details-dialog {
+        max-width: 100vw;
+        width: 96vw;
+        max-height: 88vh;
+        padding: 10px 12px;
+        border-radius: 16px;
+      }
+
+      .match-details-title {
+        font-size: 13px;
+      }
+
+      .match-details-section-title {
+        font-size: 12px;
+      }
+
+      .match-details-list {
+        padding-right: 18px; /* چون RTL هستیم */
+        padding-left: 0;
+      }
+
+      .media-list {
+        gap: 6px;
+      }
+
+      .media-item-title {
+        font-size: 12px;
       }
     }
   </style>
@@ -1022,6 +1086,7 @@
     </main>
 
 
+
     <div class="footer-credit">
       <div>Designed &amp; built by <strong>Sajjad&nbsp;Nabavi</strong></div>
       <div>Contact us:&nbsp;<a href="mailto:sajjad.n.ch@gmail.com">sajjad.n.ch@gmail.com</a></div>
@@ -1064,7 +1129,7 @@
       { id: 12, name: "هیئت جوانان",                  shortName: "JVN",  color: "#2dd4bf", logo: "🔥" }
     ];
 
-    // توضیحات جداگانه برای هر تیم (بعداً اسامی و توضیحات رو اینجا عوض کن)
+    // توضیحات جداگانه برای هر تیم
     const teamDescriptions = {
       1: "تیم ۱ - سید سعید نبوی، متین احمدیان، سید حسین نبوی، طاها جعفری، محمد احمدیان، ربیع الله احمدیان، سید جمال نبوی، سید سپهر نبوی، سید عماد(امید)نبوی.",
       2: "تیم ۲ - معرفی استودیو نامبر وان، ترکیب، مربی و ...",
@@ -1234,8 +1299,7 @@
     ];
 
     // -----------------------------
-    // ۲-ب) جزئیات بازی‌ها (گلزن‌ها و کارت‌ها)
-    // بعداً این آرایه رو با اسم‌ها و تعداد گل‌ها و کارت‌ها پر کن
+    // ۲-ب) جزئیات بازی‌ها
     // -----------------------------
     const matchDetails = {
       1: {
@@ -1253,11 +1317,10 @@
       // برای بقیه بازی‌ها هم هر وقت خواستی اضافه کن
     };
 
-    // هفته فعلی برای تب برنامه بازی‌ها
     let currentWeek = 1;
 
     // -----------------------------
-    // ۳) توابع کمکی ساده
+    // ۳) توابع کمکی
     // -----------------------------
     function getTeamById(id) {
       return teams.find(t => t.id === id);
@@ -1295,7 +1358,7 @@
     }
 
     // -----------------------------
-    // ۴) نام‌کاربری (لوکال) + تابع‌های Supabase
+    // ۴) نام‌کاربری (لوکال) + Supabase
     // -----------------------------
     const USERNAME_KEY = "kaliga_username";
 
@@ -1313,7 +1376,6 @@
       } catch {}
     }
 
-    // ---- پیش‌بینی‌ها در Supabase
     async function savePredictionToDB(matchId, homeScore, awayScore) {
       try {
         const username = getSavedUsername() || null;
@@ -1373,7 +1435,7 @@
       }
     }
 
-    // ---- کامنت‌ها در Supabase
+    // کامنت‌ها
     async function fetchComments(matchId) {
       try {
         const { data, error } = await db
@@ -1503,12 +1565,11 @@
     }
 
     // -----------------------------
-    // ۵) رندر برنامه بازی‌ها (با انتخاب هفته)
+    // ۵) صفحه برنامه بازی‌ها
     // -----------------------------
     async function renderFixturesPage() {
       const container = document.getElementById("page-content");
 
-      // دکمه‌های هفته‌ها (۱ تا ۱۱)
       let weeksHtml = "";
       for (let w = 1; w <= 11; w++) {
         weeksHtml += `
@@ -1623,7 +1684,6 @@
 
       container.innerHTML = html;
 
-      // لیسنر برای دکمه‌های هفته
       const weekButtons = container.querySelectorAll(".week-btn");
       weekButtons.forEach(btn => {
         btn.addEventListener("click", () => {
@@ -1637,7 +1697,7 @@
     }
 
     // -----------------------------
-    // ۶) رندر صفحه نتایج (با کامنت و جزئیات)
+    // ۶) صفحه نتایج
     // -----------------------------
     function renderResultsPage() {
       const container = document.getElementById("page-content");
@@ -1866,7 +1926,6 @@
     function renderMediaPage() {
       const container = document.getElementById("page-content");
 
-      // این آرایه‌ها رو بعداً با اطلاعیه‌ها، لینک عکس و کلیپ‌ها پر کن
       const announcements = [
         { title: "نمونه اطلاعیه شماره ۱", body: "اینجا متن یک اطلاعیه مهم درباره برنامه لیگ قرار می‌گیرد." },
         { title: "نمونه اطلاعیه شماره ۲", body: "ساعت شروع بازی‌ها، قوانین جدید یا نکات مهم سالن." }
@@ -1954,12 +2013,11 @@
     }
 
     // -----------------------------
-    // ۱۰) صفحه آمار لیگ (گلزنان برتر + کارت‌ها)
+    // ۱۰) صفحه آمار لیگ
     // -----------------------------
     function renderStatsPage() {
       const container = document.getElementById("page-content");
 
-      // این دو آرایه فقط دمو هستن؛ بعداً خودت با اسم بازیکن‌ها و تعداد گل و کارت پرشون کن
       const topScorersDemo = [
         { player: "نمونه بازیکن ۱", team: "کافه لوین", goals: 5 },
         { player: "نمونه بازیکن ۲", team: "استودیو نامبر وان", goals: 3 }
@@ -2080,7 +2138,7 @@
     }
 
     // -----------------------------
-    // ۱۲) سیستم تم تیره/روشن + چرخش تم
+    // ۱۲) سیستم تم
     // -----------------------------
     const darkThemes = [
       {
@@ -2318,7 +2376,7 @@
     }
 
     // -----------------------------
-    // ۱۵) جزئیات بازی (گلزن‌ها + کارت‌ها)
+    // ۱۵) جزئیات بازی
     // -----------------------------
     function showMatchDetails(matchId) {
       const overlay = document.getElementById("match-details-overlay");
@@ -2427,7 +2485,7 @@
     }
 
     // -----------------------------
-    // ۱۷) مخفی کردن موشن‌گرافی
+    // ۱۷) موشن‌گرافی
     // -----------------------------
     function hideIntro() {
       const overlay = document.getElementById("intro-overlay");
@@ -2444,8 +2502,7 @@
     }
 
     // -----------------------------
-    // ۱۸) ثبت بازدید (فقط در Supabase، بدون نمایش)
-    // جدول پیشنهادی: page_views با ستون id و created_at
+    // ۱۸) ثبت بازدید
     // -----------------------------
     async function incrementPageView() {
       try {
@@ -2456,13 +2513,11 @@
     }
 
     // -----------------------------
-    // ۱۹) شروع کار: تب‌ها، تم، موسیقی، موشن، ویو، منو
+    // ۱۹) شروع کار
     // -----------------------------
     document.addEventListener("DOMContentLoaded", () => {
-      // تم اولیه: حالت تیره
       setMode("dark");
 
-      // تب‌ها + چرخش تم روی هر کلیک
       document.querySelectorAll(".tab-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           setActivePage(btn.dataset.page);
@@ -2471,7 +2526,6 @@
       });
       setActivePage("fixtures");
 
-      // سوئیچ حالت تیره/روشن
       const modeToggle = document.getElementById("mode-toggle");
       if (modeToggle) {
         modeToggle.addEventListener("click", () => {
@@ -2479,7 +2533,6 @@
         });
       }
 
-      // موسیقی
       const audio = document.getElementById("bg-audio");
       const audioToggle = document.getElementById("audio-toggle");
 
@@ -2510,7 +2563,6 @@
         });
       }
 
-      // موشن‌گرافی ورود: ۳ ثانیه بعد مخفی شود
       const introVideo = document.getElementById("intro-video");
       if (introVideo) {
         introVideo.play().catch(() => {});
@@ -2519,13 +2571,11 @@
         hideIntro();
       }, 3000);
 
-      // منوی کناری
       const menuToggle = document.getElementById("menu-toggle");
       if (menuToggle) {
         menuToggle.addEventListener("click", openSideMenu);
       }
 
-      // ثبت یک بازدید در Supabase
       incrementPageView();
     });
   </script>
