@@ -13,9 +13,9 @@
 
   <style>
     :root {
-      --bg: #0b1020;
-      --bg-soft: #151a2c;
-      --card: #1d2236;
+      --bg: #0a1126;
+      --bg-soft: #191c28;
+      --card: #2c3040;
       --accent: #18a34a;
       --accent-soft: rgba(24, 163, 74, 0.2);
       --text: #f9fafb;
@@ -311,6 +311,22 @@
       color: #f9fafb;
       border: 1px solid rgba(15, 23, 42, 0.6);
       box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.5);
+      overflow: hidden;
+    }
+
+    .team-logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .team-logo-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .match-center {
@@ -1358,6 +1374,38 @@
       });
     }
 
+    // لوگوی تیم با تصویر + فربک به ایموجی
+    function getTeamLogoHtml(team, size) {
+      const s = size || 30;
+      const bg = team.color || "#0f172a";
+      const fontAdj = s < 30 ? "font-size:15px;" : "";
+      return `
+        <div class="team-logo" style="background:${bg};width:${s}px;height:${s}px;${fontAdj}">
+          <span class="team-logo-fallback" style="display:none;">${team.logo}</span>
+          <img
+            class="team-logo-img"
+            src="team${team.id}.png"
+            alt="${escapeHtml(team.name)}"
+            onerror="handleTeamLogoError(this, ${team.id})"
+          />
+        </div>
+      `;
+    }
+
+    function handleTeamLogoError(img, teamId) {
+      const triedJpg = img.getAttribute("data-tried-jpg");
+      if (!triedJpg) {
+        img.setAttribute("data-tried-jpg", "1");
+        img.src = `team${teamId}.jpg`;
+      } else {
+        img.style.display = "none";
+        const fallback = img.previousElementSibling;
+        if (fallback) {
+          fallback.style.display = "flex";
+        }
+      }
+    }
+
     // -----------------------------
     // ۴) نام‌کاربری (لوکال) + Supabase
     // -----------------------------
@@ -1608,7 +1656,7 @@
             <div class="card">
               <div class="match-row">
                 <div class="team-side team-home">
-                  <div class="team-logo" style="background:${home.color}">${home.logo}</div>
+                  ${getTeamLogoHtml(home)}
                   <div class="team-name">${home.name}</div>
                 </div>
                 <div class="match-center">
@@ -1634,7 +1682,7 @@
                 </div>
                 <div class="team-side team-away">
                   <div class="team-name">${away.name}</div>
-                  <div class="team-logo" style="background:${away.color}">${away.logo}</div>
+                  ${getTeamLogoHtml(away)}
                 </div>
               </div>
               <div class="match-meta">
@@ -1722,7 +1770,7 @@
             <div class="card">
               <div class="match-row">
                 <div class="team-side team-home">
-                  <div class="team-logo" style="background:${home.color}">${home.logo}</div>
+                  ${getTeamLogoHtml(home)}
                   <div class="team-name">${home.name}</div>
                 </div>
                 <div class="match-center">
@@ -1731,7 +1779,7 @@
                 </div>
                 <div class="team-side team-away">
                   <div class="team-name">${away.name}</div>
-                  <div class="team-logo" style="background:${away.color}">${away.logo}</div>
+                  ${getTeamLogoHtml(away)}
                 </div>
               </div>
               <div class="match-meta">
@@ -1857,7 +1905,7 @@
             <td><span class="pos-pill ${getPosClass(pos)}">${pos}</span></td>
             <td>
               <div class="team-cell">
-                <div class="team-logo" style="width:22px;height:22px;font-size:15px;background:${team.color}">${team.logo}</div>
+                ${getTeamLogoHtml(team, 22)}
                 <span class="team-name-sm">${team.name}</span>
               </div>
             </td>
@@ -1902,7 +1950,7 @@
           <div class="team-card">
             <div class="team-header">
               <div class="team-line">
-                <div class="team-logo" style="background:${team.color}">${team.logo}</div>
+                ${getTeamLogoHtml(team)}
                 <div class="team-name">${team.name}</div>
               </div>
               <span class="badge" onclick="showTeamImage(${team.id})">
