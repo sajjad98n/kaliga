@@ -148,6 +148,12 @@
       color: var(--text-soft);
     }
 
+    /* تاریخ و ساعت زنده */
+    .current-datetime {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
     .live-pill {
       padding: 2px 10px;
       border-radius: 999px;
@@ -327,6 +333,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+
+    /* وقتی لوگو واقعاً لود می‌شود */
+    .team-logo-has-img {
+      background: transparent !important;
+    }
+
+    .team-logo-clickable {
+      cursor: zoom-in;
     }
 
     .match-center {
@@ -701,7 +716,7 @@
       text-decoration: underline;
     }
 
-    /* پنجره نمایش عکس تیم‌ها */
+    /* پنجره نمایش عکس تیم‌ها / لوگوها */
     .team-image-overlay {
       position: fixed;
       inset: 0;
@@ -946,17 +961,7 @@
       .header-right {
         align-items: flex-start;
       }
-      .match-row {
-        grid-template-columns: 1fr;
-        gap: 6px;
-      }
-      .team-away {
-        justify-content: flex-start;
-      }
-      .match-center {
-        justify-self: flex-start;
-        text-align: right;
-      }
+      /* میزبان و میهمان همچنان روبه‌روی هم می‌مانند، فقط متا زیر هم می‌آید */
       .match-meta {
         flex-direction: column;
         gap: 2px;
@@ -1068,8 +1073,10 @@
       </div>
       <div class="header-right">
         <div>فصل ۱۴۰۴ / ۲۰۲۵</div>
-        <div>به‌روزرسانی نمونه دیتا برای تست</div>
-        <div class="live-pill">نمایش دمو • آنلاین</div>
+        <!-- تاریخ و ساعت زنده -->
+        <div id="current-datetime" class="current-datetime"></div>
+       
+        <div class="live-pill"> • آنلاین</div>
         <button id="audio-toggle" class="audio-toggle">🔈 موسیقی خاموش</button>
         <button id="mode-toggle" class="mode-toggle">🌙 حالت تیره</button>
       </div>
@@ -1102,15 +1109,13 @@
       <!-- محتوا با جاوااسکریپت تزریق می‌شود -->
     </main>
 
-
-
     <div class="footer-credit">
       <div>Designed &amp; built by <strong>Sajjad&nbsp;Nabavi</strong></div>
       <div>Contact us:&nbsp;<a href="mailto:sajjad.n.ch@gmail.com">sajjad.n.ch@gmail.com</a></div>
     </div>
   </div>
 
-  <!-- پنجره نمایش عکس تیم‌ها -->
+  <!-- پنجره نمایش عکس تیم‌ها / لوگوها -->
   <div id="team-image-overlay" class="team-image-overlay" onclick="hideTeamImage()">
     <div class="team-image-dialog" onclick="event.stopPropagation()">
       <img id="team-image-img" src="" alt="Team image" />
@@ -1149,17 +1154,17 @@
     // توضیحات جداگانه برای هر تیم
     const teamDescriptions = {
       1: "تیم ۱ - سید سعید نبوی، متین احمدیان، سید حسین نبوی، طاها جعفری، محمد احمدیان، ربیع الله احمدیان، سید جمال نبوی، سید سپهر نبوی، سید عماد(امید)نبوی.",
-      2: "تیم ۲ - معرفی استودیو نامبر وان، ترکیب، مربی و ...",
+      2: "تیم ۲ - سید عرفان نبوی، سید اسمائیل نبوی، سید حسین نبوی، سید حسن نبوی، سید محمدحسیین نبوی، مهدیار جعفری، سید محمد یامین نبوی، ابوالفضل طیبی.",
       3: "تیم ۳ - سید علی نبوی، سید محمد نبوی، سید محمود نبوی، سید صمد نبوی، سید علیرضا موسوی، سید مهدی نبوی، علی احمدیان، سینا احمدیان.",
       4: "تیم ۴ - فردین احمدیان، علی سام احمدیان، سعید جعفری، ابوالفضل احمدیان، محمد علی احمدیان، روح الله احمدیان، علی احمدیان، سید علی اکبر عمادی، اسماعیل احمدیان.",
       5: "تیم ۵ - امیر خادم، سیروس جعفری، سید حسین نبوی، کمال جعفری، بهزاد رضائیان، احمد جعفری، سید حامد نبوی، پرهام جعفری، عارف جعفری.",
       6: "تیم ۶ -سید محمد نبوی، سید امیر علی نبوی، سید سینا نبوی، سید سبحان عمادی، سید نورالله نبوی، سید محمد نبوی، سید محمد نبوی، حسن مذهبدار، سید تقی نبوی، سید فرزاد نبوی.",
-      7: "تیم ۷ - معرفی تیم زنده یاد محمدرضا جعفری.",
-      8: "تیم ۸ - توضیحات تیم شهید نجفعلی قادری.",
+      7: "تیم ۷ - هادی جعفری، جعفری، حسام جعفری، امیرحسین صفایی، آریا جعفری، مصطفی قادری، سید علی نبوی .",
+      8: "تیم ۸ - ابوذر قادری، علیرضا قادری، رضا قادری، عبدالمطلب قادری، مجتبی قادری، زین‌العابدین قادری، صادق قادری، اشکان قادری.",
       9: "تیم ۹ - آرش(قاسم) قادری، امیر قادری، عارف قادری، میلاد قادری، عباس قادری، فرهاد قادری، مهدی قادری، ماهان قادری، سید ایلیا نبوی.",
-      10:"تیم ۱۰ - معرفی تیم امامزاده پیش.",
+      10:"تیم ۱۰ - علیرضا قادری، سید محمود نبوی، سید محمدرضا نبوی، فتح الله جعفری، سید ابراهیم نبوی، آرمین ذولفقاری، امیرحسین احمدیان.",
       11:"تیم ۱۱ - سید سهیل موسوی، سید عسگری موسوی، رضا قادری، علی جعفری، دانیال مداحی، نصرالله( مهدی) جعفری، عبدالله جعفری پور، سید مرتضی نبوی.",
-      12:"تیم ۱۲ - معرفی تیم هیئت جوانان و اعضا."
+      12:"تیم ۱۲ - سید مانی نبوی، عبدالله جعفری، محمد جواد نیک بین، سید محمد کمال نبوی، سعید جعفری، سید جواد متولیان، سید مهرداد نبوی، سید ابوالفضل نبوی."
     };
 
     // -----------------------------
@@ -1320,17 +1325,41 @@
     // -----------------------------
     const matchDetails = {
       1: {
-        homeScorers: ["گلزن‌های تیم زنده یاد سید مهدی نبوی: ..."],
-        awayScorers: ["گلزن‌های تیم امامزاده پیش: ..."],
-        yellowCards: ["کارت زرد: ..."],
-        redCards: ["کارت قرمز: ..."]
+        homeScorers: ["سید صمد نبوی ، سید مهدی نبوی x2"],
+        awayScorers: ["-"],
+        yellowCards: ["-"],
+        redCards: ["-"]
       },
       2: {
-        homeScorers: ["گلزن‌های تیم استودیو نامبر وان: ..."],
-        awayScorers: ["گلزن‌های تیم شهید سید احسان موسوی: ..."],
-        yellowCards: ["کارت زرد: ..."],
-        redCards: ["کارت قرمز: ..."]
-      }
+        homeScorers: ["سید حسن نبوی ، مهدیار جعفری x2"],
+        awayScorers: ["-"],
+        yellowCards: ["-"],
+        redCards: ["-"]
+      },
+      3: {
+        homeScorers: ["میلاد قادری ، سید ایلیا نبوی"],
+        awayScorers: ["اسماعیل احمدیان ، ابوالفضل احمدیان ، علی احمدیان ، سعید جعفری"],
+        yellowCards: ["میلاد قادری ، سید ایلیا نبوی"],
+        redCards: ["-"]
+      },
+      4: {
+        homeScorers: ["حسام جعفری"],
+        awayScorers: ["بهزاد رضایان x2"],
+        yellowCards: ["-"],
+        redCards: ["-"]
+      },
+      5: {
+        homeScorers: ["سعید جعفری"],
+        awayScorers: ["حسین نبوی ، طاها جعفری ،امید نبوی ، متین احمدیان x2"],
+        yellowCards: ["-"],
+        redCards: ["-"]
+      },
+      6: {
+        homeScorers: ["فرزاد نبوی"],
+        awayScorers: ["-"],
+        yellowCards: ["-"],
+        redCards: ["-"]
+      },
       // برای بقیه بازی‌ها هم هر وقت خواستی اضافه کن
     };
 
@@ -1374,19 +1403,47 @@
       });
     }
 
+    // تاریخ و ساعت زنده (شمسی + ساعت سیستم)
+    function updateCurrentDateTime() {
+      const el = document.getElementById("current-datetime");
+      if (!el) return;
+
+      const now = new Date();
+
+      const dateFormatter = new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
+        weekday: "short",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      });
+
+      const timeFormatter = new Intl.DateTimeFormat("fa-IR", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      });
+
+      el.textContent = dateFormatter.format(now) + " • " + timeFormatter.format(now);
+    }
+
     // لوگوی تیم با تصویر + فربک به ایموجی
-    function getTeamLogoHtml(team, size) {
-      const s = size || 30;
+    function getTeamLogoHtml(team, size, clickable) {
+      const s = size || 34;
       const bg = team.color || "#0f172a";
       const fontAdj = s < 30 ? "font-size:15px;" : "";
+      const clickableClass = clickable ? " team-logo-clickable" : "";
+      const clickAttr = clickable ? `onclick="showTeamLogo(${team.id})"` : "";
       return `
-        <div class="team-logo" style="background:${bg};width:${s}px;height:${s}px;${fontAdj}">
+        <div class="team-logo${clickableClass}" ${clickAttr}
+             style="background:${bg};width:${s}px;height:${s}px;${fontAdj}">
           <span class="team-logo-fallback" style="display:none;">${team.logo}</span>
           <img
             class="team-logo-img"
             src="team${team.id}.png"
             alt="${escapeHtml(team.name)}"
             onerror="handleTeamLogoError(this, ${team.id})"
+            onload="handleTeamLogoLoad(this)"
           />
         </div>
       `;
@@ -1404,6 +1461,18 @@
           fallback.style.display = "flex";
         }
       }
+    }
+
+    function handleTeamLogoLoad(img) {
+      const wrapper = img.parentElement;
+      if (!wrapper) return;
+      wrapper.classList.add("team-logo-has-img");
+
+      // کمی بزرگ‌تر کردن قاب لوگو (حدود ۱۵٪)
+      const w = parseInt(wrapper.style.width, 10);
+      const h = parseInt(wrapper.style.height, 10);
+      if (!isNaN(w)) wrapper.style.width = Math.round(w * 1.15) + "px";
+      if (!isNaN(h)) wrapper.style.height = Math.round(h * 1.15) + "px";
     }
 
     // -----------------------------
@@ -1950,7 +2019,7 @@
           <div class="team-card">
             <div class="team-header">
               <div class="team-line">
-                ${getTeamLogoHtml(team)}
+                ${getTeamLogoHtml(team, 34, true)}
                 <div class="team-name">${team.name}</div>
               </div>
               <span class="badge" onclick="showTeamImage(${team.id})">
@@ -2068,13 +2137,15 @@
       const container = document.getElementById("page-content");
 
       const topScorersDemo = [
-        { player: "نمونه بازیکن ۱", team: "کافه لوین", goals: 5 },
-        { player: "نمونه بازیکن ۲", team: "استودیو نامبر وان", goals: 3 }
+        { player: "مهدیار جعفری", team: "استودیو نامبر وان", goals: 2 },
+        { player: "سید مهدی نبوی", team: "زنده یاد سید مهدی نبوی", goals: 2 },
+        { player: "بهزاد رضایان", team: "زنده یاد بهمن و مصطفی جعفری", goals: 2 },
+        { player: "متین احمدیان", team: "کافه لوین", goals: 2 },
       ];
 
       const cardsDemo = [
-        { player: "نمونه بازیکن ۳", team: "هیئت جوانان", yellow: 2, red: 0 },
-        { player: "نمونه بازیکن ۴", team: "پیشکسوتان نیزوا", yellow: 1, red: 1 }
+        { player: "میلاد قادری", team: "زنده یاد هادی قادری", yellow: 1, red: 0 },
+        { player: "ایلیا نبوی", team: "زنده یاد هادی قادری", yellow: 1, red: 0 }
       ];
 
       let html = `
@@ -2113,7 +2184,7 @@
               </tbody>
             </table>
             <div style="font-size:10px;color:var(--text-soft);margin-top:6px;">
-              بعدا واقعی میشود  <code></code> 
+                <code></code> 
             </div>
           </div>
 
@@ -2148,7 +2219,7 @@
               </tbody>
             </table>
             <div style="font-size:10px;color:var(--text-soft);margin-top:6px;">
-              این بخش هم بعداً با لیست واقعی بازیکنانی که کارت گرفتن جایگزین می‌شود.
+              
             </div>
           </div>
         </div>
@@ -2393,7 +2464,7 @@
     }
 
     // -----------------------------
-    // ۱۴) نمایش/مخفی کردن عکس تیم
+    // ۱۴) نمایش/مخفی کردن عکس تیم و لوگو
     // -----------------------------
     function showTeamImage(teamId) {
       const overlay = document.getElementById("team-image-overlay");
@@ -2417,6 +2488,30 @@
       };
 
       img.src = `pic${teamId}.jpg`;
+    }
+
+    function showTeamLogo(teamId) {
+      const overlay = document.getElementById("team-image-overlay");
+      const img = document.getElementById("team-image-img");
+      const dialog = document.querySelector(".team-image-dialog");
+      if (!overlay || !img || !dialog) return;
+
+      overlay.style.display = "flex";
+      dialog.style.background = "#000";
+      img.style.display = "block";
+
+      let triedJpg = false;
+      img.onerror = () => {
+        if (!triedJpg) {
+          triedJpg = true;
+          img.src = `team${teamId}.jpg`;
+        } else {
+          // اگر لوگو هم نبود، دیالوگ را ببند
+          overlay.style.display = "none";
+        }
+      };
+
+      img.src = `team${teamId}.png`;
     }
 
     function hideTeamImage() {
@@ -2574,6 +2669,10 @@
         });
       });
       setActivePage("fixtures");
+
+      // تاریخ و ساعت زنده
+      updateCurrentDateTime();
+      setInterval(updateCurrentDateTime, 1000);
 
       const modeToggle = document.getElementById("mode-toggle");
       if (modeToggle) {
