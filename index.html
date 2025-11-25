@@ -1171,7 +1171,10 @@
     // ۲) تعریف بازی‌ها
     // -----------------------------
     const matches = [
-      // هفته ۱ - بازی‌های انجام‌شده
+          // -----------------------------
+    // ۲) تعریف بازی‌ها
+    // -----------------------------
+      // هفته ۱ - بازی‌های انجام‌شده (بدون تغییر)
       {
         id: 1,
         week: 1,
@@ -1245,76 +1248,622 @@
         awayScore: 0
       },
 
-      // هفته ۲
+      // هفته ۲ - ۱۴۰۴/۰۹/۰۷
       {
         id: 7,
         week: 2,
-        homeTeamId: 11,
-        awayTeamId: 8,
+        homeTeamId: 11, // شهید سید احسان موسوی
+        awayTeamId: 8,  // شهید نجفعلی قادری
         date: "1404-09-07",
-        time: "14:30",
+        time: "14:15",
         stadium: "سالن شهید صحافی",
         status: "upcoming"
       },
       {
         id: 8,
         week: 2,
-        homeTeamId: 7,
-        awayTeamId: 3,
+        homeTeamId: 7,  // زنده یاد محمدرضا جعفری
+        awayTeamId: 3,  // زنده یاد سید مهدی نبوی
         date: "1404-09-07",
-        time: "15:15",
+        time: "15:00",
         stadium: "سالن شهید صحافی",
         status: "upcoming"
       },
       {
         id: 9,
         week: 2,
-        homeTeamId: 10,
-        awayTeamId: 2,
+        homeTeamId: 10, // امامزاده پیش
+        awayTeamId: 2,  // استودیو نامبروان
         date: "1404-09-07",
-        time: "16:00",
+        time: "15:45",
         stadium: "سالن شهید صحافی",
         status: "upcoming"
       },
       {
         id: 10,
         week: 2,
-        homeTeamId: 12,
-        awayTeamId: 5,
+        homeTeamId: 12, // هیئت جوانان
+        awayTeamId: 5,  // زنده یاد بهمن و مصطفی جعفری
         date: "1404-09-07",
-        time: "16:45",
+        time: "16:30",
         stadium: "سالن شهید صحافی",
         status: "upcoming"
       },
       {
         id: 11,
         week: 2,
-        homeTeamId: 4,
-        awayTeamId: 6,
+        homeTeamId: 4,  // زنده یاد مجید جعفری
+        awayTeamId: 6,  // پیشکسوتان نیزوا
         date: "1404-09-07",
-        time: "17:30",
+        time: "17:15",
         stadium: "سالن شهید صحافی",
         status: "upcoming"
       },
       {
         id: 12,
         week: 2,
-        homeTeamId: 9,
-        awayTeamId: 1,
+        homeTeamId: 9,  // زنده یاد هادی قادری
+        awayTeamId: 1,  // کافه لوین
         date: "1404-09-07",
-        time: "18:15",
+        time: "18:00",
         stadium: "سالن شهید صحافی",
         status: "upcoming"
       },
 
-      // هفته ۳
+      // هفته ۳ - ۱۴۰۴/۰۹/۱۴
       {
         id: 13,
         week: 3,
-        homeTeamId: 8,
-        awayTeamId: 2,
+        homeTeamId: 12, // هیئت جوانان
+        awayTeamId: 9,  // زنده یاد هادی قادری
         date: "1404-09-14",
-        time: "19:00",
+        time: "14:15",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 14,
+        week: 3,
+        homeTeamId: 10, // امامزاده پیش
+        awayTeamId: 4,  // زنده یاد مجید جعفری
+        date: "1404-09-14",
+        time: "15:00",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 15,
+        week: 3,
+        homeTeamId: 8,  // شهید نجفعلی قادری
+        awayTeamId: 1,  // کافه لوین
+        date: "1404-09-14",
+        time: "15:45",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 16,
+        week: 3,
+        homeTeamId: 7,  // زنده یاد محمدرضا جعفری
+        awayTeamId: 6,  // پیشکسوتان نیزوا
+        date: "1404-09-14",
+        time: "16:30",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 17,
+        week: 3,
+        homeTeamId: 2,  // استودیو نامبروان
+        awayTeamId: 4,  // زنده یاد مجید جعفری
+        date: "1404-09-14",
+        time: "17:15",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 18,
+        week: 3,
+        homeTeamId: 10, // امامزاده پیش
+        awayTeamId: 8,  // شهید نجفعلی قادری
+        date: "1404-09-14",
+        time: "18:00",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+
+      // هفته ۴ - ۱۴۰۴/۰۹/۲۱
+      {
+        id: 19,
+        week: 4,
+        homeTeamId: 1,  // کافه لوین
+        awayTeamId: 6,  // پیشکسوتان نیزوا
+        date: "1404-09-21",
+        time: "14:15",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 20,
+        week: 4,
+        homeTeamId: 4,  // زنده یاد مجید جعفری
+        awayTeamId: 11, // شهید سید احسان موسوی
+        date: "1404-09-21",
+        time: "15:00",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 21,
+        week: 4,
+        homeTeamId: 8,  // شهید نجفعلی قادری
+        awayTeamId: 9,  // زنده یاد هادی قادری
+        date: "1404-09-21",
+        time: "15:45",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 22,
+        week: 4,
+        homeTeamId: 2,  // استودیو نامبروان
+        awayTeamId: 7,  // زنده یاد محمدرضا جعفری
+        date: "1404-09-21",
+        time: "16:30",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 23,
+        week: 4,
+        homeTeamId: 10, // امامزاده پیش
+        awayTeamId: 5,  // زنده یاد بهمن و مصطفی جعفری
+        date: "1404-09-21",
+        time: "17:15",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 24,
+        week: 4,
+        homeTeamId: 12, // هیئت جوانان
+        awayTeamId: 3,  // زنده یاد سید مهدی نبوی
+        date: "1404-09-21",
+        time: "18:00",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+
+      // هفته ۵ - ۱۴۰۴/۰۹/۲۸
+      {
+        id: 25,
+        week: 5,
+        homeTeamId: 8,  // شهید نجفعلی قادری
+        awayTeamId: 4,  // زنده یاد مجید جعفری
+        date: "1404-09-28",
+        time: "14:15",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 26,
+        week: 5,
+        homeTeamId: 2,  // استودیو نامبروان
+        awayTeamId: 1,  // کافه لوین
+        date: "1404-09-28",
+        time: "15:00",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 27,
+        week: 5,
+        homeTeamId: 10, // امامزاده پیش
+        awayTeamId: 12, // هیئت جوانان
+        date: "1404-09-28",
+        time: "15:45",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 28,
+        week: 5,
+        homeTeamId: 5,  // زنده یاد بهمن و مصطفی جعفری
+        awayTeamId: 3,  // زنده یاد سید مهدی نبوی
+        date: "1404-09-28",
+        time: "16:30",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 29,
+        week: 5,
+        homeTeamId: 6,  // پیشکسوتان نیزوا
+        awayTeamId: 11, // شهید سید احسان موسوی
+        date: "1404-09-28",
+        time: "17:15",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 30,
+        week: 5,
+        homeTeamId: 7,  // زنده یاد محمدرضا جعفری
+        awayTeamId: 9,  // زنده یاد هادی قادری
+        date: "1404-09-28",
+        time: "18:00",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+
+      // هفته ۶ - ۱۴۰۴/۱۰/۰۵
+      {
+        id: 31,
+        week: 6,
+        homeTeamId: 12, // هیئت جوانان
+        awayTeamId: 9,  // زنده یاد هادی قادری
+        date: "1404-10-05",
+        time: "14:15",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 32,
+        week: 6,
+        homeTeamId: 10, // امامزاده پیش
+        awayTeamId: 4,  // زنده یاد مجید جعفری
+        date: "1404-10-05",
+        time: "15:00",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 33,
+        week: 6,
+        homeTeamId: 8,  // شهید نجفعلی قادری
+        awayTeamId: 1,  // کافه لوین
+        date: "1404-10-05",
+        time: "15:45",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 34,
+        week: 6,
+        homeTeamId: 7,  // زنده یاد محمدرضا جعفری
+        awayTeamId: 6,  // پیشکسوتان نیزوا
+        date: "1404-10-05",
+        time: "16:30",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 35,
+        week: 6,
+        homeTeamId: 2,  // استودیو نامبروان
+        awayTeamId: 5,  // زنده یاد بهمن و مصطفی جعفری
+        date: "1404-10-05",
+        time: "17:15",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 36,
+        week: 6,
+        homeTeamId: 11, // شهید سید احسان موسوی
+        awayTeamId: 3,  // زنده یاد سید مهدی نبوی
+        date: "1404-10-05",
+        time: "18:00",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+
+      // هفته ۷ - ۱۴۰۴/۱۰/۱۲
+      {
+        id: 37,
+        week: 7,
+        homeTeamId: 2,  // استودیو نامبروان
+        awayTeamId: 3,  // زنده یاد سید مهدی نبوی
+        date: "1404-10-12",
+        time: "14:15",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 38,
+        week: 7,
+        homeTeamId: 10, // امامزاده پیش
+        awayTeamId: 9,  // زنده یاد هادی قادری
+        date: "1404-10-12",
+        time: "15:00",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 39,
+        week: 7,
+        homeTeamId: 8,  // شهید نجفعلی قادری
+        awayTeamId: 5,  // زنده یاد بهمن و مصطفی جعفری
+        date: "1404-10-12",
+        time: "15:45",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 40,
+        week: 7,
+        homeTeamId: 12, // هیئت جوانان
+        awayTeamId: 6,  // پیشکسوتان نیزوا
+        date: "1404-10-12",
+        time: "16:30",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 41,
+        week: 7,
+        homeTeamId: 7,  // زنده یاد محمدرضا جعفری
+        awayTeamId: 11, // شهید سید احسان موسوی
+        date: "1404-10-12",
+        time: "17:15",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 42,
+        week: 7,
+        homeTeamId: 4,  // زنده یاد مجید جعفری
+        awayTeamId: 1,  // کافه لوین
+        date: "1404-10-12",
+        time: "18:00",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+
+      // هفته ۸ - ۱۴۰۴/۱۰/۱۹
+      {
+        id: 43,
+        week: 8,
+        homeTeamId: 7,  // زنده یاد محمدرضا جعفری
+        awayTeamId: 2,  // استودیو نامبروان
+        date: "1404-10-19",
+        time: "14:15",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 44,
+        week: 8,
+        homeTeamId: 8,  // شهید نجفعلی قادری
+        awayTeamId: 3,  // زنده یاد سید مهدی نبوی
+        date: "1404-10-19",
+        time: "15:00",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 45,
+        week: 8,
+        homeTeamId: 9,  // زنده یاد هادی قادری
+        awayTeamId: 6,  // پیشکسوتان نیزوا
+        date: "1404-10-19",
+        time: "15:45",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 46,
+        week: 8,
+        homeTeamId: 10, // امامزاده پیش
+        awayTeamId: 1,  // کافه لوین
+        date: "1404-10-19",
+        time: "16:30",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 47,
+        week: 8,
+        homeTeamId: 4,  // زنده یاد مجید جعفری
+        awayTeamId: 5,  // زنده یاد بهمن و مصطفی جعفری
+        date: "1404-10-19",
+        time: "17:15",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 48,
+        week: 8,
+        homeTeamId: 12, // هیئت جوانان
+        awayTeamId: 11, // شهید سید احسان موسوی
+        date: "1404-10-19",
+        time: "18:00",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+
+      // هفته ۹ - ۱۴۰۴/۱۰/۲۶
+      {
+        id: 49,
+        week: 9,
+        homeTeamId: 9,  // زنده یاد هادی قادری
+        awayTeamId: 11, // شهید سید احسان موسوی
+        date: "1404-10-26",
+        time: "14:15",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 50,
+        week: 9,
+        homeTeamId: 1,  // کافه لوین
+        awayTeamId: 5,  // زنده یاد بهمن و مصطفی جعفری
+        date: "1404-10-26",
+        time: "15:00",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 51,
+        week: 9,
+        homeTeamId: 4,  // زنده یاد مجید جعفری
+        awayTeamId: 3,  // زنده یاد سید مهدی نبوی
+        date: "1404-10-26",
+        time: "15:45",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 52,
+        week: 9,
+        homeTeamId: 7,  // زنده یاد محمدرضا جعفری
+        awayTeamId: 8,  // شهید نجفعلی قادری
+        date: "1404-10-26",
+        time: "16:30",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 53,
+        week: 9,
+        homeTeamId: 2,  // استودیو نامبروان
+        awayTeamId: 12, // هیئت جوانان
+        date: "1404-10-26",
+        time: "17:15",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 54,
+        week: 9,
+        homeTeamId: 10, // امامزاده پیش
+        awayTeamId: 6,  // پیشکسوتان نیزوا
+        date: "1404-10-26",
+        time: "18:00",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+
+      // هفته ۱۰ - ۱۴۰۴/۱۱/۰۳
+      {
+        id: 55,
+        week: 10,
+        homeTeamId: 10, // امامزاده پیش
+        awayTeamId: 5,  // زنده یاد بهمن و مصطفی جعفری
+        date: "1404-11-03",
+        time: "14:15",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 56,
+        week: 10,
+        homeTeamId: 8,  // شهید نجفعلی قادری
+        awayTeamId: 12, // هیئت جوانان
+        date: "1404-11-03",
+        time: "15:00",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 57,
+        week: 10,
+        homeTeamId: 2,  // استودیو نامبروان
+        awayTeamId: 9,  // زنده یاد هادی قادری
+        date: "1404-11-03",
+        time: "15:45",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 58,
+        week: 10,
+        homeTeamId: 1,  // کافه لوین
+        awayTeamId: 3,  // زنده یاد سید مهدی نبوی
+        date: "1404-11-03",
+        time: "16:30",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 59,
+        week: 10,
+        homeTeamId: 6,  // پیشکسوتان نیزوا
+        awayTeamId: 11, // شهید سید احسان موسوی
+        date: "1404-11-03",
+        time: "17:15",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 60,
+        week: 10,
+        homeTeamId: 7,  // زنده یاد محمدرضا جعفری
+        awayTeamId: 4,  // زنده یاد مجید جعفری
+        date: "1404-11-03",
+        time: "18:00",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+
+      // هفته ۱۱ - ۱۴۰۴/۱۱/۱۰
+      {
+        id: 61,
+        week: 11,
+        homeTeamId: 12, // هیئت جوانان
+        awayTeamId: 4,  // زنده یاد مجید جعفری
+        date: "1404-11-10",
+        time: "14:15",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 62,
+        week: 11,
+        homeTeamId: 10, // امامزاده پیش
+        awayTeamId: 11, // شهید سید احسان موسوی
+        date: "1404-11-10",
+        time: "15:00",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 63,
+        week: 11,
+        homeTeamId: 8,  // شهید نجفعلی قادری
+        awayTeamId: 9,  // زنده یاد هادی قادری
+        date: "1404-11-10",
+        time: "15:45",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 64,
+        week: 11,
+        homeTeamId: 7,  // زنده یاد محمدرضا جعفری
+        awayTeamId: 1,  // کافه لوین
+        date: "1404-11-10",
+        time: "16:30",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 65,
+        week: 11,
+        homeTeamId: 5,  // زنده یاد بهمن و مصطفی جعفری
+        awayTeamId: 3,  // زنده یاد سید مهدی نبوی
+        date: "1404-11-10",
+        time: "17:15",
+        stadium: "سالن شهید صحافی",
+        status: "upcoming"
+      },
+      {
+        id: 66,
+        week: 11,
+        homeTeamId: 2,  // استودیو نامبر وان (نابمروان)
+        awayTeamId: 6,  // پیشکسوتان نیزوا
+        date: "1404-11-10",
+        time: "18:00",
         stadium: "سالن شهید صحافی",
         status: "upcoming"
       }
