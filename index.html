@@ -2,9 +2,27 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>لیگ فوتسال روستای چاشم</title>
+  <title>کالیگا | لیگ فوتسال روستای چاشم</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- توضیحات برای گوگل -->
+ 
+
+  <meta name="description" 
+      content="سایت رسمی لیگ فوتسال روستای چاشم (کالیگا)؛ برنامه بازی‌ها، نتایج، جدول لیگ، تیم‌ها و آمار مسابقات فصل ۱۴۰۴." />
+
+  <meta name="keywords" 
+      content="کالیگا, لیگ فوتسال چاشم, لیگ چاشم, فوتسال کالیگا, لیگ فوتسال روستای چاشم، چاشم ، سمنان، شهمیرزاد، مهدیشهر، لیگ، فوتسال، جوانان، هیئت، هیئت جوانان" />
+
+  <meta name="author" content="سجاد نبوی" />
+
+
+  <!-- برای پیش‌نمایش در شبکه‌های اجتماعی -->
+  <meta property="og:title" content="کالیگا | لیگ فوتسال روستای چاشم">
+  <meta property="og:description" content="لیگ فوتسال روستای چاشم - برنامه بازی‌ها، نتایج و جدول لیگ در کالیگا.">
+  <meta property="og:url" content="https://kaliga.ir">
+  <meta property="og:type" content="website">
 
   <!-- فونت فارسی Vazirmatn -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1046,6 +1064,8 @@
       <div class="side-menu-item" onclick="navigateMenu('home')">🏠 صفحه اصلی</div>
       <div class="side-menu-item" onclick="navigateMenu('media')">📰 رسانه و اطلاعیه‌ها</div>
       <div class="side-menu-item" onclick="navigateMenu('stats')">📈 آمار لیگ</div>
+      <div class="side-menu-item" onclick="navigateMenu('feedback')">📥 انتقادات و پیشنهادات </div>
+
     </div>
   </div>
 
@@ -2230,6 +2250,129 @@
       textarea.value = "";
       await loadAndRenderComments(matchId);
     }
+        // -----------------------------
+    // ۴-ب) انتقادات و پیشنهادات کلی لیگ (صندوق کالیگا)
+    // -----------------------------
+    async function addFeedback(text) {
+      const raw = text || "";
+      const body = raw.trim();
+      if (!body) return;
+
+      const username = (getSavedUsername() || "").trim() || null;
+
+      try {
+        const { error } = await db
+          .from("feedbacks")
+          .insert({
+            username,
+            body
+          });
+
+        if (error) {
+          console.error("خطا در ثبت انتقاد/پیشنهاد:", error);
+          alert("در ثبت پیام مشکلی پیش آمد.");
+        }
+      } catch (e) {
+        console.error(e);
+        alert("مشکل در ارتباط با سرور صندوق انتقادات.");
+      }
+    }
+    async function addFeedback(text) {
+      const raw = text || "";
+       const body = raw.trim();
+       if (!body) return false;
+
+      const username = (getSavedUsername() || "").trim() || null;
+
+       try {
+        const { error } = await db
+         .from("feedbacks")
+          .insert({
+            username,
+            body
+      });
+
+        if (error) {
+          console.error("خطا در ثبت انتقاد/پیشنهاد:", error);
+          alert("در ثبت پیام مشکلی پیش آمد.");
+          return false;
+    }
+
+    // همه‌چیز اوکی بود ✅
+          return true;
+  } catch (e) {
+    console.error(e);
+    alert("مشکل در ارتباط با سرور صندوق انتقادات.");
+    return false;
+  }
+}
+    async function renderFeedbackPage() {
+  const container = document.getElementById("page-content");
+  if (!container) return;
+
+  const savedUsername = getSavedUsername() || "";
+
+  container.innerHTML = `
+    <div class="section-title">
+      <span class="dot"></span>
+      <span>صندوق انتقادات و پیشنهادات کالیگا</span>
+    </div>
+
+    <div class="card">
+      <div style="font-size:13px;font-weight:600;margin-bottom:6px;">
+        💬 ارسال نظر برای تیم برگزاری
+      </div>
+      <div style="font-size:11px;color:var(--text-soft);margin-bottom:8px;line-height:1.7;">
+        هر انتقاد، پیشنهاد یا ایده‌ای برای بهتر شدن لیگ فوتسال چاشم (کالیگا) داری، اینجا برامون بنویس.
+        نام اختیاریه، ولی کمک می‌کنه در صورت نیاز باهات ارتباط بگیریم.
+      </div>
+
+      <div class="comment-form">
+        <div class="comment-username">
+          <label>نام (دلخواه):</label>
+          <input type="text"
+                 id="feedback-username-input"
+                 placeholder="مثلاً هوادار کالیگا"
+                 value="${escapeHtml(savedUsername)}" />
+        </div>
+        <textarea id="feedback-textarea"
+                  rows="3"
+                  placeholder="اینجا انتقاد یا پیشنهادت رو بنویس..."></textarea>
+        <button type="button" onclick="submitFeedback()">ارسال پیام</button>
+      </div>
+    </div>
+  `;
+}
+
+    
+    async function submitFeedback() {
+  const textarea = document.getElementById("feedback-textarea");
+  const usernameInput = document.getElementById("feedback-username-input");
+
+  if (!textarea) return;
+
+  const text = (textarea.value || "").trim();
+  if (!text) {
+    alert("متن پیام نمی‌تواند خالی باشد.");
+    return;
+  }
+
+  if (usernameInput) {
+    const name = (usernameInput.value || "").trim();
+    if (name) {
+      setSavedUsername(name);
+    }
+  }
+
+  const ok = await addFeedback(text);
+  if (!ok) return;
+
+  textarea.value = "";
+
+  // 🔔 پیام تشکر برای کاربر
+  alert("ممنون از وقتی که گذاشتی و نظرت رو با کالیگا به اشتراک گذاشتی 💚\nبازخوردهای شما کمک می‌کنه لیگ هر هفته بهتر از قبل بشه.");
+}
+
 
     // -----------------------------
     // ۵) صفحه برنامه بازی‌ها
@@ -2947,7 +3090,7 @@
       }
     ];
 
-    let currentMode = "dark";
+    let currentMode = "light";
     let currentThemeIndex = 0;
 
     function getCurrentThemeList() {
@@ -3010,6 +3153,7 @@
       else if (page === "teams") renderTeamsPage();
       else if (page === "media") renderMediaPage();
       else if (page === "stats") renderStatsPage();
+      else if (page === "feedback") renderFeedbackPage();
     }
 
     // -----------------------------
@@ -3174,6 +3318,7 @@
       if (where === "home") setActivePage("fixtures");
       else if (where === "media") setActivePage("media");
       else if (where === "stats") setActivePage("stats");
+      else if (where === "feedback") setActivePage("feedback");
       closeSideMenu();
     }
 
@@ -3209,7 +3354,7 @@
     // ۱۹) شروع کار
     // -----------------------------
     document.addEventListener("DOMContentLoaded", () => {
-      setMode("dark");
+      setMode("light");
 
       document.querySelectorAll(".tab-btn").forEach(btn => {
         btn.addEventListener("click", () => {
