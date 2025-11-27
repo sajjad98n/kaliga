@@ -1040,6 +1040,53 @@
       .media-item-title {
         font-size: 12px;
       }
+          .media-video {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 12px;
+    }
+
+    .media-video-player {
+      border-radius: 14px;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .media-video-player video {
+      width: 100%;
+      display: block;
+      background: #000;
+    }
+
+    .media-video-controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .media-video-btn {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-soft);
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .media-video-btn:hover {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .media-video-caption {
+      font-size: 11px;
+      color: var(--text-soft);
+      line-height: 1.7;
+    }
+
     }
   </style>
 </head>
@@ -2737,19 +2784,16 @@
       const container = document.getElementById("page-content");
 
       const announcements = [
-        { title: "نمونه اطلاعیه شماره ۱", body: "اینجا متن یک اطلاعیه مهم درباره برنامه لیگ قرار می‌گیرد." },
-        { title: "نمونه اطلاعیه شماره ۲", body: "ساعت شروع بازی‌ها، قوانین جدید یا نکات مهم سالن." }
+        { title: "", body: "" },
+        
       ];
 
       const galleryPlaceholders = [
-        "اینجا بعداً عکس شماره ۱ را قرار بده.",
-        "اینجا بعداً عکس شماره ۲ را قرار بده.",
-        "اینجا بعداً عکس شماره ۳ را قرار بده."
+
       ];
 
       const clipsPlaceholders = [
-        "کلیپ گل‌های برتر هفته ۱ (مثلاً: highlight_week1.mp4)",
-        "کلیپ صحنه‌های جذاب (مثلاً: best_moments.mp4)"
+       
       ];
 
       let html = `
@@ -2758,9 +2802,60 @@
           <span>رسانه و اطلاعیه‌ها</span>
         </div>
 
-        <div class="card">
-          <div style="font-weight:600;font-size:13px;margin-bottom:6px;">📢 اطلاعیه‌ها</div>
-          <div class="media-list">
+                <div class="card">
+          <div style="font-weight:600;font-size:13px;margin-bottom:6px;">🎬 کلیپ‌ها و ویدیوها</div>
+
+          <div class="media-video">
+            <div class="media-video-player">
+                <video
+                id="media-video-main"
+                src="mp1.mp4"
+                preload="none"
+                playsinline
+                controls
+              ></video>
+
+            </div>
+
+            <div class="media-video-controls">
+              <button
+                id="media-video-play-btn"
+                class="media-video-btn"
+                type="button"
+                onclick="toggleMediaVideoPlay()"
+              >
+                ▶ پخش ویدیو
+              </button>
+
+              <button
+                id="media-video-fullscreen-btn"
+                class="media-video-btn"
+                type="button"
+                onclick="toggleMediaVideoFullscreen()"
+              >
+                ⛶ تمام‌صفحه
+              </button>
+            </div>
+
+            <div class="media-video-caption">
+             
+             <br>اولین فصل کالـیگا با مراسم افتتاحیه و انجام نخستین رقابت‌ها به‌صورت رسمی آغاز شد؛<br>
+آغازی که از همان دقایق نخست، انرژی، تمرکز و شوق تیم‌ها برای یک فصل پرتنش و جذاب را نشان داد.<br>
+در این ویدیو، مروری داریم بر لحظات مهم شروع لیگ:<br>
+از ورود و استقبال از مسئولین ، تیم‌ها و گرم‌کردن اولیه، تا سوت آغاز بازی‌ها، گل‌های هفتهٔ اول و واکنش‌های احساسی بازیکنان و هواداران.<br>
+هر صحنه، یادآور این است که فوتبال محلی فقط یک مسابقه نیست؛<br>
+ترکیبی است از تلاش، رفاقت، رقابت سالم و مسئولیتی که هر تیم در قبال نام خود بر دوش دارد.<br><br>
+
+هفتهٔ نخست، نوید یک فصل متفاوت را می‌دهد؛ فصلی که در آن تیم‌ها با انگیزه‌ای تازه وارد زمین شده‌اند
+و هواداران آماده‌اند تا در کنار بازیکنان، مسیر شکل‌گیری یک لیگ منظم و رو‌به‌رشد را تجربه کنند.<br><br>
+
+این تنها آغاز راه است…<br>
+مسیر پیشِ‌رو، پر از لحظه‌هایی خواهد بود که ارزش ثبت و تماشا کردن دارند.
+              
+            </div>
+          </div>
+        </div>
+
       `;
 
       announcements.forEach(item => {
@@ -2793,13 +2888,11 @@
       html += `
           </div>
           <div style="font-size:10px;color:var(--text-soft);margin-top:6px;">
-            بعداً می‌تونیم <code>&lt;img&gt;</code> و آدرس فایل‌های واقعی جایگزین کنیم.
+             
           </div>
         </div>
 
-        <div class="card">
-          <div style="font-weight:600;font-size:13px;margin-bottom:6px;">🎬 کلیپ‌ها و ویدیوها</div>
-          <div class="media-list">
+        
       `;
 
       clipsPlaceholders.forEach(text => {
@@ -2814,7 +2907,7 @@
       html += `
           </div>
           <div style="font-size:10px;color:var(--text-soft);margin-top:6px;">
-             این قسمت را با ویدئوی آپلودشده یا لینک یوتیوب/آپارات جایگزین میکنیم.
+          
           </div>
         </div>
       `;
@@ -2860,7 +2953,71 @@
               </thead>
               <tbody>
       `;
+        // -----------------------------
+    // ویدیو در صفحه رسانه
+    // -----------------------------
+    let mediaVideoLoaded = false;
 
+    function getMediaVideoElement() {
+      return document.getElementById("media-video-main");
+    }
+
+    function toggleMediaVideoPlay() {
+      const video = getMediaVideoElement();
+      const btn = document.getElementById("media-video-play-btn");
+      if (!video || !btn) return;
+
+      // بار اول که کلیک می‌کنیم، src را ست می‌کنیم تا قبلش چیزی دانلود نشود
+      if (!mediaVideoLoaded) {
+        video.src = "mp1.mp4";
+        mediaVideoLoaded = true;
+      }
+
+      if (video.paused) {
+        video.play().then(() => {
+          btn.textContent = "⏸ توقف ویدیو";
+        }).catch(err => {
+          console.error("خطا در پخش ویدیو:", err);
+        });
+      } else {
+        video.pause();
+        btn.textContent = "▶ پخش ویدیو";
+      }
+    }
+
+    function toggleMediaVideoFullscreen() {
+      const video = getMediaVideoElement();
+      if (!video) return;
+
+      const isFullscreen =
+        document.fullscreenElement === video ||
+        document.webkitFullscreenElement === video ||
+        document.mozFullScreenElement === video ||
+        document.msFullscreenElement === video;
+
+      if (!isFullscreen) {
+        if (video.requestFullscreen) {
+          video.requestFullscreen();
+        } else if (video.webkitRequestFullscreen) {
+          video.webkitRequestFullscreen();
+        } else if (video.mozRequestFullScreen) {
+          video.mozRequestFullScreen();
+        } else if (video.msRequestFullscreen) {
+          video.msRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      }
+    }
+            
       topScorersDemo.forEach((item, idx) => {
         html += `
           <tr>
