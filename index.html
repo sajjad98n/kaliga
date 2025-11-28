@@ -1505,7 +1505,9 @@
         date: "1404-09-07",
         time: "14:15",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "finished",
+        homeScore: 3,
+        awayScore: 1
       },
       {
         id: 8,
@@ -1515,7 +1517,9 @@
         date: "1404-09-07",
         time: "15:00",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "finished",
+        homeScore: 2,
+        awayScore: 2
       },
       {
         id: 9,
@@ -1525,7 +1529,9 @@
         date: "1404-09-07",
         time: "15:45",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "finished",
+        homeScore: 3,
+        awayScore: 1
       },
       {
         id: 10,
@@ -1535,7 +1541,9 @@
         date: "1404-09-07",
         time: "16:30",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "finished",
+        homeScore: 0,
+        awayScore: 9
       },
       {
         id: 11,
@@ -1545,7 +1553,9 @@
         date: "1404-09-07",
         time: "17:15",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "finished",
+        homeScore: 2,
+        awayScore: 2
       },
       {
         id: 12,
@@ -1555,7 +1565,9 @@
         date: "1404-09-07",
         time: "18:00",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "finished",
+        homeScore: 2,
+        awayScore: 0
       },
 
       // هفته ۳ - ۱۴۰۴/۰۹/۱۴
@@ -2151,8 +2163,46 @@
         yellowCards: ["-"],
         redCards: ["-"]
       },
+      7: {
+        homeScorers: ["نصرالله جعفری x2 ، سهیل موسوی"],
+        awayScorers: ["گل به خودی"],
+        yellowCards: ["-"],
+        redCards: ["-"]
+      },
       6: {
         homeScorers: ["فرزاد نبوی"],
+        awayScorers: ["-"],
+        yellowCards: ["-"],
+        redCards: ["-"]
+      },
+            11: {
+        homeScorers: ["سعید جعفری ، فردین احمدیان"],
+        awayScorers: ["سینا نبوی ، سبحان عمادی"],
+        yellowCards: ["سینا نبوی"],
+        redCards: ["-"]
+      },
+
+  
+            9: {
+        homeScorers: ["امیرحسین احمدیان x3"],
+        awayScorers: ["حسن نبوی"],
+        yellowCards: ["محمدرضا نبوی"],
+        redCards: ["-"]
+      },
+            10: {
+        homeScorers: ["-"],
+        awayScorers: ["پرهام جعفری x2 ، امیر خادم ، بهزاد رضاییان x2 ، حامد نبوی x2 ، عارف جعفری "],
+        yellowCards: ["-"],
+        redCards: ["-"]
+      },
+            8: {
+        homeScorers: ["امیرحسین صفایی x2"],
+        awayScorers: ["علیرضا موسوی ، مهدی نبوی"],
+        yellowCards: ["علی نبوی"],
+        redCards: ["-"]
+      },
+            12: {
+        homeScorers: ["ماهان قادری ، سید ایلیا نبوی"],
         awayScorers: ["-"],
         yellowCards: ["-"],
         redCards: ["-"]
@@ -3160,15 +3210,26 @@ function renderMediaPage() {
       const container = document.getElementById("page-content");
 
       const topScorersDemo = [
+        { player: "بهزاد رضایان", team: "زنده یاد بهمن و مصطفی جعفری", goals: 4 },
+        { player: "سید مهدی نبوی", team: "زنده یاد سید مهدی نبوی", goals: 3 },
+        { player: "امیرحسین احمدیان", team: "امامزاده پیش", goals: 3 },
+        { player: "پرهام جعفری", team: "زنده یاد بهمن و مصطفی جعفری", goals: 2 },
+        { player: "حامد نبوی", team: "زنده یاد بهمن و مصطفی جعفری", goals: 2 },
         { player: "مهدیار جعفری", team: "استودیو نامبر وان", goals: 2 },
-        { player: "سید مهدی نبوی", team: "زنده یاد سید مهدی نبوی", goals: 2 },
-        { player: "بهزاد رضایان", team: "زنده یاد بهمن و مصطفی جعفری", goals: 2 },
+        { player: "سید حسن نبوی", team: "استودیو نامبر وان", goals: 2 },
+        { player: "سعید جعفری", team: "زنده یاد مجید جعفری", goals: 2 },
+        { player: "سید ایلیا نبوی", team: "زنده یاد هادی قادری", goals: 2 },
+        { player: "امیرحسین صفایی", team: "زنده یاد محمد رضا جعفری", goals: 2 },
+        { player: "نصرالله جعفری", team: "شهید احسان موسوی", goals: 2 },
         { player: "متین احمدیان", team: "کافه لوین", goals: 2 },
       ];
 
       const cardsDemo = [
         { player: "میلاد قادری", team: "زنده یاد هادی قادری", yellow: 1, red: 0 },
-        { player: "ایلیا نبوی", team: "زنده یاد هادی قادری", yellow: 1, red: 0 }
+        { player: "ایلیا نبوی", team: "زنده یاد هادی قادری", yellow: 1, red: 0 },
+        { player: "علی نبوی", team: "زنده یاد محمد رضا جعفری", yellow: 1, red: 0 },
+        { player: "محمد رضا نبوی", team: "امامزاده پیش", yellow: 1, red: 0 },
+        { player: "سینا نبوی", team: "پیشکسوتان نیزوا", yellow: 1, red: 0 }
       ];
 
       let html = `
