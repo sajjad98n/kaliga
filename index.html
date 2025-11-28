@@ -491,6 +491,138 @@
       font-size: 10px;
       line-height: 16px;
     }
+          .prediction-donut-wrapper {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .prediction-donut {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      position: relative;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.7);
+      /* 🎬 انیمیشن لود شدن */
+      animation: prediction-pop 0.6s ease-out;
+    }
+
+    .prediction-donut-inner {
+      position: absolute;
+      inset: 12px;
+      border-radius: 50%;
+      background: var(--bg-soft);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      text-align: center;
+      color: var(--pred-text);
+      /* انیمیشن محو شدن نرم متن وسط */
+      animation: prediction-inner-fade 0.6s ease-out 0.1s both;
+    }
+
+    .prediction-donut-label {
+      opacity: 0.8;
+    }
+
+    .prediction-donut-value {
+      font-weight: 700;
+      font-size: 13px;
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+
+    /* هایلایت قوی‌ترین پیش‌بینی */
+    .prediction-donut.max-home::before,
+    .prediction-donut.max-draw::before,
+    .prediction-donut.max-away::before {
+      content: "";
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .prediction-donut.max-home::before {
+      border: 2px solid var(--pred-home);
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.7);
+    }
+
+    .prediction-donut.max-draw::before {
+      border: 2px solid var(--pred-draw);
+      box-shadow: 0 0 12px rgba(148, 163, 184, 0.7);
+    }
+
+    .prediction-donut.max-away::before {
+      border: 2px solid var(--pred-away);
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.7);
+    }
+
+    .prediction-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--pred-text);
+    }
+
+    .prediction-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .prediction-legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      flex-shrink: 0;
+    }
+
+    .prediction-legend-dot-home {
+      background: var(--pred-home);
+    }
+
+    .prediction-legend-dot-draw {
+      background: var(--pred-draw);
+    }
+
+    .prediction-legend-dot-away {
+      background: var(--pred-away);
+    }
+
+    /* 🎥 keyframes انیمیشن‌ها */
+    @keyframes prediction-pop {
+      0% {
+        transform: scale(0.4) rotate(-10deg);
+        opacity: 0;
+      }
+      60% {
+        transform: scale(1.05) rotate(2deg);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1) rotate(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes prediction-inner-fade {
+      0% {
+        opacity: 0;
+        transform: scale(0.7);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
 
     /* اکشن‌ها و کامنت‌ها */
     .match-actions {
@@ -937,6 +1069,34 @@
 
     .media-item-title {
       font-weight: 500;
+    }
+        .media-gallery-group {
+      margin-bottom: 10px;
+    }
+
+    .media-gallery-images {
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .media-gallery-item {
+      width: 90px;
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .media-gallery-item img {
+      width: 100%;
+      border-radius: 10px;
+      display: block;
+      margin-bottom: 4px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    .media-gallery-caption {
+      line-height: 1.4;
     }
 
     .media-tag {
@@ -2520,27 +2680,77 @@
               </div>
           `;
 
-          if (stats) {
+            if (stats) {
+            const homeP = stats.homePercent;
+            const drawP = stats.drawPercent;
+            const awayP = stats.awayPercent;
+
+            // تبدیل درصد به زاویه
+            const homeAngle = homeP * 3.6;
+            const drawAngle = drawP * 3.6;
+            const awayAngle = 360 - homeAngle - drawAngle;
+
+            // عنوان‌ها: اسم تیم‌ها به‌جای میزبان/مهمان
+            const homeTitle = home.name;
+            const drawTitle = "مساوی";
+            const awayTitle = away.name;
+
+            // پیدا کردن قوی‌ترین پیش‌بینی
+            let maxTitle = homeTitle;
+            let maxValue = homeP;
+            let maxClass = "max-home";
+
+            if (drawP > maxValue) {
+              maxValue = drawP;
+              maxTitle = drawTitle;
+              maxClass = "max-draw";
+            }
+            if (awayP > maxValue) {
+              maxValue = awayP;
+              maxTitle = awayTitle;
+              maxClass = "max-away";
+            }
+
+            const donutStyle = `
+              background: conic-gradient(
+                var(--pred-home) 0deg ${homeAngle}deg,
+                var(--pred-draw) ${homeAngle}deg ${homeAngle + drawAngle}deg,
+                var(--pred-away) ${homeAngle + drawAngle}deg 360deg
+              );
+            `;
+
             html += `
               <div class="prediction-summary">
                 <div>پیش‌بینی کاربران (تعداد ${stats.total}):</div>
-                <div class="prediction-bars">
-                  <div class="prediction-bar">
-                    <div class="prediction-fill prediction-fill-home" style="width:${stats.homePercent}%"></div>
-                    <div class="prediction-label">برد میزبان ${stats.homePercent}%</div>
+                <div class="prediction-donut-wrapper">
+                  <div class="prediction-donut ${maxClass}" style="${donutStyle}">
+                    <div class="prediction-donut-inner">
+                      <div class="prediction-donut-label">بیشترین</div>
+                      <div class="prediction-donut-value">
+                        ${maxTitle}<br>${maxValue}%
+                      </div>
+                    </div>
                   </div>
-                  <div class="prediction-bar">
-                    <div class="prediction-fill prediction-fill-draw" style="width:${stats.drawPercent}%"></div>
-                    <div class="prediction-label">مساوی ${stats.drawPercent}%</div>
-                  </div>
-                  <div class="prediction-bar">
-                    <div class="prediction-fill prediction-fill-away" style="width:${stats.awayPercent}%"></div>
-                    <div class="prediction-label">برد مهمان ${stats.awayPercent}%</div>
+                  <div class="prediction-legend">
+                    <div class="prediction-legend-item">
+                      <span class="prediction-legend-dot prediction-legend-dot-home"></span>
+                      <span>${homeTitle} ${homeP}%</span>
+                    </div>
+                    <div class="prediction-legend-item">
+                      <span class="prediction-legend-dot prediction-legend-dot-draw"></span>
+                      <span>${drawTitle} ${drawP}%</span>
+                    </div>
+                    <div class="prediction-legend-item">
+                      <span class="prediction-legend-dot prediction-legend-dot-away"></span>
+                      <span>${awayTitle} ${awayP}%</span>
+                    </div>
                   </div>
                 </div>
               </div>
             `;
           }
+
+
 
           if (match.status === "upcoming" || match.status === "live") {
             html += `
@@ -2803,123 +3013,145 @@
 
     // -----------------------------
     // ۹) صفحه رسانه و اطلاعیه‌ها
-    // -----------------------------
-    function renderMediaPage() {
-      const container = document.getElementById("page-content");
+// -----------------------------
+function renderMediaPage() {
+  const container = document.getElementById("page-content");
 
-      const announcements = [
-        { title: "", body: "" },
-        
-      ];
+  // اگر خواستی اطلاعیه داشته باشی، اینجا اضافه کن
+  const announcements = [
+    // { title: "اطلاعیه مهم شماره ۱", body: "متن اطلاعیه..." },
+    // { title: "اطلاعیه مهم شماره ۲", body: "متن اطلاعیه..." }
+  ];
 
-      const galleryPlaceholders = [
+  // گالری گروهی: هر عنوان، چندتا عکس
+  const galleryGroups = [
+    {
+      title: "افتتاحیه لیگ کالـیگا",
+      images: [
+        { src: "img1.jpg", caption: "مهمانان گرانقدر مراسم افتتاحیه" },
+        { src: "img2.jpg", caption: "استقبال پرشور ورزش دوستان" },
+        { src: "img3.jpg", caption: "نمایش جذاب دختران ورزشکار" }
+      ]
+    },
 
-      ];
+    // هر وقت خواستی گروه جدید اضافه کن:
+    // {
+    //   title: "هفته دوم – ...",
+    //   images: [
+    //     { src: "img6.jpg", caption: "..." },
+    //     { src: "img7.jpg", caption: "..." }
+    //   ]
+    // }
+  ];
 
-      const clipsPlaceholders = [
-       
-      ];
+  let html = `
+    <div class="section-title">
+      <span class="dot"></span>
+      <span>رسانه و اطلاعیه‌ها</span>
+    </div>
 
-      let html = `
-        <div class="section-title">
-          <span class="dot"></span>
-          <span>رسانه و اطلاعیه‌ها</span>
+    <div class="card">
+      <div style="font-weight:600;font-size:13px;margin-bottom:6px;">🎬 کلیپ‌ها و ویدیوها</div>
+
+      <div class="media-video">
+        <div class="media-video-player">
+          <video
+            id="media-video-main"
+            src="mp1.mp4"
+            preload="none"
+            playsinline
+            controls
+          ></video>
         </div>
 
-                <div class="card">
-          <div style="font-weight:600;font-size:13px;margin-bottom:6px;">🎬 کلیپ‌ها و ویدیوها</div>
+        <div class="media-video-caption">
+          <br>اولین فصل کالـیگا با مراسم افتتاحیه و انجام نخستین رقابت‌ها به‌صورت رسمی آغاز شد؛<br>
+          آغازی که از همان دقایق نخست، انرژی، تمرکز و شوق تیم‌ها برای یک فصل پرتنش و جذاب را نشان داد.<br>
+          در این ویدیو، مروری داریم بر لحظات مهم شروع لیگ:<br>
+          از ورود و استقبال از مسئولین ، تیم‌ها و گرم‌کردن اولیه، تا سوت آغاز بازی‌ها، گل‌های هفتهٔ اول و واکنش‌های احساسی بازیکنان و هواداران.<br>
+          هر صحنه، یادآور این است که فوتبال محلی فقط یک مسابقه نیست؛<br>
+          ترکیبی است از تلاش، رفاقت، رقابت سالم و مسئولیتی که هر تیم در قبال نام خود بر دوش دارد.<br><br>
 
-          <div class="media-video">
-            <div class="media-video-player">
-                <video
-                id="media-video-main"
-                src="mp1.mp4"
-                preload="none"
-                playsinline
-                controls
-              ></video>
+          هفتهٔ نخست، نوید یک فصل متفاوت را می‌دهد؛ فصلی که در آن تیم‌ها با انگیزه‌ای تازه وارد زمین شده‌اند
+          و هواداران آماده‌اند تا در کنار بازیکنان، مسیر شکل‌گیری یک لیگ منظم و رو‌به‌رشد را تجربه کنند.<br><br>
 
-            </div>
-
-            
-
-            <div class="media-video-caption">
-             
-             <br>اولین فصل کالـیگا با مراسم افتتاحیه و انجام نخستین رقابت‌ها به‌صورت رسمی آغاز شد؛<br>
-آغازی که از همان دقایق نخست، انرژی، تمرکز و شوق تیم‌ها برای یک فصل پرتنش و جذاب را نشان داد.<br>
-در این ویدیو، مروری داریم بر لحظات مهم شروع لیگ:<br>
-از ورود و استقبال از مسئولین ، تیم‌ها و گرم‌کردن اولیه، تا سوت آغاز بازی‌ها، گل‌های هفتهٔ اول و واکنش‌های احساسی بازیکنان و هواداران.<br>
-هر صحنه، یادآور این است که فوتبال محلی فقط یک مسابقه نیست؛<br>
-ترکیبی است از تلاش، رفاقت، رقابت سالم و مسئولیتی که هر تیم در قبال نام خود بر دوش دارد.<br><br>
-
-هفتهٔ نخست، نوید یک فصل متفاوت را می‌دهد؛ فصلی که در آن تیم‌ها با انگیزه‌ای تازه وارد زمین شده‌اند
-و هواداران آماده‌اند تا در کنار بازیکنان، مسیر شکل‌گیری یک لیگ منظم و رو‌به‌رشد را تجربه کنند.<br><br>
-
-این تنها آغاز راه است…<br>
-مسیر پیشِ‌رو، پر از لحظه‌هایی خواهد بود که ارزش ثبت و تماشا کردن دارند.
-              
-            </div>
-          </div>
+          این تنها آغاز راه است…<br>
+          مسیر پیشِ‌رو، پر از لحظه‌هایی خواهد بود که ارزش ثبت و تماشا کردن دارند.
         </div>
+      </div>
+    </div>
+  `;
 
-      `;
+  // کارت اطلاعیه‌ها (اگر چیزی داخل announcements گذاشته باشی)
+  if (announcements.length) {
+    html += `
+      <div class="card">
+        <div style="font-weight:600;font-size:13px;margin-bottom:6px;">📢 اطلاعیه‌ها</div>
+        <div class="media-list">
+    `;
 
-      announcements.forEach(item => {
-        html += `
-          <div>
-            <div class="media-item-title">${escapeHtml(item.title)}</div>
-            <div style="font-size:11px;color:var(--text-soft);">${escapeHtml(item.body)}</div>
-          </div>
-        `;
-      });
-
+    announcements.forEach(item => {
       html += `
+        <div>
+          <div class="media-item-title">${escapeHtml(item.title)}</div>
+          <div style="font-size:11px;color:var(--text-soft);">
+            ${escapeHtml(item.body)}
           </div>
         </div>
-
-        <div class="card">
-          <div style="font-weight:600;font-size:13px;margin-bottom:6px;">🖼️ گالری تصاویر</div>
-          <div class="media-list">
       `;
+    });
 
-      galleryPlaceholders.forEach(text => {
-        html += `
-          <div>
-            <span class="media-tag">Photo</span>
-            <span style="font-size:11px;color:var(--text-soft);">${escapeHtml(text)}</span>
-          </div>
-        `;
-      });
+    html += `
+        </div>
+      </div>
+    `;
+  }
 
+  // کارت گالری تصاویر (گروهی)
+  html += `
+    <div class="card">
+      <div style="font-weight:600;font-size:13px;margin-bottom:6px;">🖼️ گالری تصاویر</div>
+      <div class="media-list">
+  `;
+
+  galleryGroups.forEach(group => {
+    html += `
+      <div class="media-gallery-group">
+        <div class="media-item-title">${escapeHtml(group.title)}</div>
+        <div class="media-gallery-images">
+    `;
+
+    (group.images || []).forEach(img => {
       html += `
-          </div>
-          <div style="font-size:10px;color:var(--text-soft);margin-top:6px;">
-             
-          </div>
-        </div>
-
-        
-      `;
-
-      clipsPlaceholders.forEach(text => {
-        html += `
-          <div>
-            <span class="media-tag">Video</span>
-            <span style="font-size:11px;color:var(--text-soft);">${escapeHtml(text)}</span>
-          </div>
-        `;
-      });
-
-      html += `
-          </div>
-          <div style="font-size:10px;color:var(--text-soft);margin-top:6px;">
-          
-          </div>
+        <div class="media-gallery-item">
+          <img
+            src="${escapeHtml(img.src)}"
+            alt="${escapeHtml(img.caption || group.title)}"
+            onclick="showGalleryImage('${escapeHtml(img.src)}')"
+          />
+          ${img.caption
+            ? `<div class="media-gallery-caption">${escapeHtml(img.caption)}</div>`
+            : ""
+          }
         </div>
       `;
+    });
 
-      container.innerHTML = html;
-    }
+
+    html += `
+        </div>
+      </div>
+    `;
+  });
+
+  html += `
+      </div>
+    </div>
+  `;
+
+  container.innerHTML = html;
+}
+
 
     // -----------------------------
     // ۱۰) صفحه آمار لیگ
@@ -3273,8 +3505,21 @@
 
       document.body.style.background =
         `radial-gradient(circle at top, ${theme.bgSoft}, ${theme.bg} 55%)`;
+    
+      // 🎯 رنگ‌های نمودار پیش‌بینی (برای تم تیره / روشن)
+    if (currentMode === "dark") {
+      root.style.setProperty("--pred-home", "#22c55e");   // سبز برد میزبان
+      root.style.setProperty("--pred-draw", "#e5e7eb");   // طوسی مساوی
+      root.style.setProperty("--pred-away", "#3b82f6");   // آبی برد مهمان
+      root.style.setProperty("--pred-text", "#f9fafb");   // متن داخل دونات/راهنما
+      }
+    else {
+      root.style.setProperty("--pred-home", "#16a34a");   // سبز تیره‌تر
+      root.style.setProperty("--pred-draw", "#6b7280");   // طوسی پررنگ
+      root.style.setProperty("--pred-away", "#2563eb");   // آبی مناسب پس‌زمینه روشن
+      root.style.setProperty("--pred-text", "#111827");
+      }
     }
-
     function initTheme() {
       const list = getCurrentThemeList();
       if (!list.length) return;
@@ -3370,6 +3615,21 @@
       img.src = `team${teamId}.png`;
     }
 
+    function showGalleryImage(imageSrc) {
+      const overlay = document.getElementById("team-image-overlay");
+      const img = document.getElementById("team-image-img");
+      const dialog = document.querySelector(".team-image-dialog");
+      if (!overlay || !img || !dialog) return;
+
+      overlay.style.display = "flex";
+      dialog.style.background = "#000";
+      img.style.display = "block";
+
+      // برای گالری دیگه لازم نیست onerror عوض کنیم
+      img.onerror = null;
+      img.src = imageSrc;
+    }
+    
     function hideTeamImage() {
       const overlay = document.getElementById("team-image-overlay");
       if (overlay) overlay.style.display = "none";
