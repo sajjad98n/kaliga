@@ -2696,7 +2696,7 @@
             const awayTitle = away.name;
 
             // پیدا کردن قوی‌ترین پیش‌بینی
-            let maxTitle = homeTitle;
+            let maxTitle = home.shortName;
             let maxValue = homeP;
             let maxClass = "max-home";
 
@@ -2707,7 +2707,7 @@
             }
             if (awayP > maxValue) {
               maxValue = awayP;
-              maxTitle = awayTitle;
+              maxTitle = away.shortName;
               maxClass = "max-away";
             }
 
