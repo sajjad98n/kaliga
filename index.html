@@ -1402,17 +1402,17 @@
     // توضیحات جداگانه برای هر تیم
     const teamDescriptions = {
       1: "تیم ۱ - سید سعید نبوی، متین احمدیان، سید حسین نبوی، طاها جعفری، محمد احمدیان، ربیع الله احمدیان، سید جمال نبوی، سید سپهر نبوی، سید عماد(امید)نبوی.",
-      2: "تیم ۲ - سید عرفان نبوی، سید اسمائیل نبوی، سید حسین نبوی، سید حسن نبوی، سید محمدحسیین نبوی، مهدیار جعفری، سید محمد یامین نبوی، ابوالفضل طیبی.",
-      3: "تیم ۳ - سید علی نبوی، سید محمد نبوی، سید محمود نبوی، سید صمد نبوی، سید علیرضا موسوی، سید مهدی نبوی، علی احمدیان، سینا احمدیان.",
+      2: "تیم ۲ - سید اسماییل نبوی، سید حسین نبوی، سید حسن نبوی، سید محمدحسین نبوی، مهدیار جعفری، سید محمد یامین نبوی، ابوالفضل طیبی ، علی جعفری.",
+      3: "تیم ۳ - سید علی نبوی، سید محمد نبوی، سید محمود نبوی، سید صمد نبوی، سید علیرضا موسوی، سید مهدی نبوی، علی احمدیان، سینا احمدیان ، سید رمضان نبوی.",
       4: "تیم ۴ - فردین احمدیان، علی سام احمدیان، سعید جعفری، ابوالفضل احمدیان، محمد علی احمدیان، روح الله احمدیان، علی احمدیان، سید علی اکبر عمادی، اسماعیل احمدیان.",
       5: "تیم ۵ - امیر خادم، سیروس جعفری، سید حسین نبوی، کمال جعفری، بهزاد رضائیان، احمد جعفری، سید حامد نبوی، پرهام جعفری، عارف جعفری.",
       6: "تیم ۶ -سید محمد نبوی، سید امیر علی نبوی، سید سینا نبوی، سید سبحان عمادی، سید نورالله نبوی، سید محمد نبوی، سید محمد نبوی، حسن مذهبدار، سید تقی نبوی، سید فرزاد نبوی.",
-      7: "تیم ۷ - هادی جعفری، جعفری، حسام جعفری، امیرحسین صفایی، آریا جعفری، مصطفی قادری، سید علی نبوی .",
-      8: "تیم ۸ - ابوذر قادری، علیرضا قادری، رضا قادری، عبدالمطلب قادری، مجتبی قادری، زین‌العابدین قادری، صادق قادری، اشکان قادری.",
+      7: "تیم ۷ - هادی جعفری، حسام جعفری، امیرحسین صفایی، آریا جعفری، مصطفی قادری، سید علی نبوی ، امیر جعفری، محمود رضا جعفری ، سامان رضائیان .",
+      8: "تیم ۸ - ابوذر قادری، علیرضا قادری، رضا قادری، عبدالمطلب قادری، مجتبی قادری، زین‌العابدین قادری، صادق قادری، اشکان قادری ، متین قادری.",
       9: "تیم ۹ - آرش(قاسم) قادری، امیر قادری، عارف قادری، میلاد قادری، عباس قادری، فرهاد قادری، مهدی قادری، ماهان قادری، سید ایلیا نبوی.",
-      10:"تیم ۱۰ - علیرضا قادری، سید محمود نبوی، سید محمدرضا نبوی، فتح الله جعفری، سید ابراهیم نبوی، آرمین ذولفقاری، امیرحسین احمدیان.",
-      11:"تیم ۱۱ - سید سهیل موسوی، سید عسگری موسوی، رضا قادری، علی جعفری، دانیال مداحی، نصرالله( مهدی) جعفری، عبدالله جعفری پور، سید مرتضی نبوی.",
-      12:"تیم ۱۲ - سید مانی نبوی، عبدالله جعفری، محمد جواد نیک بین، سید محمد کمال نبوی، سعید جعفری، سید جواد متولیان، سید مهرداد نبوی، سید ابوالفضل نبوی."
+      10:"تیم ۱۰ - علیرضا قادری، سید محمود نبوی، سید محمدرضا نبوی، فتح الله جعفری، سید ابراهیم نبوی، آرمین ذولفقاری، امیرحسین احمدیان ، سید محمود نبوی ، سید کاظم نبوی .",
+      11:"تیم ۱۱ - سید سهیل موسوی، سید عسگری موسوی، رضا قادری، علی جعفری، دانیال مداحی، نصرالله( مهدی) جعفری، عبدالله جعفری پور، سید مرتضی نبوی ، ابراهیم جعفری.",
+      12:"تیم ۱۲ - سید مانی نبوی، عبدالله جعفری، محمد جواد نیک بین، سید محمد کمال نبوی، سعید جعفری، سید جواد متولیان، سید مهرداد نبوی، سید ابوالفضل نبوی ، سید حسن نبوی."
     };
 
     // -----------------------------
@@ -1579,7 +1579,9 @@
         date: "1404-09-14",
         time: "14:15",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "finished",
+        homeScore: 0,
+        awayScore: 0
       },
       {
         id: 14,
@@ -1589,7 +1591,9 @@
         date: "1404-09-14",
         time: "15:00",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "finished",
+        homeScore: 3,
+        awayScore: 2
       },
       {
         id: 15,
@@ -1599,7 +1603,9 @@
         date: "1404-09-14",
         time: "15:45",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "finished",
+        homeScore: 2,
+        awayScore: 4
       },
       {
         id: 16,
@@ -1609,7 +1615,9 @@
         date: "1404-09-14",
         time: "16:30",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "finished",
+        homeScore: 2,
+        awayScore: 2
       },
       {
         id: 17,
@@ -1619,7 +1627,9 @@
         date: "1404-09-14",
         time: "17:15",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "finished",
+        homeScore: 3,
+        awayScore: 3
       },
       {
         id: 18,
@@ -1629,7 +1639,9 @@
         date: "1404-09-14",
         time: "18:00",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "finished",
+        homeScore: 0,
+        awayScore: 0
       },
 
       // هفته ۴ - ۱۴۰۴/۰۹/۲۱
@@ -2205,6 +2217,42 @@
         homeScorers: ["ماهان قادری ، سید ایلیا نبوی"],
         awayScorers: ["-"],
         yellowCards: ["-"],
+        redCards: ["-"]
+      },
+      13: {
+        homeScorers: ["-"],
+        awayScorers: ["-"],
+        yellowCards: ["امید نبوی"],
+        redCards: ["-"]
+      },
+      14: {
+        homeScorers: ["سعید جعفری ، ابوالفضل احمدیان"],
+        awayScorers: ["عسگری موسوی، سهیل موسوی"],
+        yellowCards: ["عسگری موسوی ، علی اکبر عمادی"],
+        redCards: ["-"]
+      },
+      15: {
+        homeScorers: ["سعید جعفری ، جواد متولیان"],
+        awayScorers: ["سینا احمدیان ، مهدی نبوی x3"],
+        yellowCards: ["-"],
+        redCards: ["-"]
+      },
+      16: {
+        homeScorers: ["ابوالفضل طیبی ، علی جعفری"],
+        awayScorers: ["علیرضا قادری - صادق قادری"],
+        yellowCards: ["-"],
+        redCards: ["-"]
+      },
+      17: {
+        homeScorers: ["امیرحسین احمدیان x3"],
+        awayScorers: ["حسام جعفری ، امیر جعفری"],
+        yellowCards: ["فتح الله جعفری ، محمود نبوی ، سید علی نبوی"],
+        redCards: ["-"]
+      },
+      18: {
+        homeScorers: ["-"],
+        awayScorers: ["-"],
+        yellowCards: ["بهزاد رضاییان ، عارف قادری"],
         redCards: ["-"]
       },
       // برای بقیه بازی‌ها هم هر وقت خواستی اضافه کن
@@ -2837,56 +2885,68 @@
     // -----------------------------
     // ۶) صفحه نتایج
     // -----------------------------
-    function renderResultsPage() {
-      const container = document.getElementById("page-content");
-      const finished = matches.filter(m => m.status === "finished");
+function renderResultsPage() {
+  const container = document.getElementById("page-content");
 
-      let html = `
-        <div class="section-title">
-          <span class="dot"></span>
-          <span>نتایج کامل • همه‌ی هفته‌ها</span>
+  // 1) فقط بازی‌های پایان‌یافته
+  const finished = matches
+    .filter(m => m.status === "finished")
+    .slice() // کپی برای اینکه آرایه اصلی دست‌نخورَد
+    // 2) سورت نزولی: اول تاریخ (جدیدتر بالاتر)، بعد ساعت
+    .sort((a, b) => {
+      // تاریخ‌ها به صورت "YYYY-MM-DD" ذخیره شده‌اند (شمسی اما فرمتش عددی است)
+      if (a.date !== b.date) return b.date.localeCompare(a.date);
+      // اگر تاریخ برابر بود، ساعت را مقایسه کن (فرمت "HH:MM")
+      return (b.time || "").localeCompare(a.time || "");
+    });
+
+  let html = `
+    <div class="section-title">
+      <span class="dot"></span>
+      <span>نتایج کامل • همۀ هفته‌ها (جدیدترین در بالا)</span>
+    </div>
+  `;
+
+  if (!finished.length) {
+    html += `<div class="card">فعلاً نتیجه نهایی ثبت نشده است.</div>`;
+  } else {
+    finished.forEach(match => {
+      const home = getTeamById(match.homeTeamId);
+      const away = getTeamById(match.awayTeamId);
+
+      html += `
+        <div class="card">
+          <div class="match-row">
+            <div class="team-side team-home">
+              ${getTeamLogoHtml(home)}
+              <div class="team-name">${home.name}</div>
+            </div>
+            <div class="match-center">
+              <div class="match-score">${match.homeScore} : ${match.awayScore}</div>
+              <div class="match-status status-finished">پایان یافته</div>
+            </div>
+            <div class="team-side team-away">
+              <div class="team-name">${away.name}</div>
+              ${getTeamLogoHtml(away)}
+            </div>
+          </div>
+          <div class="match-meta">
+            <span>هفته ${match.week} • ${match.stadium}</span>
+            <span>تاریخ: ${formatDate(match.date)} • ${match.time}</span>
+          </div>
+          <div class="match-actions">
+            <button class="action-btn" onclick="toggleComments(${match.id})">💬 نظرات بازی</button>
+            <button class="action-btn" onclick="showMatchDetails(${match.id})">📋 جزئیات بازی</button>
+          </div>
+          <div class="comments-section" id="comments-${match.id}" style="display:none;"></div>
         </div>
       `;
+    });
+  }
 
-      if (!finished.length) {
-        html += `<div class="card">فعلاً نتیجه نهایی ثبت نشده است.</div>`;
-      } else {
-        finished.forEach(match => {
-          const home = getTeamById(match.homeTeamId);
-          const away = getTeamById(match.awayTeamId);
+  container.innerHTML = html;
+}
 
-          html += `
-            <div class="card">
-              <div class="match-row">
-                <div class="team-side team-home">
-                  ${getTeamLogoHtml(home)}
-                  <div class="team-name">${home.name}</div>
-                </div>
-                <div class="match-center">
-                  <div class="match-score">${match.homeScore} : ${match.awayScore}</div>
-                  <div class="match-status status-finished">پایان یافته</div>
-                </div>
-                <div class="team-side team-away">
-                  <div class="team-name">${away.name}</div>
-                  ${getTeamLogoHtml(away)}
-                </div>
-              </div>
-              <div class="match-meta">
-                <span>هفته ${match.week} • ${match.stadium}</span>
-                <span>تاریخ: ${formatDate(match.date)} • ${match.time}</span>
-              </div>
-              <div class="match-actions">
-                <button class="action-btn" onclick="toggleComments(${match.id})">💬 نظرات بازی</button>
-                <button class="action-btn" onclick="showMatchDetails(${match.id})">📋 جزئیات بازی</button>
-              </div>
-              <div class="comments-section" id="comments-${match.id}" style="display:none;"></div>
-            </div>
-          `;
-        });
-      }
-
-      container.innerHTML = html;
-    }
 
     // -----------------------------
     // ۷) جدول لیگ
@@ -3210,18 +3270,24 @@ function renderMediaPage() {
       const container = document.getElementById("page-content");
 
       const topScorersDemo = [
-        { player: "بهزاد رضایان", team: "زنده یاد بهمن و مصطفی جعفری", goals: 4 },
-        { player: "سید مهدی نبوی", team: "زنده یاد سید مهدی نبوی", goals: 3 },
-        { player: "امیرحسین احمدیان", team: "امامزاده پیش", goals: 3 },
-        { player: "پرهام جعفری", team: "زنده یاد بهمن و مصطفی جعفری", goals: 2 },
-        { player: "حامد نبوی", team: "زنده یاد بهمن و مصطفی جعفری", goals: 2 },
-        { player: "مهدیار جعفری", team: "استودیو نامبر وان", goals: 2 },
-        { player: "سید حسن نبوی", team: "استودیو نامبر وان", goals: 2 },
-        { player: "سعید جعفری", team: "زنده یاد مجید جعفری", goals: 2 },
-        { player: "سید ایلیا نبوی", team: "زنده یاد هادی قادری", goals: 2 },
-        { player: "امیرحسین صفایی", team: "زنده یاد محمد رضا جعفری", goals: 2 },
-        { player: "نصرالله جعفری", team: "شهید احسان موسوی", goals: 2 },
-        { player: "متین احمدیان", team: "کافه لوین", goals: 2 },
+  { player: "امیرحسین احمدیان", team: "امامزاده پیش", goals: 6 },
+  { player: "مهدی نبوی", team: "زنده یاد سید مهدی نبوی", goals: 6 },
+  { player: "بهزاد رضاییان", team: "زنده یاد بهمن و مصطفی جعفری", goals: 4 },
+
+  { player: "سعید جعفری", team: "زنده یاد مجید جعفری", goals: 3 },
+
+  { player: "ابوالفضل احمدیان", team: "زنده یاد مجید جعفری", goals: 2 },
+  { player: "امیرحسین صفایی", team: "زنده یاد محمدرضا جعفری", goals: 2 },
+  { player: "ایلیا نبوی", team: "زنده یاد هادی قادری", goals: 2 },
+  { player: "حامد نبوی", team: "زنده یاد بهمن و مصطفی جعفری", goals: 2 },
+  { player: "حسام جعفری", team: "زنده یاد محمدرضا جعفری", goals: 2 },
+  { player: "حسن نبوی", team: "استودیو نامبر وان", goals: 2 },
+  { player: "سعید جعفری", team: "هیئت جوانان", goals: 2 },
+  { player: "سهیل موسوی", team: "شهید سید احسان موسوی", goals: 2 },
+  { player: "متین احمدیان", team: "کافه لوین", goals: 2 },
+  { player: "مهدیار جعفری", team: "استودیو نامبر وان", goals: 2 },
+  { player: "نصرالله جعفری", team: "شهید سید احسان موسوی", goals: 2 },
+  { player: "پرهام جعفری", team: "زنده یاد بهمن و مصطفی جعفری", goals: 2 },
       ];
 
       const cardsDemo = [
@@ -3846,7 +3912,7 @@ function renderMediaPage() {
           rotateTheme();
         });
       });
-      setActivePage("fixtures");
+      setActivePage("results");
 
       // تاریخ و ساعت زنده
       updateCurrentDateTime();
