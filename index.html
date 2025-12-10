@@ -18,8 +18,6 @@
   </script>
 
   <!-- توضیحات برای گوگل -->
- 
-
   <meta name="description" 
       content="سایت رسمی لیگ فوتسال روستای چاشم (کالیگا)؛ برنامه بازی‌ها، نتایج، جدول لیگ، تیم‌ها و آمار مسابقات فصل ۱۴۰۴." />
 
@@ -27,8 +25,6 @@
       content="کالیگا, لیگ فوتسال چاشم, لیگ چاشم, فوتسال کالیگا, لیگ فوتسال روستای چاشم، چاشم ، سمنان، شهمیرزاد، مهدیشهر، لیگ، فوتسال، جوانان، هیئت، هیئت جوانان" />
 
   <meta name="author" content="سجاد نبوی" />
-  
-
 
   <!-- برای پیش‌نمایش در شبکه‌های اجتماعی -->
   <meta property="og:title" content="کالیگا | لیگ فوتسال روستای چاشم">
@@ -491,7 +487,8 @@
       font-size: 10px;
       line-height: 16px;
     }
-          .prediction-donut-wrapper {
+
+    .prediction-donut-wrapper {
       margin-top: 8px;
       display: flex;
       align-items: center;
@@ -622,7 +619,6 @@
         transform: scale(1);
       }
     }
-
 
     /* اکشن‌ها و کامنت‌ها */
     .match-actions {
@@ -1070,7 +1066,8 @@
     .media-item-title {
       font-weight: 500;
     }
-        .media-gallery-group {
+
+    .media-gallery-group {
       margin-bottom: 10px;
     }
 
@@ -1160,7 +1157,6 @@
       .header-right {
         align-items: flex-start;
       }
-      /* میزبان و میهمان همچنان روبه‌روی هم می‌مانند، فقط متا زیر هم می‌آید */
       .match-meta {
         flex-direction: column;
         gap: 2px;
@@ -1210,7 +1206,7 @@
       }
 
       .match-details-list {
-        padding-right: 18px; /* چون RTL هستیم */
+        padding-right: 18px;
         padding-left: 0;
       }
 
@@ -1221,53 +1217,53 @@
       .media-item-title {
         font-size: 12px;
       }
-          .media-video {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: 12px;
-    }
 
-    .media-video-player {
-      border-radius: 14px;
-      overflow: hidden;
-      background: #000;
-    }
+      .media-video {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-size: 12px;
+      }
 
-    .media-video-player video {
-      width: 100%;
-      display: block;
-      background: #000;
-    }
+      .media-video-player {
+        border-radius: 14px;
+        overflow: hidden;
+        background: #000;
+      }
 
-    .media-video-controls {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
+      .media-video-player video {
+        width: 100%;
+        display: block;
+        background: #000;
+      }
 
-    .media-video-btn {
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background: rgba(15, 23, 42, 0.9);
-      color: var(--text-soft);
-      font-size: 11px;
-      cursor: pointer;
-    }
+      .media-video-controls {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
 
-    .media-video-btn:hover {
-      background: var(--accent-soft);
-      color: var(--accent);
-      border-color: var(--accent);
-    }
+      .media-video-btn {
+        padding: 4px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.7);
+        background: rgba(15, 23, 42, 0.9);
+        color: var(--text-soft);
+        font-size: 11px;
+        cursor: pointer;
+      }
 
-    .media-video-caption {
-      font-size: 11px;
-      color: var(--text-soft);
-      line-height: 1.7;
-    }
+      .media-video-btn:hover {
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-color: var(--accent);
+      }
 
+      .media-video-caption {
+        font-size: 11px;
+        color: var(--text-soft);
+        line-height: 1.7;
+      }
     }
   </style>
 </head>
@@ -1293,7 +1289,6 @@
       <div class="side-menu-item" onclick="navigateMenu('media')">📰 رسانه و اطلاعیه‌ها</div>
       <div class="side-menu-item" onclick="navigateMenu('stats')">📈 آمار لیگ</div>
       <div class="side-menu-item" onclick="navigateMenu('feedback')">📥 انتقادات و پیشنهادات </div>
-
     </div>
   </div>
 
@@ -1323,7 +1318,6 @@
         <div>فصل ۱۴۰۴ / ۲۰۲۵</div>
         <!-- تاریخ و ساعت زنده -->
         <div id="current-datetime" class="current-datetime"></div>
-       
         <div class="live-pill"> • آنلاین</div>
         <button id="audio-toggle" class="audio-toggle">🔈 موسیقی خاموش</button>
         <button id="mode-toggle" class="mode-toggle">🌙 حالت تیره</button>
@@ -1419,10 +1413,7 @@
     // ۲) تعریف بازی‌ها
     // -----------------------------
     const matches = [
-          // -----------------------------
-    // ۲) تعریف بازی‌ها
-    // -----------------------------
-      // هفته ۱ - بازی‌های انجام‌شده (بدون تغییر)
+      // هفته ۱ - بازی‌های انجام‌شده
       {
         id: 1,
         week: 1,
@@ -1433,7 +1424,8 @@
         stadium: "سالن شهید صحافی",
         status: "finished",
         homeScore: 3,
-        awayScore: 0
+        awayScore: 0,
+        lock_at: "2025-11-21T15:00:00+03:30"
       },
       {
         id: 2,
@@ -1445,7 +1437,8 @@
         stadium: "سالن شهید صحافی",
         status: "finished",
         homeScore: 3,
-        awayScore: 0
+        awayScore: 0,
+        lock_at: "2025-11-21T15:45:00+03:30"
       },
       {
         id: 3,
@@ -1457,7 +1450,8 @@
         stadium: "سالن شهید صحافی",
         status: "finished",
         homeScore: 2,
-        awayScore: 4
+        awayScore: 4,
+        lock_at: "2025-11-21T16:50:00+03:30"
       },
       {
         id: 4,
@@ -1469,7 +1463,8 @@
         stadium: "سالن شهید صحافی",
         status: "finished",
         homeScore: 1,
-        awayScore: 2
+        awayScore: 2,
+        lock_at: "2025-11-21T17:45:00+03:30"
       },
       {
         id: 5,
@@ -1481,7 +1476,8 @@
         stadium: "سالن شهید صحافی",
         status: "finished",
         homeScore: 1,
-        awayScore: 5
+        awayScore: 5,
+        lock_at: "2025-11-21T18:30:00+03:30"
       },
       {
         id: 6,
@@ -1493,651 +1489,712 @@
         stadium: "سالن شهید صحافی",
         status: "finished",
         homeScore: 1,
-        awayScore: 0
+        awayScore: 0,
+        lock_at: "2025-11-21T19:15:00+03:30"
       },
 
       // هفته ۲ - ۱۴۰۴/۰۹/۰۷
       {
         id: 7,
         week: 2,
-        homeTeamId: 11, // شهید سید احسان موسوی
-        awayTeamId: 8,  // شهید نجفعلی قادری
+        homeTeamId: 11,
+        awayTeamId: 8,
         date: "1404-09-07",
         time: "14:15",
         stadium: "سالن شهید صحافی",
         status: "finished",
         homeScore: 3,
-        awayScore: 1
+        awayScore: 1,
+        lock_at: "2025-11-28T14:15:00+03:30"
       },
       {
         id: 8,
         week: 2,
-        homeTeamId: 7,  // زنده یاد محمدرضا جعفری
-        awayTeamId: 3,  // زنده یاد سید مهدی نبوی
+        homeTeamId: 7,
+        awayTeamId: 3,
         date: "1404-09-07",
         time: "15:00",
         stadium: "سالن شهید صحافی",
         status: "finished",
         homeScore: 2,
-        awayScore: 2
+        awayScore: 2,
+        lock_at: "2025-11-28T15:00:00+03:30"
       },
       {
         id: 9,
         week: 2,
-        homeTeamId: 10, // امامزاده پیش
-        awayTeamId: 2,  // استودیو نامبروان
+        homeTeamId: 10,
+        awayTeamId: 2,
         date: "1404-09-07",
         time: "15:45",
         stadium: "سالن شهید صحافی",
         status: "finished",
         homeScore: 3,
-        awayScore: 1
+        awayScore: 1,
+        lock_at: "2025-11-28T15:45:00+03:30"
       },
       {
         id: 10,
         week: 2,
-        homeTeamId: 12, // هیئت جوانان
-        awayTeamId: 5,  // زنده یاد بهمن و مصطفی جعفری
+        homeTeamId: 12,
+        awayTeamId: 5,
         date: "1404-09-07",
         time: "16:30",
         stadium: "سالن شهید صحافی",
         status: "finished",
         homeScore: 0,
-        awayScore: 9
+        awayScore: 9,
+        lock_at: "2025-11-28T16:30:00+03:30"
       },
       {
         id: 11,
         week: 2,
-        homeTeamId: 4,  // زنده یاد مجید جعفری
-        awayTeamId: 6,  // پیشکسوتان نیزوا
+        homeTeamId: 4,
+        awayTeamId: 6,
         date: "1404-09-07",
         time: "17:15",
         stadium: "سالن شهید صحافی",
         status: "finished",
         homeScore: 2,
-        awayScore: 2
+        awayScore: 2,
+        lock_at: "2025-11-28T17:15:00+03:30"
       },
       {
         id: 12,
         week: 2,
-        homeTeamId: 9,  // زنده یاد هادی قادری
-        awayTeamId: 1,  // کافه لوین
+        homeTeamId: 9,
+        awayTeamId: 1,
         date: "1404-09-07",
         time: "18:00",
         stadium: "سالن شهید صحافی",
         status: "finished",
         homeScore: 2,
-        awayScore: 0
+        awayScore: 0,
+        lock_at: "2025-11-28T18:00:00+03:30"
       },
 
       // هفته ۳ - ۱۴۰۴/۰۹/۱۴
       {
         id: 13,
         week: 3,
-        homeTeamId: 1, // هیئت جوانان
-        awayTeamId: 6,  // زنده یاد هادی قادری
+        homeTeamId: 1,
+        awayTeamId: 6,
         date: "1404-09-14",
         time: "14:15",
         stadium: "سالن شهید صحافی",
         status: "finished",
         homeScore: 0,
-        awayScore: 0
+        awayScore: 0,
+        lock_at: "2025-12-05T14:15:00+03:30"
       },
       {
         id: 14,
         week: 3,
-        homeTeamId: 4, // امامزاده پیش
-        awayTeamId: 11,  // زنده یاد مجید جعفری
+        homeTeamId: 4,
+        awayTeamId: 11,
         date: "1404-09-14",
         time: "15:00",
         stadium: "سالن شهید صحافی",
         status: "finished",
         homeScore: 3,
-        awayScore: 2
+        awayScore: 2,
+        lock_at: "2025-12-05T15:00:00+03:30"
       },
       {
         id: 15,
         week: 3,
-        homeTeamId: 12,  // شهید نجفعلی قادری
-        awayTeamId: 3,  // کافه لوین
+        homeTeamId: 12,
+        awayTeamId: 3,
         date: "1404-09-14",
         time: "15:45",
         stadium: "سالن شهید صحافی",
         status: "finished",
         homeScore: 2,
-        awayScore: 4
+        awayScore: 4,
+        lock_at: "2025-12-05T15:45:00+03:30"
       },
       {
         id: 16,
         week: 3,
-        homeTeamId: 2,  // زنده یاد محمدرضا جعفری
-        awayTeamId: 8,  // پیشکسوتان نیزوا
+        homeTeamId: 2,
+        awayTeamId: 8,
         date: "1404-09-14",
         time: "16:30",
         stadium: "سالن شهید صحافی",
         status: "finished",
         homeScore: 2,
-        awayScore: 2
+        awayScore: 2,
+        lock_at: "2025-12-05T16:30:00+03:30"
       },
       {
         id: 17,
         week: 3,
-        homeTeamId: 10,  // استودیو نامبروان
-        awayTeamId: 7,  // زنده یاد مجید جعفری
+        homeTeamId: 10,
+        awayTeamId: 7,
         date: "1404-09-14",
         time: "17:15",
         stadium: "سالن شهید صحافی",
         status: "finished",
         homeScore: 3,
-        awayScore: 3
+        awayScore: 3,
+        lock_at: "2025-12-05T17:15:00+03:30"
       },
       {
         id: 18,
         week: 3,
-        homeTeamId: 9, // امامزاده پیش
-        awayTeamId: 5,  // شهید نجفعلی قادری
+        homeTeamId: 9,
+        awayTeamId: 5,
         date: "1404-09-14",
         time: "18:00",
         stadium: "سالن شهید صحافی",
         status: "finished",
         homeScore: 0,
-        awayScore: 0
+        awayScore: 0,
+        lock_at: "2025-12-05T18:00:00+03:30"
       },
 
       // هفته ۴ - ۱۴۰۴/۰۹/۲۱
       {
         id: 19,
         week: 4,
-        homeTeamId: 6,  // کافه لوین
-        awayTeamId: 5,  // پیشکسوتان نیزوا
+        homeTeamId: 6,
+        awayTeamId: 5,
         date: "1404-09-21",
         time: "14:15",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2025-12-12T14:15:00+03:30"
       },
       {
         id: 20,
         week: 4,
-        homeTeamId: 7,  // زنده یاد مجید جعفری
-        awayTeamId: 12, // شهید سید احسان موسوی
+        homeTeamId: 7,
+        awayTeamId: 12,
         date: "1404-09-21",
         time: "15:00",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2025-12-12T15:00:00+03:30"
       },
       {
         id: 21,
         week: 4,
-        homeTeamId: 1,  // شهید نجفعلی قادری
-        awayTeamId: 11,  // زنده یاد هادی قادری
+        homeTeamId: 1,
+        awayTeamId: 11,
         date: "1404-09-21",
         time: "15:45",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2025-12-12T15:45:00+03:30"
       },
       {
         id: 22,
         week: 4,
-        homeTeamId: 9,  // استودیو نامبروان
-        awayTeamId: 3,  // زنده یاد محمدرضا جعفری
+        homeTeamId: 9,
+        awayTeamId: 3,
         date: "1404-09-21",
         time: "16:30",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2025-12-12T16:30:00+03:30"
       },
       {
         id: 23,
         week: 4,
-        homeTeamId: 2, // امامزاده پیش
-        awayTeamId: 4,  // زنده یاد بهمن و مصطفی جعفری
+        homeTeamId: 2,
+        awayTeamId: 4,
         date: "1404-09-21",
         time: "17:15",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2025-12-12T17:15:00+03:30"
       },
       {
         id: 24,
         week: 4,
-        homeTeamId: 10, // هیئت جوانان
-        awayTeamId: 8,  // زنده یاد سید مهدی نبوی
+        homeTeamId: 10,
+        awayTeamId: 8,
         date: "1404-09-21",
         time: "18:00",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2025-12-12T18:00:00+03:30"
       },
 
       // هفته ۵ - ۱۴۰۴/۰۹/۲۸
       {
         id: 25,
         week: 5,
-        homeTeamId: 8,  // شهید نجفعلی قادری
-        awayTeamId: 4,  // زنده یاد مجید جعفری
+        homeTeamId: 8,
+        awayTeamId: 4,
         date: "1404-09-28",
         time: "14:15",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2025-12-19T14:15:00+03:30"
       },
       {
         id: 26,
         week: 5,
-        homeTeamId: 2,  // استودیو نامبروان
-        awayTeamId: 1,  // کافه لوین
+        homeTeamId: 2,
+        awayTeamId: 1,
         date: "1404-09-28",
         time: "15:00",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2025-12-19T15:00:00+03:30"
       },
       {
         id: 27,
         week: 5,
-        homeTeamId: 10, // امامزاده پیش
-        awayTeamId: 12, // هیئت جوانان
+        homeTeamId: 10,
+        awayTeamId: 12,
         date: "1404-09-28",
         time: "15:45",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2025-12-19T15:45:00+03:30"
       },
       {
         id: 28,
         week: 5,
-        homeTeamId: 5,  // زنده یاد بهمن و مصطفی جعفری
-        awayTeamId: 11,  // زنده یاد سید مهدی نبوی
+        homeTeamId: 5,
+        awayTeamId: 11,
         date: "1404-09-28",
         time: "16:30",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2025-12-19T16:30:00+03:30"
       },
       {
         id: 29,
         week: 5,
-        homeTeamId: 6,  // پیشکسوتان نیزوا
-        awayTeamId: 3, // شهید سید احسان موسوی
+        homeTeamId: 6,
+        awayTeamId: 3,
         date: "1404-09-28",
         time: "17:15",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2025-12-19T17:15:00+03:30"
       },
       {
         id: 30,
         week: 5,
-        homeTeamId: 7,  // زنده یاد محمدرضا جعفری
-        awayTeamId: 9,  // زنده یاد هادی قادری
+        homeTeamId: 7,
+        awayTeamId: 9,
         date: "1404-09-28",
         time: "18:00",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2025-12-19T18:00:00+03:30"
       },
 
       // هفته ۶ - ۱۴۰۴/۱۰/۰۵
       {
         id: 31,
         week: 6,
-        homeTeamId: 12, // هیئت جوانان
-        awayTeamId: 9,  // زنده یاد هادی قادری
+        homeTeamId: 12,
+        awayTeamId: 9,
         date: "1404-10-05",
         time: "14:15",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2025-12-26T14:15:00+03:30"
       },
       {
         id: 32,
         week: 6,
-        homeTeamId: 10, // امامزاده پیش
-        awayTeamId: 4,  // زنده یاد مجید جعفری
+        homeTeamId: 10,
+        awayTeamId: 4,
         date: "1404-10-05",
         time: "15:00",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2025-12-26T15:00:00+03:30"
       },
       {
         id: 33,
         week: 6,
-        homeTeamId: 8,  // شهید نجفعلی قادری
-        awayTeamId: 1,  // کافه لوین
+        homeTeamId: 8,
+        awayTeamId: 1,
         date: "1404-10-05",
         time: "15:45",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2025-12-26T15:45:00+03:30"
       },
       {
         id: 34,
         week: 6,
-        homeTeamId: 7,  // زنده یاد محمدرضا جعفری
-        awayTeamId: 6,  // پیشکسوتان نیزوا
+        homeTeamId: 7,
+        awayTeamId: 6,
         date: "1404-10-05",
         time: "16:30",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2025-12-26T16:30:00+03:30"
       },
       {
         id: 35,
         week: 6,
-        homeTeamId: 2,  // استودیو نامبروان
-        awayTeamId: 5,  // زنده یاد بهمن و مصطفی جعفری
+        homeTeamId: 2,
+        awayTeamId: 5,
         date: "1404-10-05",
         time: "17:15",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2025-12-26T17:15:00+03:30"
       },
       {
         id: 36,
         week: 6,
-        homeTeamId: 11, // شهید سید احسان موسوی
-        awayTeamId: 3,  // زنده یاد سید مهدی نبوی
+        homeTeamId: 11,
+        awayTeamId: 3,
         date: "1404-10-05",
         time: "18:00",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2025-12-26T18:00:00+03:30"
       },
 
       // هفته ۷ - ۱۴۰۴/۱۰/۱۲
       {
         id: 37,
         week: 7,
-        homeTeamId: 2,  // استودیو نامبروان
-        awayTeamId: 3,  // زنده یاد سید مهدی نبوی
+        homeTeamId: 2,
+        awayTeamId: 3,
         date: "1404-10-12",
         time: "14:15",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-02T14:15:00+03:30"
       },
       {
         id: 38,
         week: 7,
-        homeTeamId: 10, // امامزاده پیش
-        awayTeamId: 9,  // زنده یاد هادی قادری
+        homeTeamId: 10,
+        awayTeamId: 9,
         date: "1404-10-12",
         time: "15:00",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-02T15:00:00+03:30"
       },
       {
         id: 39,
         week: 7,
-        homeTeamId: 8,  // شهید نجفعلی قادری
-        awayTeamId: 5,  // زنده یاد بهمن و مصطفی جعفری
+        homeTeamId: 8,
+        awayTeamId: 5,
         date: "1404-10-12",
         time: "15:45",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-02T15:45:00+03:30"
       },
       {
         id: 40,
         week: 7,
-        homeTeamId: 12, // هیئت جوانان
-        awayTeamId: 6,  // پیشکسوتان نیزوا
+        homeTeamId: 12,
+        awayTeamId: 6,
         date: "1404-10-12",
         time: "16:30",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-02T16:30:00+03:30"
       },
       {
         id: 41,
         week: 7,
-        homeTeamId: 7,  // زنده یاد محمدرضا جعفری
-        awayTeamId: 11, // شهید سید احسان موسوی
+        homeTeamId: 7,
+        awayTeamId: 11,
         date: "1404-10-12",
         time: "17:15",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-02T17:15:00+03:30"
       },
       {
         id: 42,
         week: 7,
-        homeTeamId: 4,  // زنده یاد مجید جعفری
-        awayTeamId: 1,  // کافه لوین
+        homeTeamId: 4,
+        awayTeamId: 1,
         date: "1404-10-12",
         time: "18:00",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-02T18:00:00+03:30"
       },
 
       // هفته ۸ - ۱۴۰۴/۱۰/۱۹
       {
         id: 43,
         week: 8,
-        homeTeamId: 7,  // زنده یاد محمدرضا جعفری
-        awayTeamId: 2,  // استودیو نامبروان
+        homeTeamId: 7,
+        awayTeamId: 2,
         date: "1404-10-19",
         time: "14:15",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-09T14:15:00+03:30"
       },
       {
         id: 44,
         week: 8,
-        homeTeamId: 8,  // شهید نجفعلی قادری
-        awayTeamId: 3,  // زنده یاد سید مهدی نبوی
+        homeTeamId: 8,
+        awayTeamId: 3,
         date: "1404-10-19",
         time: "15:00",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-09T15:00:00+03:30"
       },
       {
         id: 45,
         week: 8,
-        homeTeamId: 9,  // زنده یاد هادی قادری
-        awayTeamId: 6,  // پیشکسوتان نیزوا
+        homeTeamId: 9,
+        awayTeamId: 6,
         date: "1404-10-19",
         time: "15:45",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-09T15:45:00+03:30"
       },
       {
         id: 46,
         week: 8,
-        homeTeamId: 10, // امامزاده پیش
-        awayTeamId: 1,  // کافه لوین
+        homeTeamId: 10,
+        awayTeamId: 1,
         date: "1404-10-19",
         time: "16:30",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-09T16:30:00+03:30"
       },
       {
         id: 47,
         week: 8,
-        homeTeamId: 4,  // زنده یاد مجید جعفری
-        awayTeamId: 5,  // زنده یاد بهمن و مصطفی جعفری
+        homeTeamId: 4,
+        awayTeamId: 5,
         date: "1404-10-19",
         time: "17:15",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-09T17:15:00+03:30"
       },
       {
         id: 48,
         week: 8,
-        homeTeamId: 12, // هیئت جوانان
-        awayTeamId: 11, // شهید سید احسان موسوی
+        homeTeamId: 12,
+        awayTeamId: 11,
         date: "1404-10-19",
         time: "18:00",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-09T18:00:00+03:30"
       },
 
       // هفته ۹ - ۱۴۰۴/۱۰/۲۶
       {
         id: 49,
         week: 9,
-        homeTeamId: 9,  // زنده یاد هادی قادری
-        awayTeamId: 11, // شهید سید احسان موسوی
+        homeTeamId: 9,
+        awayTeamId: 11,
         date: "1404-10-26",
         time: "14:15",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-16T14:15:00+03:30"
       },
       {
         id: 50,
         week: 9,
-        homeTeamId: 1,  // کافه لوین
-        awayTeamId: 5,  // زنده یاد بهمن و مصطفی جعفری
+        homeTeamId: 1,
+        awayTeamId: 5,
         date: "1404-10-26",
         time: "15:00",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-16T15:00:00+03:30"
       },
       {
         id: 51,
         week: 9,
-        homeTeamId: 4,  // زنده یاد مجید جعفری
-        awayTeamId: 3,  // زنده یاد سید مهدی نبوی
+        homeTeamId: 4,
+        awayTeamId: 3,
         date: "1404-10-26",
         time: "15:45",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-16T15:45:00+03:30"
       },
       {
         id: 52,
         week: 9,
-        homeTeamId: 7,  // زنده یاد محمدرضا جعفری
-        awayTeamId: 8,  // شهید نجفعلی قادری
+        homeTeamId: 7,
+        awayTeamId: 8,
         date: "1404-10-26",
         time: "16:30",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-16T16:30:00+03:30"
       },
       {
         id: 53,
         week: 9,
-        homeTeamId: 2,  // استودیو نامبروان
-        awayTeamId: 12, // هیئت جوانان
+        homeTeamId: 2,
+        awayTeamId: 12,
         date: "1404-10-26",
         time: "17:15",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-16T17:15:00+03:30"
       },
       {
         id: 54,
         week: 9,
-        homeTeamId: 10, // امامزاده پیش
-        awayTeamId: 6,  // پیشکسوتان نیزوا
+        homeTeamId: 10,
+        awayTeamId: 6,
         date: "1404-10-26",
         time: "18:00",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-16T18:00:00+03:30"
       },
 
       // هفته ۱۰ - ۱۴۰۴/۱۱/۰۳
       {
         id: 55,
         week: 10,
-        homeTeamId: 10, // امامزاده پیش
-        awayTeamId: 5,  // زنده یاد بهمن و مصطفی جعفری
+        homeTeamId: 10,
+        awayTeamId: 5,
         date: "1404-11-03",
         time: "14:15",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-23T14:15:00+03:30"
       },
       {
         id: 56,
         week: 10,
-        homeTeamId: 8,  // شهید نجفعلی قادری
-        awayTeamId: 12, // هیئت جوانان
+        homeTeamId: 8,
+        awayTeamId: 12,
         date: "1404-11-03",
         time: "15:00",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-23T15:00:00+03:30"
       },
       {
         id: 57,
         week: 10,
-        homeTeamId: 2,  // استودیو نامبروان
-        awayTeamId: 9,  // زنده یاد هادی قادری
+        homeTeamId: 2,
+        awayTeamId: 9,
         date: "1404-11-03",
         time: "15:45",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-23T15:45:00+03:30"
       },
       {
         id: 58,
         week: 10,
-        homeTeamId: 1,  // کافه لوین
-        awayTeamId: 3,  // زنده یاد سید مهدی نبوی
+        homeTeamId: 1,
+        awayTeamId: 3,
         date: "1404-11-03",
         time: "16:30",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-23T16:30:00+03:30"
       },
       {
         id: 59,
         week: 10,
-        homeTeamId: 6,  // پیشکسوتان نیزوا
-        awayTeamId: 11, // شهید سید احسان موسوی
+        homeTeamId: 6,
+        awayTeamId: 11,
         date: "1404-11-03",
         time: "17:15",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-23T17:15:00+03:30"
       },
       {
         id: 60,
         week: 10,
-        homeTeamId: 7,  // زنده یاد محمدرضا جعفری
-        awayTeamId: 4,  // زنده یاد مجید جعفری
+        homeTeamId: 7,
+        awayTeamId: 4,
         date: "1404-11-03",
         time: "18:00",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-23T18:00:00+03:30"
       },
 
       // هفته ۱۱ - ۱۴۰۴/۱۱/۱۰
       {
         id: 61,
         week: 11,
-        homeTeamId: 12, // هیئت جوانان
-        awayTeamId: 4,  // زنده یاد مجید جعفری
+        homeTeamId: 12,
+        awayTeamId: 4,
         date: "1404-11-10",
         time: "14:15",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-30T14:15:00+03:30"
       },
       {
         id: 62,
         week: 11,
-        homeTeamId: 10, // امامزاده پیش
-        awayTeamId: 11, // شهید سید احسان موسوی
+        homeTeamId: 10,
+        awayTeamId: 11,
         date: "1404-11-10",
         time: "15:00",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-30T15:00:00+03:30"
       },
       {
         id: 63,
         week: 11,
-        homeTeamId: 8,  // شهید نجفعلی قادری
-        awayTeamId: 9,  // زنده یاد هادی قادری
+        homeTeamId: 8,
+        awayTeamId: 9,
         date: "1404-11-10",
         time: "15:45",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-30T15:45:00+03:30"
       },
       {
         id: 64,
         week: 11,
-        homeTeamId: 7,  // زنده یاد محمدرضا جعفری
-        awayTeamId: 1,  // کافه لوین
+        homeTeamId: 7,
+        awayTeamId: 1,
         date: "1404-11-10",
         time: "16:30",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-30T16:30:00+03:30"
       },
       {
         id: 65,
         week: 11,
-        homeTeamId: 5,  // زنده یاد بهمن و مصطفی جعفری
-        awayTeamId: 3,  // زنده یاد سید مهدی نبوی
+        homeTeamId: 5,
+        awayTeamId: 3,
         date: "1404-11-10",
         time: "17:15",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-30T17:15:00+03:30"
       },
       {
         id: 66,
         week: 11,
-        homeTeamId: 2,  // استودیو نامبر وان (نابمروان)
-        awayTeamId: 6,  // پیشکسوتان نیزوا
+        homeTeamId: 2,
+        awayTeamId: 6,
         date: "1404-11-10",
         time: "18:00",
         stadium: "سالن شهید صحافی",
-        status: "upcoming"
+        status: "upcoming",
+        lock_at: "2026-01-30T18:00:00+03:30"
       }
     ];
 
@@ -2187,33 +2244,31 @@
         yellowCards: ["-"],
         redCards: ["-"]
       },
-            11: {
+      11: {
         homeScorers: ["سعید جعفری ، فردین احمدیان"],
         awayScorers: ["سینا نبوی ، سبحان عمادی"],
         yellowCards: ["سینا نبوی"],
         redCards: ["-"]
       },
-
-  
-            9: {
+      9: {
         homeScorers: ["امیرحسین احمدیان x3"],
         awayScorers: ["حسن نبوی"],
         yellowCards: ["محمدرضا نبوی"],
         redCards: ["-"]
       },
-            10: {
+      10: {
         homeScorers: ["-"],
         awayScorers: ["پرهام جعفری x2 ، امیر خادم ، بهزاد رضاییان x2 ، حامد نبوی x2 ، عارف جعفری "],
         yellowCards: ["-"],
         redCards: ["-"]
       },
-            8: {
+      8: {
         homeScorers: ["امیرحسین صفایی x2"],
         awayScorers: ["علیرضا موسوی ، مهدی نبوی"],
         yellowCards: ["علی نبوی"],
         redCards: ["-"]
       },
-            12: {
+      12: {
         homeScorers: ["ماهان قادری ، سید ایلیا نبوی"],
         awayScorers: ["-"],
         yellowCards: ["-"],
@@ -2245,7 +2300,7 @@
       },
       17: {
         homeScorers: ["امیرحسین احمدیان x3"],
-        awayScorers: ["حسام جعفری ، امیر جعفری x2"],
+        awayScorers: ["حسام جعفری ، امیر جعفری"],
         yellowCards: ["فتح الله جعفری ، محمود نبوی ، سید علی نبوی"],
         redCards: ["-"]
       },
@@ -2254,8 +2309,7 @@
         awayScorers: ["-"],
         yellowCards: ["بهزاد رضاییان ، عارف قادری"],
         redCards: ["-"]
-      },
-      // برای بقیه بازی‌ها هم هر وقت خواستی اضافه کن
+      }
     };
 
     let currentWeek = 1;
@@ -2297,6 +2351,21 @@
         return map[ch] || ch;
       });
     }
+    
+
+    // چک می‌کند پیش‌بینی برای این بازی هنوز باز است یا نه
+    function isPredictionOpen(match) {
+      if (!match || !match.lock_at) {
+        return true;
+      }
+      const now = new Date();
+      const lockTime = new Date(match.lock_at);
+      if (isNaN(lockTime.getTime())) {
+        console.warn("lock_at نامعتبر برای بازی", match.id, match.lock_at);
+        return true;
+      }
+      return now < lockTime;
+    }
 
     // تاریخ و ساعت زنده (شمسی + ساعت سیستم)
     function updateCurrentDateTime() {
@@ -2322,7 +2391,7 @@
       el.textContent = dateFormatter.format(now) + " • " + timeFormatter.format(now);
     }
 
-    // لوگوی تیم با تصویر + فربک به ایموجی
+    // لوگوی تیم با تصویر + fallback ایموجی
     function getTeamLogoHtml(team, size, clickable) {
       const s = size || 34;
       const bg = team.color || "#0f172a";
@@ -2363,7 +2432,6 @@
       if (!wrapper) return;
       wrapper.classList.add("team-logo-has-img");
 
-      // کمی بزرگ‌تر کردن قاب لوگو (حدود ۱۵٪)
       const w = parseInt(wrapper.style.width, 10);
       const h = parseInt(wrapper.style.height, 10);
       if (!isNaN(w)) wrapper.style.width = Math.round(w * 1.15) + "px";
@@ -2371,9 +2439,9 @@
     }
 
     // -----------------------------
-    // ۴) نام‌کاربری (لوکال) + Supabase
+    // ۴) نام‌کاربری (لوکال) + player_id
     // -----------------------------
-    const USERNAME_KEY = "kaliga_username";
+    const USERNAME_KEY = "kaliga_username_V2";
 
     function getSavedUsername() {
       try {
@@ -2389,22 +2457,93 @@
       } catch {}
     }
 
+    const PLAYER_ID_KEY = "kaliga_player_id";
+
+    function getOrCreatePlayerId() {
+      try {
+        let pid = localStorage.getItem(PLAYER_ID_KEY);
+        if (!pid) {
+          if (window.crypto && crypto.randomUUID) {
+            pid = "plr_" + crypto.randomUUID();
+          } else {
+            pid = "plr_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
+          }
+          localStorage.setItem(PLAYER_ID_KEY, pid);
+        }
+        return pid;
+      } catch (e) {
+        console.error("player_id error:", e);
+        return "plr_guest";
+      }
+    }
+
+    function ensureUsernameForPrediction() {
+      let username = (getSavedUsername() || "").trim();
+      if (username) return username;
+
+      const input = prompt(
+        "برای شرکت در قرعه‌کشی لطفاً یک نام کاربری انتخاب کن (مثلاً kaliga_fan):",
+        ""
+      );
+      if (!input) {
+        alert("بدون نام کاربری، پیش‌بینی در قرعه‌کشی حساب نمی‌شود.");
+        return null;
+      }
+
+      username = input.trim();
+      if (!username) {
+        alert("نام کاربری نمی‌تواند خالی باشد.");
+        return null;
+      }
+
+      setSavedUsername(username);
+      return username;
+    }
+
+    // ⚠️ نسخه‌ی جدید با fallback اگر ستون player_id در جدول موجود نباشد
     async function savePredictionToDB(matchId, homeScore, awayScore) {
       try {
-        const username = getSavedUsername() || null;
+        const username = (getSavedUsername() || "").trim() || null;
+        const playerId = getOrCreatePlayerId();
 
-        const { error } = await db
+        // تلاش اول: همراه با player_id
+        let { error } = await db
           .from("predictions")
           .insert({
             match_id: matchId,
+            player_id: playerId,
             username,
             home_score: homeScore,
             away_score: awayScore
           });
 
         if (error) {
-          console.error("خطا در ذخیره پیش‌بینی:", error);
-          alert("خطا در ذخیره پیش‌بینی رخ داد.");
+          console.error("خطا در ذخیره پیش‌بینی (مرحله ۱):", error);
+          const msg =
+            (error.message || "") +
+            " " +
+            (error.details || "") +
+            " " +
+            (error.hint || "");
+
+          // اگر اشاره‌ای به player_id شد، بدون آن دوباره امتحان کن
+          if (msg.includes("player_id")) {
+            const { error: error2 } = await db
+              .from("predictions")
+              .insert({
+                match_id: matchId,
+                username,
+                home_score: homeScore,
+                away_score: awayScore
+              });
+
+            if (error2) {
+              console.error("خطا در ذخیره پیش‌بینی (مرحله ۲):", error2);
+              alert("خطا در ذخیره پیش‌بینی رخ داد.");
+            }
+          } else {
+            alert("خطا در ذخیره پیش‌بینی رخ داد.");
+          }
         }
       } catch (e) {
         console.error(e);
@@ -2576,8 +2715,9 @@
       textarea.value = "";
       await loadAndRenderComments(matchId);
     }
-        // -----------------------------
-    // ۴-ب) انتقادات و پیشنهادات کلی لیگ (صندوق کالیگا)
+
+    // -----------------------------
+    // ۴-ب) انتقادات و پیشنهادات کلی لیگ
     // -----------------------------
     async function addFeedback(text) {
       const raw = text || "";
@@ -2603,102 +2743,100 @@
         alert("مشکل در ارتباط با سرور صندوق انتقادات.");
       }
     }
+
     async function addFeedback(text) {
       const raw = text || "";
-       const body = raw.trim();
-       if (!body) return false;
+      const body = raw.trim();
+      if (!body) return false;
 
       const username = (getSavedUsername() || "").trim() || null;
 
-       try {
+      try {
         const { error } = await db
-         .from("feedbacks")
+          .from("feedbacks")
           .insert({
             username,
             body
-      });
+          });
 
         if (error) {
           console.error("خطا در ثبت انتقاد/پیشنهاد:", error);
           alert("در ثبت پیام مشکلی پیش آمد.");
           return false;
+        }
+
+        return true;
+      } catch (e) {
+        console.error(e);
+        alert("مشکل در ارتباط با سرور صندوق انتقادات.");
+        return false;
+      }
     }
 
-    // همه‌چیز اوکی بود ✅
-          return true;
-  } catch (e) {
-    console.error(e);
-    alert("مشکل در ارتباط با سرور صندوق انتقادات.");
-    return false;
-  }
-}
     async function renderFeedbackPage() {
-  const container = document.getElementById("page-content");
-  if (!container) return;
+      const container = document.getElementById("page-content");
+      if (!container) return;
 
-  const savedUsername = getSavedUsername() || "";
+      const savedUsername = getSavedUsername() || "";
 
-  container.innerHTML = `
-    <div class="section-title">
-      <span class="dot"></span>
-      <span>صندوق انتقادات و پیشنهادات کالیگا</span>
-    </div>
-
-    <div class="card">
-      <div style="font-size:13px;font-weight:600;margin-bottom:6px;">
-        💬 ارسال نظر برای تیم برگزاری
-      </div>
-      <div style="font-size:11px;color:var(--text-soft);margin-bottom:8px;line-height:1.7;">
-        هر انتقاد، پیشنهاد یا ایده‌ای برای بهتر شدن لیگ فوتسال چاشم (کالیگا) داری، اینجا برامون بنویس.
-        نام اختیاریه، ولی کمک می‌کنه در صورت نیاز باهات ارتباط بگیریم.
-      </div>
-
-      <div class="comment-form">
-        <div class="comment-username">
-          <label>نام (دلخواه):</label>
-          <input type="text"
-                 id="feedback-username-input"
-                 placeholder="مثلاً هوادار کالیگا"
-                 value="${escapeHtml(savedUsername)}" />
+      container.innerHTML = `
+        <div class="section-title">
+          <span class="dot"></span>
+          <span>صندوق انتقادات و پیشنهادات کالیگا</span>
         </div>
-        <textarea id="feedback-textarea"
-                  rows="3"
-                  placeholder="اینجا انتقاد یا پیشنهادت رو بنویس..."></textarea>
-        <button type="button" onclick="submitFeedback()">ارسال پیام</button>
-      </div>
-    </div>
-  `;
-}
 
-    
-    async function submitFeedback() {
-  const textarea = document.getElementById("feedback-textarea");
-  const usernameInput = document.getElementById("feedback-username-input");
+        <div class="card">
+          <div style="font-size:13px;font-weight:600;margin-bottom:6px;">
+            💬 ارسال نظر برای تیم برگزاری
+          </div>
+          <div style="font-size:11px;color:var(--text-soft);margin-bottom:8px;line-height:1.7;">
+            هر انتقاد، پیشنهاد یا ایده‌ای برای بهتر شدن لیگ فوتسال چاشم (کالیگا) داری، اینجا برامون بنویس.
+            نام اختیاریه، ولی کمک می‌کنه در صورت نیاز باهات ارتباط بگیریم.
+          </div>
 
-  if (!textarea) return;
-
-  const text = (textarea.value || "").trim();
-  if (!text) {
-    alert("متن پیام نمی‌تواند خالی باشد.");
-    return;
-  }
-
-  if (usernameInput) {
-    const name = (usernameInput.value || "").trim();
-    if (name) {
-      setSavedUsername(name);
+          <div class="comment-form">
+            <div class="comment-username">
+              <label>نام (دلخواه):</label>
+              <input type="text"
+                     id="feedback-username-input"
+                     placeholder="مثلاً هوادار کالیگا"
+                     value="${escapeHtml(savedUsername)}" />
+            </div>
+            <textarea id="feedback-textarea"
+                      rows="3"
+                      placeholder="اینجا انتقاد یا پیشنهادت رو بنویس..."></textarea>
+            <button type="button" onclick="submitFeedback()">ارسال پیام</button>
+          </div>
+        </div>
+      `;
     }
-  }
 
-  const ok = await addFeedback(text);
-  if (!ok) return;
+    async function submitFeedback() {
+      const textarea = document.getElementById("feedback-textarea");
+      const usernameInput = document.getElementById("feedback-username-input");
 
-  textarea.value = "";
+      if (!textarea) return;
 
-  // 🔔 پیام تشکر برای کاربر
-  alert("ممنون از وقتی که گذاشتی و نظرت رو با کالیگا به اشتراک گذاشتی 💚\nبازخوردهای شما کمک می‌کنه لیگ هر هفته بهتر از قبل بشه.");
-}
+      const text = (textarea.value || "").trim();
+      if (!text) {
+        alert("متن پیام نمی‌تواند خالی باشد.");
+        return;
+      }
 
+      if (usernameInput) {
+        const name = (usernameInput.value || "").trim();
+        if (name) {
+          setSavedUsername(name);
+        }
+      }
+
+      const ok = await addFeedback(text);
+      if (!ok) return;
+
+      textarea.value = "";
+
+      alert("ممنون از وقتی که گذاشتی و نظرت رو با کالیگا به اشتراک گذاشتی 💚\nبازخوردهای شما کمک می‌کنه لیگ هر هفته بهتر از قبل بشه.");
+    }
 
     // -----------------------------
     // ۵) صفحه برنامه بازی‌ها
@@ -2778,22 +2916,19 @@
               </div>
           `;
 
-            if (stats) {
+          if (stats) {
             const homeP = stats.homePercent;
             const drawP = stats.drawPercent;
             const awayP = stats.awayPercent;
 
-            // تبدیل درصد به زاویه
             const homeAngle = homeP * 3.6;
             const drawAngle = drawP * 3.6;
             const awayAngle = 360 - homeAngle - drawAngle;
 
-            // عنوان‌ها: اسم تیم‌ها به‌جای میزبان/مهمان
             const homeTitle = home.name;
             const drawTitle = "مساوی";
             const awayTitle = away.name;
 
-            // پیدا کردن قوی‌ترین پیش‌بینی
             let maxTitle = home.shortName;
             let maxValue = homeP;
             let maxClass = "max-home";
@@ -2848,18 +2983,31 @@
             `;
           }
 
+          // ✅ منطق جدید: فقط اگر هنوز مهلت پیش‌بینی باز است، دکمه را نشان بده
+          const predictionStillOpen = isPredictionOpen(match);
 
-
-          if (match.status === "upcoming" || match.status === "live") {
+          if ((match.status === "upcoming" || match.status === "live") && predictionStillOpen) {
             html += `
               <div class="match-actions">
-                <button class="action-btn" onclick="handlePrediction(${match.id})">📊 ثبت پیش‌بینی</button>
+                <button class="action-btn" onclick="handlePrediction(${match.id})">
+                  📊 ثبت پیش‌بینی
+                </button>
+              </div>
+            `;
+          } else if ((match.status === "upcoming" || match.status === "live") && !predictionStillOpen) {
+            html += `
+              <div class="match-actions">
+                <span style="font-size:11px;color:var(--text-soft);">
+                  مهلت پیش‌بینی این بازی به پایان رسیده است.
+                </span>
               </div>
             `;
           } else if (match.status === "finished") {
             html += `
               <div class="match-actions">
-                <button class="action-btn" onclick="showMatchDetails(${match.id})">📋 جزئیات بازی</button>
+                <button class="action-btn" onclick="showMatchDetails(${match.id})">
+                  📋 جزئیات بازی
+                </button>
               </div>
             `;
           }
@@ -2885,68 +3033,63 @@
     // -----------------------------
     // ۶) صفحه نتایج
     // -----------------------------
-function renderResultsPage() {
-  const container = document.getElementById("page-content");
+    function renderResultsPage() {
+      const container = document.getElementById("page-content");
 
-  // 1) فقط بازی‌های پایان‌یافته
-  const finished = matches
-    .filter(m => m.status === "finished")
-    .slice() // کپی برای اینکه آرایه اصلی دست‌نخورَد
-    // 2) سورت نزولی: اول تاریخ (جدیدتر بالاتر)، بعد ساعت
-    .sort((a, b) => {
-      // تاریخ‌ها به صورت "YYYY-MM-DD" ذخیره شده‌اند (شمسی اما فرمتش عددی است)
-      if (a.date !== b.date) return b.date.localeCompare(a.date);
-      // اگر تاریخ برابر بود، ساعت را مقایسه کن (فرمت "HH:MM")
-      return (b.time || "").localeCompare(a.time || "");
-    });
+      const finished = matches
+        .filter(m => m.status === "finished")
+        .slice()
+        .sort((a, b) => {
+          if (a.date !== b.date) return b.date.localeCompare(a.date);
+          return (b.time || "").localeCompare(a.time || "");
+        });
 
-  let html = `
-    <div class="section-title">
-      <span class="dot"></span>
-      <span>نتایج کامل • همۀ هفته‌ها (جدیدترین در بالا)</span>
-    </div>
-  `;
-
-  if (!finished.length) {
-    html += `<div class="card">فعلاً نتیجه نهایی ثبت نشده است.</div>`;
-  } else {
-    finished.forEach(match => {
-      const home = getTeamById(match.homeTeamId);
-      const away = getTeamById(match.awayTeamId);
-
-      html += `
-        <div class="card">
-          <div class="match-row">
-            <div class="team-side team-home">
-              ${getTeamLogoHtml(home)}
-              <div class="team-name">${home.name}</div>
-            </div>
-            <div class="match-center">
-              <div class="match-score">${match.homeScore} : ${match.awayScore}</div>
-              <div class="match-status status-finished">پایان یافته</div>
-            </div>
-            <div class="team-side team-away">
-              <div class="team-name">${away.name}</div>
-              ${getTeamLogoHtml(away)}
-            </div>
-          </div>
-          <div class="match-meta">
-            <span>هفته ${match.week} • ${match.stadium}</span>
-            <span>تاریخ: ${formatDate(match.date)} • ${match.time}</span>
-          </div>
-          <div class="match-actions">
-            <button class="action-btn" onclick="toggleComments(${match.id})">💬 نظرات بازی</button>
-            <button class="action-btn" onclick="showMatchDetails(${match.id})">📋 جزئیات بازی</button>
-          </div>
-          <div class="comments-section" id="comments-${match.id}" style="display:none;"></div>
+      let html = `
+        <div class="section-title">
+          <span class="dot"></span>
+          <span>نتایج کامل • همۀ هفته‌ها (جدیدترین در بالا)</span>
         </div>
       `;
-    });
-  }
 
-  container.innerHTML = html;
-}
+      if (!finished.length) {
+        html += `<div class="card">فعلاً نتیجه نهایی ثبت نشده است.</div>`;
+      } else {
+        finished.forEach(match => {
+          const home = getTeamById(match.homeTeamId);
+          const away = getTeamById(match.awayTeamId);
 
+          html += `
+            <div class="card">
+              <div class="match-row">
+                <div class="team-side team-home">
+                  ${getTeamLogoHtml(home)}
+                  <div class="team-name">${home.name}</div>
+                </div>
+                <div class="match-center">
+                  <div class="match-score">${match.homeScore} : ${match.awayScore}</div>
+                  <div class="match-status status-finished">پایان یافته</div>
+                </div>
+                <div class="team-side team-away">
+                  <div class="team-name">${away.name}</div>
+                  ${getTeamLogoHtml(away)}
+                </div>
+              </div>
+              <div class="match-meta">
+                <span>هفته ${match.week} • ${match.stadium}</span>
+                <span>تاریخ: ${formatDate(match.date)} • ${match.time}</span>
+              </div>
+              <div class="match-actions">
+                <button class="action-btn" onclick="toggleComments(${match.id})">💬 نظرات بازی</button>
+                <button class="action-btn" onclick="showMatchDetails(${match.id})">📋 جزئیات بازی</button>
+              </div>
+              <div class="comments-section" id="comments-${match.id}" style="display:none;"></div>
+            </div>
+          `;
+        });
+      }
+
+      container.innerHTML = html;
+    }
 
     // -----------------------------
     // ۷) جدول لیگ
@@ -3123,145 +3266,127 @@ function renderResultsPage() {
 
     // -----------------------------
     // ۹) صفحه رسانه و اطلاعیه‌ها
-// -----------------------------
-function renderMediaPage() {
-  const container = document.getElementById("page-content");
+    // -----------------------------
+    function renderMediaPage() {
+      const container = document.getElementById("page-content");
 
-  // اگر خواستی اطلاعیه داشته باشی، اینجا اضافه کن
-  const announcements = [
-    // { title: "اطلاعیه مهم شماره ۱", body: "متن اطلاعیه..." },
-    // { title: "اطلاعیه مهم شماره ۲", body: "متن اطلاعیه..." }
-  ];
+      const announcements = [];
 
-  // گالری گروهی: هر عنوان، چندتا عکس
-  const galleryGroups = [
-    {
-      title: "افتتاحیه لیگ کالـیگا",
-      images: [
-        { src: "img1.jpg", caption: "مهمانان گرانقدر مراسم افتتاحیه" },
-        { src: "img2.jpg", caption: "استقبال پرشور ورزش دوستان" },
-        { src: "img3.jpg", caption: "نمایش جذاب دختران ورزشکار" }
-      ]
-    },
+      const galleryGroups = [
+        {
+          title: "افتتاحیه لیگ کالـیگا",
+          images: [
+            { src: "img1.jpg", caption: "مهمانان گرانقدر مراسم افتتاحیه" },
+            { src: "img2.jpg", caption: "استقبال پرشور ورزش دوستان" },
+            { src: "img3.jpg", caption: "نمایش جذاب دختران ورزشکار" }
+          ]
+        }
+      ];
 
-    // هر وقت خواستی گروه جدید اضافه کن:
-    // {
-    //   title: "هفته دوم – ...",
-    //   images: [
-    //     { src: "img6.jpg", caption: "..." },
-    //     { src: "img7.jpg", caption: "..." }
-    //   ]
-    // }
-  ];
-
-  let html = `
-    <div class="section-title">
-      <span class="dot"></span>
-      <span>رسانه و اطلاعیه‌ها</span>
-    </div>
-
-    <div class="card">
-      <div style="font-weight:600;font-size:13px;margin-bottom:6px;">🎬 کلیپ‌ها و ویدیوها</div>
-
-      <div class="media-video">
-        <div class="media-video-player">
-          <video
-            id="media-video-main"
-            src="mp1.mp4"
-            preload="none"
-            playsinline
-            controls
-          ></video>
+      let html = `
+        <div class="section-title">
+          <span class="dot"></span>
+          <span>رسانه و اطلاعیه‌ها</span>
         </div>
 
-        <div class="media-video-caption">
-          <br>اولین فصل کالـیگا با مراسم افتتاحیه و انجام نخستین رقابت‌ها به‌صورت رسمی آغاز شد؛<br>
-          آغازی که از همان دقایق نخست، انرژی، تمرکز و شوق تیم‌ها برای یک فصل پرتنش و جذاب را نشان داد.<br>
-          در این ویدیو، مروری داریم بر لحظات مهم شروع لیگ:<br>
-          از ورود و استقبال از مسئولین ، تیم‌ها و گرم‌کردن اولیه، تا سوت آغاز بازی‌ها، گل‌های هفتهٔ اول و واکنش‌های احساسی بازیکنان و هواداران.<br>
-          هر صحنه، یادآور این است که فوتبال محلی فقط یک مسابقه نیست؛<br>
-          ترکیبی است از تلاش، رفاقت، رقابت سالم و مسئولیتی که هر تیم در قبال نام خود بر دوش دارد.<br><br>
+        <div class="card">
+          <div style="font-weight:600;font-size:13px;margin-bottom:6px;">🎬 کلیپ‌ها و ویدیوها</div>
 
-          هفتهٔ نخست، نوید یک فصل متفاوت را می‌دهد؛ فصلی که در آن تیم‌ها با انگیزه‌ای تازه وارد زمین شده‌اند
-          و هواداران آماده‌اند تا در کنار بازیکنان، مسیر شکل‌گیری یک لیگ منظم و رو‌به‌رشد را تجربه کنند.<br><br>
+          <div class="media-video">
+            <div class="media-video-player">
+              <video
+                id="media-video-main"
+                src="mp1.mp4"
+                preload="none"
+                playsinline
+                controls
+              ></video>
+            </div>
 
-          این تنها آغاز راه است…<br>
-          مسیر پیشِ‌رو، پر از لحظه‌هایی خواهد بود که ارزش ثبت و تماشا کردن دارند.
-        </div>
-      </div>
-    </div>
-  `;
+            <div class="media-video-caption">
+              <br>اولین فصل کالـیگا با مراسم افتتاحیه و انجام نخستین رقابت‌ها به‌صورت رسمی آغاز شد؛<br>
+              آغازی که از همان دقایق نخست، انرژی، تمرکز و شوق تیم‌ها برای یک فصل پرتنش و جذاب را نشان داد.<br>
+              در این ویدیو، مروری داریم بر لحظات مهم شروع لیگ:<br>
+              از ورود و استقبال از مسئولین ، تیم‌ها و گرم‌کردن اولیه، تا سوت آغاز بازی‌ها، گل‌های هفتهٔ اول و واکنش‌های احساسی بازیکنان و هواداران.<br>
+              هر صحنه، یادآور این است که فوتبال محلی فقط یک مسابقه نیست؛<br>
+              ترکیبی است از تلاش، رفاقت، رقابت سالم و مسئولیتی که هر تیم در قبال نام خود بر دوش دارد.<br><br>
 
-  // کارت اطلاعیه‌ها (اگر چیزی داخل announcements گذاشته باشی)
-  if (announcements.length) {
-    html += `
-      <div class="card">
-        <div style="font-weight:600;font-size:13px;margin-bottom:6px;">📢 اطلاعیه‌ها</div>
-        <div class="media-list">
-    `;
+              هفتهٔ نخست، نوید یک فصل متفاوت را می‌دهد؛ فصلی که در آن تیم‌ها با انگیزه‌ای تازه وارد زمین شده‌اند
+              و هواداران آماده‌اند تا در کنار بازیکنان، مسیر شکل‌گیری یک لیگ منظم و رو‌به‌رشد را تجربه کنند.<br><br>
 
-    announcements.forEach(item => {
-      html += `
-        <div>
-          <div class="media-item-title">${escapeHtml(item.title)}</div>
-          <div style="font-size:11px;color:var(--text-soft);">
-            ${escapeHtml(item.body)}
+              این تنها آغاز راه است…<br>
+              مسیر پیشِ‌رو، پر از لحظه‌هایی خواهد بود که ارزش ثبت و تماشا کردن دارند.
+            </div>
           </div>
         </div>
       `;
-    });
 
-    html += `
-        </div>
-      </div>
-    `;
-  }
+      if (announcements.length) {
+        html += `
+          <div class="card">
+            <div style="font-weight:600;font-size:13px;margin-bottom:6px;">📢 اطلاعیه‌ها</div>
+            <div class="media-list">
+        `;
 
-  // کارت گالری تصاویر (گروهی)
-  html += `
-    <div class="card">
-      <div style="font-weight:600;font-size:13px;margin-bottom:6px;">🖼️ گالری تصاویر</div>
-      <div class="media-list">
-  `;
+        announcements.forEach(item => {
+          html += `
+            <div>
+              <div class="media-item-title">${escapeHtml(item.title)}</div>
+              <div style="font-size:11px;color:var(--text-soft);">
+                ${escapeHtml(item.body)}
+              </div>
+            </div>
+          `;
+        });
 
-  galleryGroups.forEach(group => {
-    html += `
-      <div class="media-gallery-group">
-        <div class="media-item-title">${escapeHtml(group.title)}</div>
-        <div class="media-gallery-images">
-    `;
+        html += `
+            </div>
+          </div>
+        `;
+      }
 
-    (group.images || []).forEach(img => {
       html += `
-        <div class="media-gallery-item">
-          <img
-            src="${escapeHtml(img.src)}"
-            alt="${escapeHtml(img.caption || group.title)}"
-            onclick="showGalleryImage('${escapeHtml(img.src)}')"
-          />
-          ${img.caption
-            ? `<div class="media-gallery-caption">${escapeHtml(img.caption)}</div>`
-            : ""
-          }
+        <div class="card">
+          <div style="font-weight:600;font-size:13px;margin-bottom:6px;">🖼️ گالری تصاویر</div>
+          <div class="media-list">
+      `;
+
+      galleryGroups.forEach(group => {
+        html += `
+          <div class="media-gallery-group">
+            <div class="media-item-title">${escapeHtml(group.title)}</div>
+            <div class="media-gallery-images">
+        `;
+
+        (group.images || []).forEach(img => {
+          html += `
+            <div class="media-gallery-item">
+              <img
+                src="${escapeHtml(img.src)}"
+                alt="${escapeHtml(img.caption || group.title)}"
+                onclick="showGalleryImage('${escapeHtml(img.src)}')"
+              />
+              ${img.caption
+                ? `<div class="media-gallery-caption">${escapeHtml(img.caption)}</div>`
+                : ""
+              }
+            </div>
+          `;
+        });
+
+        html += `
+            </div>
+          </div>
+        `;
+      });
+
+      html += `
+          </div>
         </div>
       `;
-    });
 
-
-    html += `
-        </div>
-      </div>
-    `;
-  });
-
-  html += `
-      </div>
-    </div>
-  `;
-
-  container.innerHTML = html;
-}
-
+      container.innerHTML = html;
+    }
 
     // -----------------------------
     // ۱۰) صفحه آمار لیگ
@@ -3270,25 +3395,22 @@ function renderMediaPage() {
       const container = document.getElementById("page-content");
 
       const topScorersDemo = [
-  { player: "امیرحسین احمدیان", team: "امامزاده پیش", goals: 6 },
-  { player: "مهدی نبوی", team: "زنده یاد سید مهدی نبوی", goals: 6 },
-  { player: "بهزاد رضاییان", team: "زنده یاد بهمن و مصطفی جعفری", goals: 4 },
-
-  { player: "سعید جعفری", team: "زنده یاد مجید جعفری", goals: 3 },
-
-  { player: "ابوالفضل احمدیان", team: "زنده یاد مجید جعفری", goals: 3 },
-  { player: "امیرحسین صفایی", team: "زنده یاد محمدرضا جعفری", goals: 2 },
-  { player: "ایلیا نبوی", team: "زنده یاد هادی قادری", goals: 2 },
-  { player: "امیر جعفری", team: "زنده یاد محمدرضا جعفری", goals: 2 },
-  { player: "حامد نبوی", team: "زنده یاد بهمن و مصطفی جعفری", goals: 2 },
-  { player: "حسام جعفری", team: "زنده یاد محمدرضا جعفری", goals: 2 },
-  { player: "حسن نبوی", team: "استودیو نامبر وان", goals: 2 },
-  { player: "سعید جعفری", team: "هیئت جوانان", goals: 2 },
-  { player: "سهیل موسوی", team: "شهید سید احسان موسوی", goals: 2 },
-  { player: "متین احمدیان", team: "کافه لوین", goals: 2 },
-  { player: "مهدیار جعفری", team: "استودیو نامبر وان", goals: 2 },
-  { player: "نصرالله جعفری", team: "شهید سید احسان موسوی", goals: 2 },
-  { player: "پرهام جعفری", team: "زنده یاد بهمن و مصطفی جعفری", goals: 2 },
+        { player: "امیرحسین احمدیان", team: "امامزاده پیش", goals: 6 },
+        { player: "مهدی نبوی", team: "زنده یاد سید مهدی نبوی", goals: 6 },
+        { player: "بهزاد رضاییان", team: "زنده یاد بهمن و مصطفی جعفری", goals: 4 },
+        { player: "سعید جعفری", team: "زنده یاد مجید جعفری", goals: 3 },
+        { player: "ابوالفضل احمدیان", team: "زنده یاد مجید جعفری", goals: 3 },
+        { player: "امیرحسین صفایی", team: "زنده یاد محمدرضا جعفری", goals: 2 },
+        { player: "امیر جعفری", team: "زنده یاد محمدرضا جعفری", goals: 2 },
+        { player: "حامد نبوی", team: "زنده یاد بهمن و مصطفی جعفری", goals: 2 },
+        { player: "حسام جعفری", team: "زنده یاد محمدرضا جعفری", goals: 2 },
+        { player: "حسن نبوی", team: "استودیو نامبر وان", goals: 2 },
+        { player: "سعید جعفری", team: "هیئت جوانان", goals: 2 },
+        { player: "سهیل موسوی", team: "شهید سید احسان موسوی", goals: 2 },
+        { player: "متین احمدیان", team: "کافه لوین", goals: 2 },
+        { player: "مهدیار جعفری", team: "استودیو نامبر وان", goals: 2 },
+        { player: "نصرالله جعفری", team: "شهید سید احسان موسوی", goals: 2 },
+        { player: "پرهام جعفری", team: "زنده یاد بهمن و مصطفی جعفری", goals: 2 }
       ];
 
       const cardsDemo = [
@@ -3319,71 +3441,69 @@ function renderMediaPage() {
               </thead>
               <tbody>
       `;
-        // -----------------------------
-    // ویدیو در صفحه رسانه
-    // -----------------------------
-    let mediaVideoLoaded = false;
 
-    function getMediaVideoElement() {
-      return document.getElementById("media-video-main");
-    }
+      // (توابع ویدیو داخل این صفحه تعریف شده‌اند ولی فعلاً استفاده نمی‌شوند)
+      let mediaVideoLoaded = false;
 
-    function toggleMediaVideoPlay() {
-      const video = getMediaVideoElement();
-      const btn = document.getElementById("media-video-play-btn");
-      if (!video || !btn) return;
-
-      // بار اول که کلیک می‌کنیم، src را ست می‌کنیم تا قبلش چیزی دانلود نشود
-      if (!mediaVideoLoaded) {
-        video.src = "mp1.mp4";
-        mediaVideoLoaded = true;
+      function getMediaVideoElement() {
+        return document.getElementById("media-video-main");
       }
 
-      if (video.paused) {
-        video.play().then(() => {
-          btn.textContent = "⏸ توقف ویدیو";
-        }).catch(err => {
-          console.error("خطا در پخش ویدیو:", err);
-        });
-      } else {
-        video.pause();
-        btn.textContent = "▶ پخش ویدیو";
-      }
-    }
+      function toggleMediaVideoPlay() {
+        const video = getMediaVideoElement();
+        const btn = document.getElementById("media-video-play-btn");
+        if (!video || !btn) return;
 
-    function toggleMediaVideoFullscreen() {
-      const video = getMediaVideoElement();
-      if (!video) return;
-
-      const isFullscreen =
-        document.fullscreenElement === video ||
-        document.webkitFullscreenElement === video ||
-        document.mozFullScreenElement === video ||
-        document.msFullscreenElement === video;
-
-      if (!isFullscreen) {
-        if (video.requestFullscreen) {
-          video.requestFullscreen();
-        } else if (video.webkitRequestFullscreen) {
-          video.webkitRequestFullscreen();
-        } else if (video.mozRequestFullScreen) {
-          video.mozRequestFullScreen();
-        } else if (video.msRequestFullscreen) {
-          video.msRequestFullscreen();
+        if (!mediaVideoLoaded) {
+          video.src = "mp1.mp4";
+          mediaVideoLoaded = true;
         }
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
+
+        if (video.paused) {
+          video.play().then(() => {
+            btn.textContent = "⏸ توقف ویدیو";
+          }).catch(err => {
+            console.error("خطا در پخش ویدیو:", err);
+          });
+        } else {
+          video.pause();
+          btn.textContent = "▶ پخش ویدیو";
         }
       }
-    }
-            
+
+      function toggleMediaVideoFullscreen() {
+        const video = getMediaVideoElement();
+        if (!video) return;
+
+        const isFullscreen =
+          document.fullscreenElement === video ||
+          document.webkitFullscreenElement === video ||
+          document.mozFullScreenElement === video ||
+          document.msFullscreenElement === video;
+
+        if (!isFullscreen) {
+          if (video.requestFullscreen) {
+            video.requestFullscreen();
+          } else if (video.webkitRequestFullscreen) {
+            video.webkitRequestFullscreen();
+          } else if (video.mozRequestFullScreen) {
+            video.mozRequestFullScreen();
+          } else if (video.msRequestFullscreen) {
+            video.msRequestFullscreen();
+          }
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+          } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          }
+        }
+      }
+
       topScorersDemo.forEach((item, idx) => {
         html += `
           <tr>
@@ -3399,7 +3519,7 @@ function renderMediaPage() {
               </tbody>
             </table>
             <div style="font-size:10px;color:var(--text-soft);margin-top:6px;">
-                <code></code> 
+              <code></code> 
             </div>
           </div>
 
@@ -3433,9 +3553,7 @@ function renderMediaPage() {
       html += `
               </tbody>
             </table>
-            <div style="font-size:10px;color:var(--text-soft);margin-top:6px;">
-              
-            </div>
+            <div style="font-size:10px;color:var(--text-soft);margin-top:6px;"></div>
           </div>
         </div>
       `;
@@ -3450,8 +3568,16 @@ function renderMediaPage() {
       const match = matches.find(m => m.id === matchId);
       if (!match) return;
 
+      if (!isPredictionOpen(match)) {
+        alert("مهلت پیش‌بینی برای این بازی تمام شده است.");
+        return;
+      }
+
       const home = getTeamById(match.homeTeamId);
       const away = getTeamById(match.awayTeamId);
+
+      const username = ensureUsernameForPrediction();
+      if (!username) return;
 
       let hs = prompt(`گل‌های ${home.name} را برای پیش‌بینی وارد کن:`, "0");
       if (hs === null) return;
@@ -3633,21 +3759,20 @@ function renderMediaPage() {
 
       document.body.style.background =
         `radial-gradient(circle at top, ${theme.bgSoft}, ${theme.bg} 55%)`;
-    
-      // 🎯 رنگ‌های نمودار پیش‌بینی (برای تم تیره / روشن)
-    if (currentMode === "dark") {
-      root.style.setProperty("--pred-home", "#22c55e");   // سبز برد میزبان
-      root.style.setProperty("--pred-draw", "#e5e7eb");   // طوسی مساوی
-      root.style.setProperty("--pred-away", "#3b82f6");   // آبی برد مهمان
-      root.style.setProperty("--pred-text", "#f9fafb");   // متن داخل دونات/راهنما
-      }
-    else {
-      root.style.setProperty("--pred-home", "#16a34a");   // سبز تیره‌تر
-      root.style.setProperty("--pred-draw", "#6b7280");   // طوسی پررنگ
-      root.style.setProperty("--pred-away", "#2563eb");   // آبی مناسب پس‌زمینه روشن
-      root.style.setProperty("--pred-text", "#111827");
+
+      if (currentMode === "dark") {
+        root.style.setProperty("--pred-home", "#22c55e");
+        root.style.setProperty("--pred-draw", "#e5e7eb");
+        root.style.setProperty("--pred-away", "#3b82f6");
+        root.style.setProperty("--pred-text", "#f9fafb");
+      } else {
+        root.style.setProperty("--pred-home", "#16a34a");
+        root.style.setProperty("--pred-draw", "#6b7280");
+        root.style.setProperty("--pred-away", "#2563eb");
+        root.style.setProperty("--pred-text", "#111827");
       }
     }
+
     function initTheme() {
       const list = getCurrentThemeList();
       if (!list.length) return;
@@ -3735,7 +3860,6 @@ function renderMediaPage() {
           triedJpg = true;
           img.src = `team${teamId}.jpg`;
         } else {
-          // اگر لوگو هم نبود، دیالوگ را ببند
           overlay.style.display = "none";
         }
       };
@@ -3753,11 +3877,10 @@ function renderMediaPage() {
       dialog.style.background = "#000";
       img.style.display = "block";
 
-      // برای گالری دیگه لازم نیست onerror عوض کنیم
       img.onerror = null;
       img.src = imageSrc;
     }
-    
+
     function hideTeamImage() {
       const overlay = document.getElementById("team-image-overlay");
       if (overlay) overlay.style.display = "none";
@@ -3913,9 +4036,10 @@ function renderMediaPage() {
           rotateTheme();
         });
       });
+
+      // ✅ صفحه‌ی اول: نتایج
       setActivePage("results");
 
-      // تاریخ و ساعت زنده
       updateCurrentDateTime();
       setInterval(updateCurrentDateTime, 1000);
 
@@ -3974,5 +4098,3 @@ function renderMediaPage() {
   </script>
 </body>
 </html>
-
-
