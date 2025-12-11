@@ -2638,6 +2638,62 @@ async function savePredictionToDB(matchId, homeScore, awayScore, phone) {
     alert("مشکل در ارتباط با سرور پیش‌بینی.");
   }
 }
+// -----------------------------
+// آمار خلاصهٔ پیش‌بینی‌ها برای یک بازی
+// خروجی: null اگر پیش‌بینی‌ای نباشد، وگرنه درصد برد میزبان/مساوی/برد میهمان
+// -----------------------------
+async function getPredictionStats(matchId) {
+  try {
+    const { data, error } = await db
+      .from("predictions")
+      .select("home_score, away_score")
+      .eq("match_id", matchId);
+
+    if (error) {
+      console.error("خطا در خواندن آمار پیش‌بینی‌ها:", error);
+      return null;
+    }
+
+    if (!data || !data.length) {
+      // هیچ پیش‌بینی‌ای برای این بازی ثبت نشده
+      return null;
+    }
+
+    let homeWins = 0;
+    let draws = 0;
+    let awayWins = 0;
+
+    data.forEach(p => {
+      const hs = Number(p.home_score);
+      const as = Number(p.away_score);
+      if (Number.isNaN(hs) || Number.isNaN(as)) return;
+
+      if (hs > as) homeWins++;
+      else if (hs < as) awayWins++;
+      else draws++;
+    });
+
+    const total = homeWins + draws + awayWins;
+    if (!total) {
+      // همه رکوردها ناسالم بوده یا چیزی برای شمارش نداریم
+      return null;
+    }
+
+    const homePercent = Math.round((homeWins / total) * 100);
+    const drawPercent = Math.round((draws / total) * 100);
+    const awayPercent = 100 - homePercent - drawPercent; // جمع حتماً ۱۰۰ بشه
+
+    return {
+      total,
+      homePercent,
+      drawPercent,
+      awayPercent
+    };
+  } catch (e) {
+    console.error("استثناء در getPredictionStats:", e);
+    return null;
+  }
+}
 
 
     async function loadAndRenderComments(matchId) {
