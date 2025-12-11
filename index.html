@@ -2639,6 +2639,75 @@ async function savePredictionToDB(matchId, homeScore, awayScore, phone) {
   }
 }
 // -----------------------------
+// آمار پیش‌بینی چند بازی با هم (برای یک هفته)
+// خروجی: map مثل statsMap[matchId] = { total, homePercent, drawPercent, awayPercent }
+// -----------------------------
+async function getPredictionStatsForMatches(matchIds) {
+  if (!Array.isArray(matchIds) || !matchIds.length) {
+    return {};
+  }
+
+  try {
+    const { data, error } = await db
+      .from("predictions")
+      .select("match_id, home_score, away_score")
+      .in("match_id", matchIds);
+
+    if (error) {
+      console.error("خطا در خواندن آمار پیش‌بینی‌ها (batch):", error);
+      return {};
+    }
+
+    // گروه‌بندی بر اساس match_id
+    const grouped = {};
+    (data || []).forEach(p => {
+      const mid = p.match_id;
+      if (!grouped[mid]) grouped[mid] = [];
+      grouped[mid].push(p);
+    });
+
+    const statsMap = {};
+
+    Object.keys(grouped).forEach(mid => {
+      const list = grouped[mid];
+
+      let homeWins = 0;
+      let draws = 0;
+      let awayWins = 0;
+
+      list.forEach(p => {
+        const hs = Number(p.home_score);
+        const as = Number(p.away_score);
+        if (Number.isNaN(hs) || Number.isNaN(as)) return;
+
+        if (hs > as) homeWins++;
+        else if (hs < as) awayWins++;
+        else draws++;
+      });
+
+      const total = homeWins + draws + awayWins;
+      if (!total) return;
+
+      const homePercent = Math.round((homeWins / total) * 100);
+      const drawPercent = Math.round((draws / total) * 100);
+      const awayPercent = 100 - homePercent - drawPercent;
+
+      statsMap[mid] = {
+        total,
+        homePercent,
+        drawPercent,
+        awayPercent
+      };
+    });
+
+    return statsMap;
+  } catch (e) {
+    console.error("استثناء در getPredictionStatsForMatches:", e);
+    return {};
+  }
+}
+
+// -----------------------------
 // آمار خلاصهٔ پیش‌بینی‌ها برای یک بازی
 // خروجی: null اگر پیش‌بینی‌ای نباشد، وگرنه درصد برد میزبان/مساوی/برد میهمان
 // -----------------------------
@@ -2902,194 +2971,206 @@ async function getPredictionStats(matchId) {
     // -----------------------------
     // ۵) صفحه برنامه بازی‌ها
     // -----------------------------
-    async function renderFixturesPage() {
-      const container = document.getElementById("page-content");
+    // -----------------------------
+// ۵) صفحه برنامه بازی‌ها - نسخه بهینه شده
+// -----------------------------
+async function renderFixturesPage() {
+  const container = document.getElementById("page-content");
 
-      let weeksHtml = "";
-      for (let w = 1; w <= 11; w++) {
-        weeksHtml += `
-          <button class="week-btn ${w === currentWeek ? "active" : ""}" data-week="${w}">
-            هفته ${w}
-          </button>
+  let weeksHtml = "";
+  for (let w = 1; w <= 11; w++) {
+    weeksHtml += `
+      <button class="week-btn ${w === currentWeek ? "active" : ""}" data-week="${w}">
+        هفته ${w}
+      </button>
+    `;
+  }
+
+  let html = `
+    <div class="section-title">
+      <span class="dot"></span>
+      <span>برنامه بازی‌ها • هفته ${currentWeek}</span>
+    </div>
+    <div class="week-tabs">
+      ${weeksHtml}
+    </div>
+  `;
+
+  const matchesOfWeek = matches.filter(m => m.week === currentWeek);
+
+  // 🔥 فقط یک درخواست به Supabase برای تمام بازی‌های این هفته
+  const needStatsIds = matchesOfWeek
+    .filter(m => m.status === "upcoming" || m.status === "live")
+    .map(m => m.id);
+
+  const statsMap = await getPredictionStatsForMatches(needStatsIds);
+
+  if (!matchesOfWeek.length) {
+    html += `<div class="card">برای این هفته هنوز بازی ثبت نشده است.</div>`;
+  } else {
+    for (const match of matchesOfWeek) {
+      const home = getTeamById(match.homeTeamId);
+      const away = getTeamById(match.awayTeamId);
+
+      // آمار از map محلی گرفته می‌شود (بدون await)
+      let stats = null;
+      if (match.status === "upcoming" || match.status === "live") {
+        stats = statsMap[match.id] || null;
+      }
+
+      html += `
+        <div class="card">
+          <div class="match-row">
+            <div class="team-side team-home">
+              ${getTeamLogoHtml(home)}
+              <div class="team-name">${home.name}</div>
+            </div>
+            <div class="match-center">
+      `;
+
+      if (match.status === "upcoming") {
+        html += `
+              <div class="match-score">- : -</div>
+              <div class="match-status ${getStatusClass(match.status)}">
+                ${getStatusLabel(match.status)}
+              </div>
+        `;
+      } else {
+        html += `
+              <div class="match-score">${match.homeScore} : ${match.awayScore}</div>
+              <div class="match-status ${getStatusClass(match.status)}">
+                ${getStatusLabel(match.status)}
+              </div>
         `;
       }
 
-      let html = `
-        <div class="section-title">
-          <span class="dot"></span>
-          <span>برنامه بازی‌ها • هفته ${currentWeek}</span>
-        </div>
-        <div class="week-tabs">
-          ${weeksHtml}
-        </div>
+      html += `
+            </div>
+            <div class="team-side team-away">
+              <div class="team-name">${away.name}</div>
+              ${getTeamLogoHtml(away)}
+            </div>
+          </div>
+          <div class="match-meta">
+            <span>هفته ${match.week} • ${match.stadium}</span>
+            <span>تاریخ: ${formatDate(match.date)} • ${match.time}</span>
+          </div>
       `;
 
-      const matchesOfWeek = matches.filter(m => m.week === currentWeek);
+      // اگر آماری برای این بازی داریم، دونات رو نشون بده
+      if (stats) {
+        const homeP = stats.homePercent;
+        const drawP = stats.drawPercent;
+        const awayP = stats.awayPercent;
 
-      if (!matchesOfWeek.length) {
-        html += `<div class="card">برای این هفته هنوز بازی ثبت نشده است.</div>`;
-      } else {
-        for (const match of matchesOfWeek) {
-          const home = getTeamById(match.homeTeamId);
-          const away = getTeamById(match.awayTeamId);
+        const homeAngle = homeP * 3.6;
+        const drawAngle = drawP * 3.6;
+        const awayAngle = 360 - homeAngle - drawAngle;
 
-          let stats = null;
-          if (match.status === "upcoming" || match.status === "live") {
-            stats = await getPredictionStats(match.id);
-          }
+        const homeTitle = home.name;
+        const drawTitle = "مساوی";
+        const awayTitle = away.name;
 
-          html += `
-            <div class="card">
-              <div class="match-row">
-                <div class="team-side team-home">
-                  ${getTeamLogoHtml(home)}
-                  <div class="team-name">${home.name}</div>
-                </div>
-                <div class="match-center">
-          `;
+        let maxTitle = home.shortName;
+        let maxValue = homeP;
+        let maxClass = "max-home";
 
-          if (match.status === "upcoming") {
-            html += `
-                  <div class="match-score">- : -</div>
-                  <div class="match-status ${getStatusClass(match.status)}">
-                    ${getStatusLabel(match.status)}
-                  </div>
-            `;
-          } else {
-            html += `
-                  <div class="match-score">${match.homeScore} : ${match.awayScore}</div>
-                  <div class="match-status ${getStatusClass(match.status)}">
-                    ${getStatusLabel(match.status)}
-                  </div>
-            `;
-          }
-
-          html += `
-                </div>
-                <div class="team-side team-away">
-                  <div class="team-name">${away.name}</div>
-                  ${getTeamLogoHtml(away)}
-                </div>
-              </div>
-              <div class="match-meta">
-                <span>هفته ${match.week} • ${match.stadium}</span>
-                <span>تاریخ: ${formatDate(match.date)} • ${match.time}</span>
-              </div>
-          `;
-
-          if (stats) {
-            const homeP = stats.homePercent;
-            const drawP = stats.drawPercent;
-            const awayP = stats.awayPercent;
-
-            const homeAngle = homeP * 3.6;
-            const drawAngle = drawP * 3.6;
-            const awayAngle = 360 - homeAngle - drawAngle;
-
-            const homeTitle = home.name;
-            const drawTitle = "مساوی";
-            const awayTitle = away.name;
-
-            let maxTitle = home.shortName;
-            let maxValue = homeP;
-            let maxClass = "max-home";
-
-            if (drawP > maxValue) {
-              maxValue = drawP;
-              maxTitle = drawTitle;
-              maxClass = "max-draw";
-            }
-            if (awayP > maxValue) {
-              maxValue = awayP;
-              maxTitle = away.shortName;
-              maxClass = "max-away";
-            }
-
-            const donutStyle = `
-              background: conic-gradient(
-                var(--pred-home) 0deg ${homeAngle}deg,
-                var(--pred-draw) ${homeAngle}deg ${homeAngle + drawAngle}deg,
-                var(--pred-away) ${homeAngle + drawAngle}deg 360deg
-              );
-            `;
-
-            html += `
-              <div class="prediction-summary">
-                <div>پیش‌بینی کاربران (تعداد ${stats.total}):</div>
-                <div class="prediction-donut-wrapper">
-                  <div class="prediction-donut ${maxClass}" style="${donutStyle}">
-                    <div class="prediction-donut-inner">
-                      <div class="prediction-donut-label">بیشترین</div>
-                      <div class="prediction-donut-value">
-                        ${maxTitle}<br>${maxValue}%
-                      </div>
-                    </div>
-                  </div>
-                  <div class="prediction-legend">
-                    <div class="prediction-legend-item">
-                      <span class="prediction-legend-dot prediction-legend-dot-home"></span>
-                      <span>${homeTitle} ${homeP}%</span>
-                    </div>
-                    <div class="prediction-legend-item">
-                      <span class="prediction-legend-dot prediction-legend-dot-draw"></span>
-                      <span>${drawTitle} ${drawP}%</span>
-                    </div>
-                    <div class="prediction-legend-item">
-                      <span class="prediction-legend-dot prediction-legend-dot-away"></span>
-                      <span>${awayTitle} ${awayP}%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            `;
-          }
-
-          // ✅ منطق جدید: فقط اگر هنوز مهلت پیش‌بینی باز است، دکمه را نشان بده
-          const predictionStillOpen = isPredictionOpen(match);
-
-          if ((match.status === "upcoming" || match.status === "live") && predictionStillOpen) {
-            html += `
-              <div class="match-actions">
-                <button class="action-btn" onclick="handlePrediction(${match.id})">
-                  📊 ثبت پیش‌بینی
-                </button>
-              </div>
-            `;
-          } else if ((match.status === "upcoming" || match.status === "live") && !predictionStillOpen) {
-            html += `
-              <div class="match-actions">
-                <span style="font-size:11px;color:var(--text-soft);">
-                  مهلت پیش‌بینی این بازی به پایان رسیده است.
-                </span>
-              </div>
-            `;
-          } else if (match.status === "finished") {
-            html += `
-              <div class="match-actions">
-                <button class="action-btn" onclick="showMatchDetails(${match.id})">
-                  📋 جزئیات بازی
-                </button>
-              </div>
-            `;
-          }
-
-          html += `</div>`;
+        if (drawP > maxValue) {
+          maxValue = drawP;
+          maxTitle = drawTitle;
+          maxClass = "max-draw";
         }
+        if (awayP > maxValue) {
+          maxValue = awayP;
+          maxTitle = away.shortName;
+          maxClass = "max-away";
+        }
+
+        const donutStyle = `
+          background: conic-gradient(
+            var(--pred-home) 0deg ${homeAngle}deg,
+            var(--pred-draw) ${homeAngle}deg ${homeAngle + drawAngle}deg,
+            var(--pred-away) ${homeAngle + drawAngle}deg 360deg
+          );
+        `;
+
+        html += `
+          <div class="prediction-summary">
+            <div>پیش‌بینی کاربران (تعداد ${stats.total}):</div>
+            <div class="prediction-donut-wrapper">
+              <div class="prediction-donut ${maxClass}" style="${donutStyle}">
+                <div class="prediction-donut-inner">
+                  <div class="prediction-donut-label">بیشترین</div>
+                  <div class="prediction-donut-value">
+                    ${maxTitle}<br>${maxValue}%
+                  </div>
+                </div>
+              </div>
+              <div class="prediction-legend">
+                <div class="prediction-legend-item">
+                  <span class="prediction-legend-dot prediction-legend-dot-home"></span>
+                  <span>${homeTitle} ${homeP}%</span>
+                </div>
+                <div class="prediction-legend-item">
+                  <span class="prediction-legend-dot prediction-legend-dot-draw"></span>
+                  <span>${drawTitle} ${drawP}%</span>
+                </div>
+                <div class="prediction-legend-item">
+                  <span class="prediction-legend-dot prediction-legend-dot-away"></span>
+                  <span>${awayTitle} ${awayP}%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
       }
 
-      container.innerHTML = html;
+      // بقیه منطق دکمه‌ها مثل قبل
+      const predictionStillOpen = isPredictionOpen(match);
 
-      const weekButtons = container.querySelectorAll(".week-btn");
-      weekButtons.forEach(btn => {
-        btn.addEventListener("click", () => {
-          const w = parseInt(btn.dataset.week, 10);
-          if (!isNaN(w)) {
-            currentWeek = w;
-            renderFixturesPage();
-          }
-        });
-      });
+      if ((match.status === "upcoming" || match.status === "live") && predictionStillOpen) {
+        html += `
+          <div class="match-actions">
+            <button class="action-btn" onclick="handlePrediction(${match.id})">
+              📊 ثبت پیش‌بینی
+            </button>
+          </div>
+        `;
+      } else if ((match.status === "upcoming" || match.status === "live") && !predictionStillOpen) {
+        html += `
+          <div class="match-actions">
+            <span style="font-size:11px;color:var(--text-soft);">
+              مهلت پیش‌بینی این بازی به پایان رسیده است.
+            </span>
+          </div>
+        `;
+      } else if (match.status === "finished") {
+        html += `
+          <div class="match-actions">
+            <button class="action-btn" onclick="showMatchDetails(${match.id})">
+              📋 جزئیات بازی
+            </button>
+          </div>
+        `;
+      }
+
+      html += `</div>`;
     }
+  }
+
+  container.innerHTML = html;
+
+  const weekButtons = container.querySelectorAll(".week-btn");
+  weekButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const w = parseInt(btn.dataset.week, 10);
+      if (!isNaN(w)) {
+        currentWeek = w;
+        renderFixturesPage();
+      }
+    });
+  });
+}
 
     // -----------------------------
     // ۶) صفحه نتایج
