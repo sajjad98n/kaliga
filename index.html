@@ -1374,6 +1374,41 @@
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx6bnJ3YnJ4emduY3pmcWdhbXhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5MjU5MTQsImV4cCI6MjA3OTUwMTkxNH0.lHjgbKJ90Mws5z5-jzJYqAoyRgjfMGikmJTuAi1Nxqk";
 
     const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// -----------------------------
+// قفل ساده برای بخش ادمین
+// -----------------------------
+const ADMIN_PASSWORD_KEY = "kaliga_admin_ok_v1";
+// ❗️اینو هرچی دوست داری بگذار، مثلا: "Kaliga@1404"
+const ADMIN_PASSWORD = "91812";
+
+function checkAdminAccess() {
+  // اگر قبلاً تو این مرورگر رمز درست زده شده باشه
+  try {
+    const ok = localStorage.getItem(ADMIN_PASSWORD_KEY);
+    if (ok === "1") return true;
+  } catch (e) {
+    console.warn("عدم دسترسی به localStorage برای ادمین:", e);
+  }
+
+  const pwd = prompt("رمز ورود به بخش ادمین را وارد کن:");
+
+  if (!pwd) {
+    alert("دسترسی به بخش ادمین لغو شد.");
+    return false;
+  }
+
+  if (pwd === ADMIN_PASSWORD) {
+    try {
+      localStorage.setItem(ADMIN_PASSWORD_KEY, "1");
+    } catch (e) {
+      console.warn("مشکل در ذخیره وضعیت ادمین:", e);
+    }
+    return true;
+  } else {
+    alert("رمز نادرست است.");
+    return false;
+  }
+}
 
     // -----------------------------
     // ۱) تعریف تیم‌ها + لوگو (ایموجی)
@@ -2456,6 +2491,22 @@
         localStorage.setItem(USERNAME_KEY, name);
       } catch {}
     }
+    // شماره تماس اختیاری کاربر
+const PHONE_KEY = "kaliga_phone";
+
+function getSavedPhone() {
+  try {
+    return localStorage.getItem(PHONE_KEY) || "";
+  } catch {
+    return "";
+  }
+}
+
+function setSavedPhone(phone) {
+  try {
+    localStorage.setItem(PHONE_KEY, phone);
+  } catch {}
+}
 
     const PLAYER_ID_KEY = "kaliga_player_id";
 
@@ -2477,163 +2528,117 @@
       }
     }
 
-    function ensureUsernameForPrediction() {
-      let username = (getSavedUsername() || "").trim();
-      if (username) return username;
+// مطمئن می‌شیم کاربر نام کاربری داره؛
+ // و یک‌بار هم بهش پیشنهاد می‌دیم شماره تماس اختیاری وارد کنه
+function ensureUsernameForPrediction() {
+  let username = (getSavedUsername() || "").trim();
+  let phone = (getSavedPhone() || "").trim();
 
-      const input = prompt(
-        "برای شرکت در قرعه‌کشی لطفاً یک نام کاربری انتخاب کن (مثلاً kaliga_fan):",
-        ""
-      );
-      if (!input) {
-        alert("بدون نام کاربری، پیش‌بینی در قرعه‌کشی حساب نمی‌شود.");
-        return null;
-      }
-
-      username = input.trim();
-      if (!username) {
-        alert("نام کاربری نمی‌تواند خالی باشد.");
-        return null;
-      }
-
-      setSavedUsername(username);
-      return username;
+  // ۱) اگر هنوز نام کاربری نداره → ازش بپرس
+  if (!username) {
+    const input = prompt(
+      "برای شرکت در قرعه‌کشی لطفاً یک نام کاربری انتخاب کن (مثلاً kaliga_fan):",
+      ""
+    );
+    if (!input) {
+      alert("بدون نام کاربری، پیش‌بینی در قرعه‌کشی حساب نمی‌شود.");
+      return null;
     }
 
-    // ⚠️ نسخه‌ی جدید با fallback اگر ستون player_id در جدول موجود نباشد
-    async function savePredictionToDB(matchId, homeScore, awayScore) {
-      try {
-        const username = (getSavedUsername() || "").trim() || null;
-        const playerId = getOrCreatePlayerId();
+    username = input.trim();
+    if (!username) {
+      alert("نام کاربری نمی‌تواند خالی باشد.");
+      return null;
+    }
 
-        // تلاش اول: همراه با player_id
-        let { error } = await db
+    setSavedUsername(username);
+  }
+
+  // ۲) اگر هنوز شماره تماس ذخیره نشده، یک‌بار پیشنهاد بده (اختیاری)
+  if (!phone) {
+    const phoneInput = prompt(
+      "اگر دوست داری شماره تماس‌ت رو وارد کن (اختیاری).\nدر صورت برنده شدن، راحت‌تر می‌تونیم پیدات کنیم:",
+      ""
+    );
+    if (phoneInput && phoneInput.trim()) {
+      phone = phoneInput.trim();
+      setSavedPhone(phone);
+    }
+  }
+
+  // برگردوندن هر دو مقدار
+  return { username, phone };
+}
+
+
+    // ذخیره‌ی پیش‌بینی در Supabase با پشتیبانی از phone و fallback برای player_id
+async function savePredictionToDB(matchId, homeScore, awayScore, phone) {
+  try {
+    const username = (getSavedUsername() || "").trim() || null;
+    const playerId = getOrCreatePlayerId();
+
+    // اگر phone پاس داده نشده بود، از localStorage بخون
+    let phoneFromStorage = "";
+    try {
+      if (typeof getSavedPhone === "function") {
+        phoneFromStorage = getSavedPhone() || "";
+      }
+    } catch (_) {
+      phoneFromStorage = "";
+    }
+
+    const phoneValue =
+      (typeof phone === "string" && phone.trim()) ||
+      (phoneFromStorage && phoneFromStorage.trim()) ||
+      null;
+
+    // تلاش اول: همراه با player_id
+    let { error } = await db
+      .from("predictions")
+      .insert({
+        match_id: matchId,
+        player_id: playerId,
+        username,
+        phone: phoneValue,
+        home_score: homeScore,
+        away_score: awayScore
+      });
+
+    if (error) {
+      console.error("خطا در ذخیره پیش‌بینی (مرحله ۱):", error);
+      const msg =
+        (error.message || "") +
+        " " +
+        (error.details || "") +
+        " " +
+        (error.hint || "");
+
+      // اگر مشکل از player_id بود، بدون player_id دوباره امتحان کن
+      if (msg.includes("player_id")) {
+        const { error: error2 } = await db
           .from("predictions")
           .insert({
             match_id: matchId,
-            player_id: playerId,
             username,
+            phone: phoneValue,
             home_score: homeScore,
             away_score: awayScore
           });
 
-        if (error) {
-          console.error("خطا در ذخیره پیش‌بینی (مرحله ۱):", error);
-          const msg =
-            (error.message || "") +
-            " " +
-            (error.details || "") +
-            " " +
-            (error.hint || "");
-
-          // اگر اشاره‌ای به player_id شد، بدون آن دوباره امتحان کن
-          if (msg.includes("player_id")) {
-            const { error: error2 } = await db
-              .from("predictions")
-              .insert({
-                match_id: matchId,
-                username,
-                home_score: homeScore,
-                away_score: awayScore
-              });
-
-            if (error2) {
-              console.error("خطا در ذخیره پیش‌بینی (مرحله ۲):", error2);
-              alert("خطا در ذخیره پیش‌بینی رخ داد.");
-            }
-          } else {
-            alert("خطا در ذخیره پیش‌بینی رخ داد.");
-          }
+        if (error2) {
+          console.error("خطا در ذخیره پیش‌بینی (مرحله ۲):", error2);
+          alert("خطا در ذخیره پیش‌بینی رخ داد.");
         }
-      } catch (e) {
-        console.error(e);
-        alert("مشکل در ارتباط با سرور پیش‌بینی.");
+      } else {
+        alert("خطا در ذخیره پیش‌بینی رخ داد.");
       }
     }
+  } catch (e) {
+    console.error(e);
+    alert("مشکل در ارتباط با سرور پیش‌بینی.");
+  }
+}
 
-    async function getPredictionStats(matchId) {
-      try {
-        const { data, error } = await db
-          .from("predictions")
-          .select("home_score, away_score")
-          .eq("match_id", matchId);
-
-        if (error) {
-          console.error("خطا در خواندن پیش‌بینی‌ها:", error);
-          return null;
-        }
-
-        if (!data || data.length === 0) return null;
-
-        let home = 0, draw = 0, away = 0;
-        data.forEach(r => {
-          if (r.home_score > r.away_score) home++;
-          else if (r.home_score < r.away_score) away++;
-          else draw++;
-        });
-
-        const total = home + draw + away;
-        if (!total) return null;
-
-        return {
-          total,
-          homePercent: Math.round(home * 100 / total),
-          drawPercent: Math.round(draw * 100 / total),
-          awayPercent: Math.round(away * 100 / total)
-        };
-      } catch (e) {
-        console.error(e);
-        return null;
-      }
-    }
-
-    // کامنت‌ها
-    async function fetchComments(matchId) {
-      try {
-        const { data, error } = await db
-          .from("comments")
-          .select("id, username, body, created_at")
-          .eq("match_id", matchId)
-          .order("created_at", { ascending: true });
-
-        if (error) {
-          console.error("خطا در خواندن کامنت‌ها:", error);
-          return [];
-        }
-
-        return data || [];
-      } catch (e) {
-        console.error(e);
-        return [];
-      }
-    }
-
-    async function addComment(matchId, text) {
-      const username = getSavedUsername().trim();
-      if (!username) {
-        alert("اول نام کاربری را ثبت کن.");
-        return;
-      }
-      if (!text.trim()) return;
-
-      try {
-        const { error } = await db
-          .from("comments")
-          .insert({
-            match_id: matchId,
-            username,
-            body: text.trim()
-          });
-
-        if (error) {
-          console.error("خطا در ثبت کامنت:", error);
-          alert("خطا در ثبت کامنت رخ داد.");
-        }
-      } catch (e) {
-        console.error(e);
-        alert("مشکل در ارتباط با سرور کامنت.");
-      }
-    }
 
     async function loadAndRenderComments(matchId) {
       const container = document.getElementById(`comments-${matchId}`);
@@ -3152,6 +3157,29 @@
 
       return tableArray;
     }
+        // -----------------------------
+    // امتیازدهی پیش‌بینی‌ها (طبق قانون کالیگا)
+    // -----------------------------
+    function getResultSign(home, away) {
+      if (home > away) return 1;   // برد میزبان
+      if (home < away) return -1;  // برد میهمان
+      return 0;                    // مساوی
+    }
+
+    function calcPredictionPoints(realHome, realAway, predHome, predAway) {
+      // نتیجه دقیق درست → ۳ امتیاز
+      if (predHome === realHome && predAway === realAway) {
+        return 3;
+      }
+
+      // فقط جهت درست (برد / مساوی / باخت) → ۱ امتیاز
+      if (getResultSign(predHome, predAway) === getResultSign(realHome, realAway)) {
+        return 1;
+      }
+
+      // اشتباه → ۰
+      return 0;
+    }
 
     function getPosClass(pos) {
       if (pos <= 4) return "pos-top";
@@ -3281,7 +3309,9 @@
             { src: "img3.jpg", caption: "نمایش جذاب دختران ورزشکار" }
           ]
         }
+        
       ];
+      
 
       let html = `
         <div class="section-title">
@@ -3560,43 +3590,308 @@
 
       container.innerHTML = html;
     }
+   // -----------------------------
+// ۱۰-ب) صفحه مخفی ادمین: امتیاز پیش‌بینی‌ها
+// -----------------------------
+
+// -----------------------------
+// ۱۰-ب) صفحه مخفی ادمین: امتیاز پیش‌بینی‌ها + شماره تماس
+// -----------------------------
+async function renderAdminPredictionsPage() {
+  const container = document.getElementById("page-content");
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="section-title">
+      <span class="dot"></span>
+      <span>گزارش ادمین - امتیاز و فعالیت پیش‌بینی‌ها</span>
+    </div>
+    <div class="card">در حال بارگذاری اطلاعات پیش‌بینی‌ها...</div>
+  `;
+
+  try {
+    // همهٔ پیش‌بینی‌ها (ستون‌ها رو آزاد می‌گیریم تا اگه player_id یا phone نباشه، خطا نده)
+    const { data, error } = await db
+      .from("predictions")
+      .select("*");
+
+    if (error) {
+      console.error("خطا در خواندن داده‌های پیش‌بینی:", error);
+      container.innerHTML = `
+        <div class="section-title">
+          <span class="dot"></span>
+          <span>گزارش ادمین - امتیاز و فعالیت پیش‌بینی‌ها</span>
+        </div>
+        <div class="card">
+          در خواندن داده‌های پیش‌بینی مشکلی پیش آمد.<br/>
+          جزئیات در کنسول مرورگر (F12) قابل مشاهده است.
+        </div>
+      `;
+      return;
+    }
+
+    if (!data || !data.length) {
+      container.innerHTML = `
+        <div class="section-title">
+          <span class="dot"></span>
+          <span>گزارش ادمین - امتیاز و فعالیت پیش‌بینی‌ها</span>
+        </div>
+        <div class="card">
+          هنوز هیچ پیش‌بینی‌ای در دیتابیس ثبت نشده است.
+        </div>
+      `;
+      return;
+    }
+
+    // فقط بازی‌های تمام‌شده برای محاسبه امتیاز
+    const finishedMatchesMap = new Map();
+    matches
+      .filter(m => m.status === "finished")
+      .forEach(m => finishedMatchesMap.set(m.id, m));
+
+    // ۱) آمار امتیاز پیش‌بینی برای بازی‌های تمام‌شده
+    const scoreByUser = new Map();
+
+    // ۲) آمار تعداد کل پیش‌بینی‌ها (برای همهٔ بازی‌ها)
+    const countByUser = new Map();
+
+    data.forEach(pred => {
+      const username = (pred.username || "").trim() || "بدون نام‌کاربری";
+      const phone = (pred.phone || "").trim();
+
+      // --- ۲) شمارش کل پیش‌بینی‌ها ---
+      if (!countByUser.has(username)) {
+        countByUser.set(username, {
+          username,
+          phone: phone || "",
+          totalPredictions: 0
+        });
+      } else if (phone && !countByUser.get(username).phone) {
+        // اگر قبلاً شماره نداشت و حالا داریم، ذخیره کن
+        countByUser.get(username).phone = phone;
+      }
+      countByUser.get(username).totalPredictions += 1;
+
+      // --- ۱) فقط اگر بازی تمام شده، امتیاز حساب می‌کنیم ---
+      const match = finishedMatchesMap.get(pred.match_id);
+      if (!match) return;
+
+      if (!scoreByUser.has(username)) {
+        scoreByUser.set(username, {
+          username,
+          phone: phone || "",
+          predictionsCount: 0,
+          correctResultCount: 0,
+          exactScoreCount: 0,
+          totalPoints: 0
+        });
+      } else if (phone && !scoreByUser.get(username).phone) {
+        scoreByUser.get(username).phone = phone;
+      }
+
+      const row = scoreByUser.get(username);
+
+      // استفاده از تابع امتیازدهی سراسری (که بالاتر تعریف کردی)
+      const points = calcPredictionPoints(
+        match.homeScore,
+        match.awayScore,
+        pred.home_score,
+        pred.away_score
+      );
+
+      row.predictionsCount += 1;
+      if (points > 0) row.correctResultCount += 1;
+      if (points === 3) row.exactScoreCount += 1;
+      row.totalPoints += points;
+    });
+
+    // آرایه‌ها برای نمایش
+    const scoreRows = Array.from(scoreByUser.values());
+    const countRows = Array.from(countByUser.values());
+
+    // مرتب‌سازی جدول امتیاز
+    scoreRows.sort((a, b) => {
+      if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
+      if (b.correctResultCount !== a.correctResultCount) return b.correctResultCount - a.correctResultCount;
+      if (b.exactScoreCount !== a.exactScoreCount) return b.exactScoreCount - a.exactScoreCount;
+      return b.predictionsCount - a.predictionsCount;
+    });
+
+    // مرتب‌سازی جدول تعداد پیش‌بینی‌ها
+    countRows.sort((a, b) => {
+      if (b.totalPredictions !== a.totalPredictions) {
+        return b.totalPredictions - a.totalPredictions;
+      }
+      return a.username.localeCompare(b.username, "fa");
+    });
+
+    // ساخت HTML نهایی
+    let html = `
+      <div class="section-title">
+        <span class="dot"></span>
+        <span>گزارش ادمین - امتیاز و فعالیت پیش‌بینی‌ها</span>
+      </div>
+
+      <div class="card">
+        <div style="font-size:12px;margin-bottom:8px;">
+          سلام.
+        </div>
+    `;
+
+    // 🔹 بخش اول: جدول امتیاز پیش‌بینی‌ها (فقط بازی‌های تمام‌شده)
+    if (!scoreRows.length) {
+      html += `
+        <div style="font-size:12px;color:var(--text-soft);margin-bottom:4px;">
+          هنوز هیچ پیش‌بینیِ قابل امتیازدهی برای بازی‌های تمام‌شده ثبت نشده است.
+        </div>
+      `;
+    } else {
+      html += `
+        <div style="font-weight:600;font-size:13px;margin-bottom:6px;">🏆 جدول امتیاز پیش‌بینی‌ها (بازی‌های تمام‌شده)</div>
+        <div class="table-wrapper" style="margin-top:6px;">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>نام کاربری</th>
+                <th>شماره تماس</th>
+                <th>تعداد پیش‌بینی (بازی تمام‌شده)</th>
+                <th>نتیجه درست</th>
+                <th>نتیجه و اسکور دقیق (۳ امتیازی)</th>
+                <th>امتیاز کل</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+
+      scoreRows.forEach((r, idx) => {
+        html += `
+          <tr>
+            <td>${idx + 1}</td>
+            <td>${escapeHtml(r.username)}</td>
+            <td>${escapeHtml(r.phone || "")}</td>
+            <td>${r.predictionsCount}</td>
+            <td>${r.correctResultCount}</td>
+            <td>${r.exactScoreCount}</td>
+            <td>${r.totalPoints}</td>
+          </tr>
+        `;
+      });
+
+      html += `
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    html += `</div>`; // پایان کارت اول
+
+    // 🔹 بخش دوم: جدول تعداد کل پیش‌بینی‌های هر کاربر
+    html += `
+      <div class="card">
+        <div style="font-weight:600;font-size:13px;margin-bottom:6px;">📊 فعالیت کاربران در پیش‌بینی (همهٔ بازی‌ها)</div>
+        <div style="font-size:11px;color:var(--text-soft);margin-bottom:6px;">
+          این جدول صرفاً تعداد پیش‌بینی‌های ثبت‌شده توسط هر نام کاربری را نشان می‌دهد؛
+          چه بازی انجام شده باشد چه هنوز برگزار نشده باشد.
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>نام کاربری</th>
+                <th>شماره تماس</th>
+                <th>تعداد کل پیش‌بینی‌ها</th>
+              </tr>
+            </thead>
+            <tbody>
+    `;
+
+    countRows.forEach((r, idx) => {
+      html += `
+        <tr>
+          <td>${idx + 1}</td>
+          <td>${escapeHtml(r.username)}</td>
+          <td>${escapeHtml(r.phone || "")}</td>
+          <td>${r.totalPredictions}</td>
+        </tr>
+      `;
+    });
+
+    html += `
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+
+    container.innerHTML = html;
+  } catch (e) {
+    console.error("استثناء در صفحه ادمین پیش‌بینی:", e);
+    container.innerHTML = `
+      <div class="section-title">
+        <span class="dot"></span>
+        <span>گزارش ادمین - امتیاز و فعالیت پیش‌بینی‌ها</span>
+      </div>
+      <div class="card">
+        یک خطای غیرمنتظره رخ داد. جزئیات در کنسول مرورگر (F12) قابل مشاهده است.
+      </div>
+    `;
+  }
+}
+
 
     // -----------------------------
     // ۱۱) اکشن پیش‌بینی
     // -----------------------------
-    async function handlePrediction(matchId) {
-      const match = matches.find(m => m.id === matchId);
-      if (!match) return;
+// -----------------------------
+// ۱۱) اکشن پیش‌بینی
+// -----------------------------
+async function handlePrediction(matchId) {
+  const match = matches.find(m => m.id === matchId);
+  if (!match) return;
 
-      if (!isPredictionOpen(match)) {
-        alert("مهلت پیش‌بینی برای این بازی تمام شده است.");
-        return;
-      }
+  // ۱) چک کنیم مهلت پیش‌بینی تموم نشده
+  if (!isPredictionOpen(match)) {
+    alert("مهلت پیش‌بینی برای این بازی تمام شده است.");
+    return;
+  }
 
-      const home = getTeamById(match.homeTeamId);
-      const away = getTeamById(match.awayTeamId);
+  const home = getTeamById(match.homeTeamId);
+  const away = getTeamById(match.awayTeamId);
 
-      const username = ensureUsernameForPrediction();
-      if (!username) return;
+  // ۲) مطمئن بشیم کاربر نام کاربری داره
+  //    و در صورت تمایل شماره تماس هم بپرسیم
+  const identity = ensureUsernameForPrediction();
+  if (!identity) {
+    // اگر کاربر نام وارد نکرد، ثبت پیش‌بینی رو کنسل می‌کنیم
+    return;
+  }
 
-      let hs = prompt(`گل‌های ${home.name} را برای پیش‌بینی وارد کن:`, "0");
-      if (hs === null) return;
-      let as = prompt(`گل‌های ${away.name} را برای پیش‌بینی وارد کن:`, "0");
-      if (as === null) return;
+  const { username, phone } = identity; // phone فعلاً فقط برای ذخیره تو DB است
 
-      hs = parseInt(hs, 10);
-      as = parseInt(as, 10);
+  // ۳) گرفتن اسکور از کاربر
+  let hs = prompt(`گل‌های ${home.name} را برای پیش‌بینی وارد کن:`, "0");
+  if (hs === null) return;
+  let as = prompt(`گل‌های ${away.name} را برای پیش‌بینی وارد کن:`, "0");
+  if (as === null) return;
 
-      if (isNaN(hs) || isNaN(as) || hs < 0 || as < 0) {
-        alert("لطفاً فقط عدد صحیح مثبت وارد کن.");
-        return;
-      }
+  hs = parseInt(hs, 10);
+  as = parseInt(as, 10);
 
-      await savePredictionToDB(matchId, hs, as);
-      alert("پیش‌بینی شما ذخیره شد.");
+  if (isNaN(hs) || isNaN(as) || hs < 0 || as < 0) {
+    alert("لطفاً فقط عدد صحیح مثبت وارد کن.");
+    return;
+  }
 
-      setActivePage("fixtures");
-    }
+  // ۴) ذخیره پیش‌بینی، همراه با شماره تماس (اگر کاربر داده باشد)
+  await savePredictionToDB(matchId, hs, as, phone);
+  alert("پیش‌بینی شما ذخیره شد.");
+
+  setActivePage("fixtures");
+}
+
 
     // -----------------------------
     // ۱۲) سیستم تم
@@ -3815,6 +4110,8 @@
       else if (page === "media") renderMediaPage();
       else if (page === "stats") renderStatsPage();
       else if (page === "feedback") renderFeedbackPage();
+      else if (page === "admin") renderAdminPredictionsPage();
+
     }
 
     // -----------------------------
@@ -4027,74 +4324,92 @@
     // -----------------------------
     // ۱۹) شروع کار
     // -----------------------------
-    document.addEventListener("DOMContentLoaded", () => {
-      setMode("dark");
+   // -----------------------------
+// ۱۹) شروع کار
+// -----------------------------
+document.addEventListener("DOMContentLoaded", () => {
+  setMode("dark");
 
-      document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-          setActivePage(btn.dataset.page);
-          rotateTheme();
-        });
-      });
-
-      // ✅ صفحه‌ی اول: نتایج
-      setActivePage("results");
-
-      updateCurrentDateTime();
-      setInterval(updateCurrentDateTime, 1000);
-
-      const modeToggle = document.getElementById("mode-toggle");
-      if (modeToggle) {
-        modeToggle.addEventListener("click", () => {
-          setMode(currentMode === "dark" ? "light" : "dark");
-        });
-      }
-
-      const audio = document.getElementById("bg-audio");
-      const audioToggle = document.getElementById("audio-toggle");
-
-      if (audio && audioToggle) {
-        audio.volume = 0.4;
-
-        audio.play().catch(() => {});
-
-        function updateAudioButton() {
-          if (audio.paused) {
-            audioToggle.textContent = "🔈 موسیقی خاموش";
-            audioToggle.classList.remove("active");
-          } else {
-            audioToggle.textContent = "🔊 موسیقی روشن";
-            audioToggle.classList.add("active");
-          }
-        }
-
-        updateAudioButton();
-
-        audioToggle.addEventListener("click", () => {
-          if (audio.paused) {
-            audio.play().catch(() => {});
-          } else {
-            audio.pause();
-          }
-          updateAudioButton();
-        });
-      }
-
-      const introVideo = document.getElementById("intro-video");
-      if (introVideo) {
-        introVideo.play().catch(() => {});
-      }
-      setTimeout(() => {
-        hideIntro();
-      }, 3000);
-
-      const menuToggle = document.getElementById("menu-toggle");
-      if (menuToggle) {
-        menuToggle.addEventListener("click", openSideMenu);
-      }
-
-      incrementPageView();
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      setActivePage(btn.dataset.page);
+      rotateTheme();
     });
+  });
+
+  // 🔐 چک کردن اینکه آیا آدرس admin=1 هست یا نه
+  const params = new URLSearchParams(window.location.search);
+  const isAdminMode = params.get("admin") === "1";
+
+  if (isAdminMode) {
+    const ok = checkAdminAccess(); // تابعی که بالا اضافه کردیم
+    if (ok) {
+      renderAdminPredictionsPage(); // همون صفحه ادمینی که قبلاً برات نوشتیم
+    } else {
+      setActivePage("results");
+    }
+  } else {
+    setActivePage("results");
+  }
+
+  // تاریخ و ساعت زنده
+  updateCurrentDateTime();
+  setInterval(updateCurrentDateTime, 1000);
+
+  const modeToggle = document.getElementById("mode-toggle");
+  if (modeToggle) {
+    modeToggle.addEventListener("click", () => {
+      setMode(currentMode === "dark" ? "light" : "dark");
+    });
+  }
+
+  const audio = document.getElementById("bg-audio");
+  const audioToggle = document.getElementById("audio-toggle");
+
+  if (audio && audioToggle) {
+    audio.volume = 0.4;
+
+    audio.play().catch(() => {});
+
+    function updateAudioButton() {
+      if (audio.paused) {
+        audioToggle.textContent = "🔈 موسیقی خاموش";
+        audioToggle.classList.remove("active");
+      } else {
+        audioToggle.textContent = "🔊 موسیقی روشن";
+        audioToggle.classList.add("active");
+      }
+    }
+
+    updateAudioButton();
+
+    audioToggle.addEventListener("click", () => {
+      if (audio.paused) {
+        audio.play().catch(() => {});
+      } else {
+        audio.pause();
+      }
+      updateAudioButton();
+    });
+  }
+
+  const introVideo = document.getElementById("intro-video");
+  if (introVideo) {
+    introVideo.play().catch(() => {});
+  }
+  setTimeout(() => {
+    hideIntro();
+  }, 3000);
+
+  const menuToggle = document.getElementById("menu-toggle");
+  if (menuToggle) {
+    menuToggle.addEventListener("click", openSideMenu);
+  }
+
+  incrementPageView();
+});
+
+
   </script>
 </body>
 </html>
