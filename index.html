@@ -3473,12 +3473,12 @@ async function fetchMediaPosts() {
   const { data, error } = await db
     .from("media_posts")
     .select(`
-      id, title, caption, sort_order, created_at,
-      media_images ( id, post_id, src, caption, sort_order )
+      id, title, caption, order_index, created_at,
+      media_images ( id, post_id, file_path, caption, order_index )
     `)
-    .order("sort_order", { ascending: true })
+    .order("order_index", { ascending: true })
     .order("created_at", { ascending: false })
-    .order("sort_order", { foreignTable: "media_images", ascending: true });
+    .order("order_index", { foreignTable: "media_images", ascending: true });
 
   if (error) {
     console.error("خطا در خواندن پست‌های رسانه:", error);
@@ -3487,6 +3487,7 @@ async function fetchMediaPosts() {
 
   return data || [];
 }
+
 
 function normalizeMediaSrc(src) {
   const s = (src || "").trim();
@@ -3559,7 +3560,8 @@ function normalizeMediaSrc(src) {
     posts.forEach(post => {
       const title = post.title || "";
       const caption = post.caption || "";
-      const images = (post.media_images || []).slice().sort((a,b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
+      const images = (post.media_images || []).slice().sort((a,b) => (a.order_index ?? 0) - (b.order_index ?? 0));
+
 
       html += `
         <div class="card">
@@ -3569,7 +3571,7 @@ function normalizeMediaSrc(src) {
           ${images.length ? `
             <div class="media-gallery-images" style="margin-top:10px;">
               ${images.map(img => {
-                const src = normalizeMediaSrc(img.src);
+                const src = normalizeMediaSrc(img.file_path);
                 const cap = img.caption || "";
                 if (!src) return "";
                 return `
@@ -3601,15 +3603,15 @@ function normalizeMediaSrc(src) {
       const container = document.getElementById("page-content");
 
       const topScorersDemo = [
-        { player: "امیرحسین احمدیان", team: "امامزاده پیش", goals: 6 },
+        { player: "امیرحسین احمدیان", team: "امامزاده پیش", goals: 8 },
         { player: "حسام جعفری", team: "زنده یاد محمدرضا جعفری", goals: 6 },
         { player: "مهدی نبوی", team: "زنده یاد سید مهدی نبوی", goals: 6 },
         { player: "بهزاد رضاییان", team: "زنده یاد بهمن و مصطفی جعفری", goals: 5 },
         { player: "امیرحسین صفایی", team: "زنده یاد محمدرضا جعفری", goals: 4 },
         { player: "امیر جعفری", team: "زنده یاد محمدرضا جعفری", goals: 4 },
         
-        { player: "سعید جعفری", team: "زنده یاد مجید جعفری", goals: 3 },
-        { player: "ابوالفضل احمدیان", team: "زنده یاد مجید جعفری", goals: 3 },
+        { player: "سعید جعفری", team: "زنده یاد مجید جعفری", goals: 4 },
+        { player: "ابوالفضل احمدیان", team: "زنده یاد مجید جعفری", goals: 4 },
         { player: "سعید جعفری", team: "هیئت جوانان", goals: 3 },
         { player: "نصرالله جعفری", team: "شهید سید احسان موسوی", goals: 3 },
         //{ player: "حامد نبوی", team: "زنده یاد بهمن و مصطفی جعفری", goals: 2 },
@@ -4780,15 +4782,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
   </script>
-<section id="media" style="margin: 24px 0;">
-  <h2>رسانه</h2>
-
-  <div id="media-error" style="display:none; padding:12px; border:1px solid #f00; margin:12px 0;"></div>
-
-  <div id="media-posts"></div>
-</section>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./media.js" defer></script>
 
 </body>
 </html>
