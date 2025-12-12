@@ -1267,6 +1267,7 @@
     }
   </style>
 </head>
+
 <body>
   <!-- موشن‌گرافی ورود -->
   <div id="intro-overlay" class="intro-overlay">
@@ -3466,46 +3467,75 @@ async function renderFixturesPage() {
     // -----------------------------
     // ۹) صفحه رسانه و اطلاعیه‌ها
     // -----------------------------
-    function renderMediaPage() {
-      const container = document.getElementById("page-content");
+    const MEDIA_BASE = ""; // اگر src را کامل مثل media/img4.jpg می‌نویسی، همین خالی بمونه
 
-      const announcements = [];
+async function fetchMediaPosts() {
+  const { data, error } = await db
+    .from("media_posts")
+    .select(`
+      id, title, caption, sort_order, created_at,
+      media_images ( id, post_id, src, caption, sort_order )
+    `)
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: false })
+    .order("sort_order", { foreignTable: "media_images", ascending: true });
 
-      const galleryGroups = [
-        {
-          title: "افتتاحیه لیگ کالـیگا",
-          images: [
-            { src: "img1.jpg", caption: "مهمانان گرانقدر مراسم افتتاحیه" },
-            { src: "img2.jpg", caption: "استقبال پرشور ورزش دوستان" },
-            { src: "img3.jpg", caption: "نمایش جذاب دختران ورزشکار" }
-          ]
-        }
-        
-      ];
-      
+  if (error) {
+    console.error("خطا در خواندن پست‌های رسانه:", error);
+    return [];
+  }
 
-      let html = `
-        <div class="section-title">
-          <span class="dot"></span>
-          <span>رسانه و اطلاعیه‌ها</span>
+  return data || [];
+}
+
+function normalizeMediaSrc(src) {
+  const s = (src || "").trim();
+  if (!s) return "";
+  // اگر لینک کامل بود (http) همون رو برگردون
+  if (/^https?:\/\//i.test(s)) return s;
+  // اگر مسیر نسبی بود
+  return MEDIA_BASE + s;
+}
+
+    async function renderMediaPage() {
+  const container = document.getElementById("page-content");
+  if (!container) return;
+
+  // اول سریع یه لودینگ نشون بده
+  container.innerHTML = `
+    <div class="section-title">
+      <span class="dot"></span>
+      <span>رسانه و اطلاعیه‌ها</span>
+    </div>
+    <div class="card">در حال بارگذاری پست‌ها...</div>
+  `;
+
+  // پست‌ها را از Supabase بخوان
+  const posts = await fetchMediaPosts();
+
+  // بخش ویدیو/متن قبلی خودت (همون که داشتی)
+  let html = `
+    <div class="section-title">
+      <span class="dot"></span>
+      <span>رسانه و اطلاعیه‌ها</span>
+    </div>
+
+    <div class="card">
+      <div style="font-weight:600;font-size:13px;margin-bottom:6px;">🎬 کلیپ‌ها و ویدیوها</div>
+
+      <div class="media-video">
+        <div class="media-video-player">
+          <video
+            id="media-video-main"
+            src="mp1.mp4"
+            preload="none"
+            playsinline
+            controls
+          ></video>
         </div>
 
-        <div class="card">
-          <div style="font-weight:600;font-size:13px;margin-bottom:6px;">🎬 کلیپ‌ها و ویدیوها</div>
-
-          <div class="media-video">
-            <div class="media-video-player">
-              <video
-                id="media-video-main"
-                src="mp1.mp4"
-                preload="none"
-                playsinline
-                controls
-              ></video>
-            </div>
-
-            <div class="media-video-caption">
-              <br>اولین فصل کالـیگا با مراسم افتتاحیه و انجام نخستین رقابت‌ها به‌صورت رسمی آغاز شد؛<br>
+        <div class="media-video-caption">
+                        <br>اولین فصل کالـیگا با مراسم افتتاحیه و انجام نخستین رقابت‌ها به‌صورت رسمی آغاز شد؛<br>
               آغازی که از همان دقایق نخست، انرژی، تمرکز و شوق تیم‌ها برای یک فصل پرتنش و جذاب را نشان داد.<br>
               در این ویدیو، مروری داریم بر لحظات مهم شروع لیگ:<br>
               از ورود و استقبال از مسئولین ، تیم‌ها و گرم‌کردن اولیه، تا سوت آغاز بازی‌ها، گل‌های هفتهٔ اول و واکنش‌های احساسی بازیکنان و هواداران.<br>
@@ -3516,78 +3546,53 @@ async function renderFixturesPage() {
               و هواداران آماده‌اند تا در کنار بازیکنان، مسیر شکل‌گیری یک لیگ منظم و رو‌به‌رشد را تجربه کنند.<br><br>
 
               این تنها آغاز راه است…<br>
-              مسیر پیشِ‌رو، پر از لحظه‌هایی خواهد بود که ارزش ثبت و تماشا کردن دارند.
-            </div>
-          </div>
+             مسیر پیشِ‌رو، پر از لحظه‌هایی خواهد بود که ارزش ثبت و تماشا کردن دارند.
         </div>
-      `;
+      </div>
+    </div>
+  `;
 
-      if (announcements.length) {
-        html += `
-          <div class="card">
-            <div style="font-weight:600;font-size:13px;margin-bottom:6px;">📢 اطلاعیه‌ها</div>
-            <div class="media-list">
-        `;
-
-        announcements.forEach(item => {
-          html += `
-            <div>
-              <div class="media-item-title">${escapeHtml(item.title)}</div>
-              <div style="font-size:11px;color:var(--text-soft);">
-                ${escapeHtml(item.body)}
-              </div>
-            </div>
-          `;
-        });
-
-        html += `
-            </div>
-          </div>
-        `;
-      }
+  // --- پست‌ها ---
+  if (!posts.length) {
+    html += `<div class="card">هنوز پستی برای نمایش ثبت نشده است.</div>`;
+  } else {
+    posts.forEach(post => {
+      const title = post.title || "";
+      const caption = post.caption || "";
+      const images = (post.media_images || []).slice().sort((a,b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
 
       html += `
         <div class="card">
-          <div style="font-weight:600;font-size:13px;margin-bottom:6px;">🖼️ گالری تصاویر</div>
-          <div class="media-list">
-      `;
+          <div class="media-item-title">${escapeHtml(title)}</div>
+          ${caption ? `<div style="font-size:11px;color:var(--text-soft);margin-top:4px;line-height:1.8;">${escapeHtml(caption)}</div>` : ""}
 
-      galleryGroups.forEach(group => {
-        html += `
-          <div class="media-gallery-group">
-            <div class="media-item-title">${escapeHtml(group.title)}</div>
-            <div class="media-gallery-images">
-        `;
-
-        (group.images || []).forEach(img => {
-          html += `
-            <div class="media-gallery-item">
-              <img
-                src="${escapeHtml(img.src)}"
-                alt="${escapeHtml(img.caption || group.title)}"
-                onclick="showGalleryImage('${escapeHtml(img.src)}')"
-              />
-              ${img.caption
-                ? `<div class="media-gallery-caption">${escapeHtml(img.caption)}</div>`
-                : ""
-              }
+          ${images.length ? `
+            <div class="media-gallery-images" style="margin-top:10px;">
+              ${images.map(img => {
+                const src = normalizeMediaSrc(img.src);
+                const cap = img.caption || "";
+                if (!src) return "";
+                return `
+                  <div class="media-gallery-item">
+                    <img
+                      src="${escapeHtml(src)}"
+                      alt="${escapeHtml(cap || title)}"
+                      onclick="showGalleryImage('${escapeHtml(src)}')"
+                    />
+                    ${cap ? `<div class="media-gallery-caption">${escapeHtml(cap)}</div>` : ""}
+                  </div>
+                `;
+              }).join("")}
             </div>
-          `;
-        });
-
-        html += `
-            </div>
-          </div>
-        `;
-      });
-
-      html += `
-          </div>
+          ` : ""}
         </div>
       `;
+    });
+  }
 
-      container.innerHTML = html;
-    }
+  container.innerHTML = html;
+}
+
 
     // -----------------------------
     // ۱۰) صفحه آمار لیگ
@@ -4775,5 +4780,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
   </script>
+<section id="media" style="margin: 24px 0;">
+  <h2>رسانه</h2>
+
+  <div id="media-error" style="display:none; padding:12px; border:1px solid #f00; margin:12px 0;"></div>
+
+  <div id="media-posts"></div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./media.js" defer></script>
+
 </body>
 </html>
