@@ -1374,6 +1374,9 @@
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx6bnJ3YnJ4emduY3pmcWdhbXhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5MjU5MTQsImV4cCI6MjA3OTUwMTkxNH0.lHjgbKJ90Mws5z5-jzJYqAoyRgjfMGikmJTuAi1Nxqk";
 
     const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+
+
 // -----------------------------
 // قفل ساده برای بخش ادمین
 // -----------------------------
@@ -2348,6 +2351,57 @@ function checkAdminAccess() {
     };
 
     let currentWeek = 1;
+    // -----------------------------
+    // ۲-ج) نتایج و جزئیات ادمین از Supabase
+    // -----------------------------
+    const matchOverrides = {};      // { [match_id]: { match_id, home_score, away_score, status } }
+    const matchDetailsAdmin = {};   // { [match_id]: { homeScorers:[], awayScorers:[], yellowCards:[], redCards:[] } }
+
+    async function loadMatchOverrides() {
+      try {
+        const { data, error } = await db
+          .from("match_results")
+          .select("*");
+
+        if (error) {
+          console.error("خطا در خواندن match_results از Supabase:", error);
+          return;
+        }
+
+        data.forEach(row => {
+          matchOverrides[row.match_id] = {
+            match_id: row.match_id,
+            home_score: row.home_score,
+            away_score: row.away_score,
+            status: row.status || "finished"
+          };
+
+          matchDetailsAdmin[row.match_id] = {
+            homeScorers: (row.home_scorers || "").split("\n").map(s => s.trim()).filter(Boolean),
+            awayScorers: (row.away_scorers || "").split("\n").map(s => s.trim()).filter(Boolean),
+            yellowCards: (row.yellow_cards || "").split("\n").map(s => s.trim()).filter(Boolean),
+            redCards: (row.red_cards || "").split("\n").map(s => s.trim()).filter(Boolean)
+          };
+        });
+      } catch (e) {
+        console.error("استثناء در loadMatchOverrides:", e);
+      }
+    }
+
+    function getEffectiveMatch(baseMatch) {
+      const ov = matchOverrides[baseMatch.id];
+      if (!ov) return baseMatch;
+      return {
+        ...baseMatch,
+        status: ov.status || "finished",
+        homeScore: ov.home_score,
+        awayScore: ov.away_score
+      };
+    }
+
+    function getAllEffectiveMatches() {
+      return matches.map(m => getEffectiveMatch(m));
+    }
 
     // -----------------------------
     // ۳) توابع کمکی
@@ -2849,30 +2903,6 @@ async function getPredictionStats(matchId) {
     // -----------------------------
     // ۴-ب) انتقادات و پیشنهادات کلی لیگ
     // -----------------------------
-    async function addFeedback(text) {
-      const raw = text || "";
-      const body = raw.trim();
-      if (!body) return;
-
-      const username = (getSavedUsername() || "").trim() || null;
-
-      try {
-        const { error } = await db
-          .from("feedbacks")
-          .insert({
-            username,
-            body
-          });
-
-        if (error) {
-          console.error("خطا در ثبت انتقاد/پیشنهاد:", error);
-          alert("در ثبت پیام مشکلی پیش آمد.");
-        }
-      } catch (e) {
-        console.error(e);
-        alert("مشکل در ارتباط با سرور صندوق انتقادات.");
-      }
-    }
 
     async function addFeedback(text) {
       const raw = text || "";
@@ -2996,7 +3026,7 @@ async function renderFixturesPage() {
     </div>
   `;
 
-  const matchesOfWeek = matches.filter(m => m.week === currentWeek);
+    const matchesOfWeek = getAllEffectiveMatches().filter(m => m.week === currentWeek);
 
   // 🔥 فقط یک درخواست به Supabase برای تمام بازی‌های این هفته
   const needStatsIds = matchesOfWeek
@@ -3175,16 +3205,17 @@ async function renderFixturesPage() {
     // -----------------------------
     // ۶) صفحه نتایج
     // -----------------------------
-    function renderResultsPage() {
+        function renderResultsPage() {
       const container = document.getElementById("page-content");
 
-      const finished = matches
+      const finished = getAllEffectiveMatches()
         .filter(m => m.status === "finished")
         .slice()
         .sort((a, b) => {
           if (a.date !== b.date) return b.date.localeCompare(a.date);
           return (b.time || "").localeCompare(a.time || "");
         });
+
 
       let html = `
         <div class="section-title">
@@ -3251,34 +3282,36 @@ async function renderFixturesPage() {
         });
       });
 
-      matches.filter(m => m.status === "finished").forEach(match => {
-        const homeStat = stats.get(match.homeTeamId);
-        const awayStat = stats.get(match.awayTeamId);
+      getAllEffectiveMatches()
+        .filter(m => m.status === "finished")
+        .forEach(match => {
+          const homeStat = stats.get(match.homeTeamId);
+          const awayStat = stats.get(match.awayTeamId);
 
-        homeStat.played++;
-        awayStat.played++;
+          homeStat.played++;
+          awayStat.played++;
 
-        homeStat.goalsFor += match.homeScore;
-        homeStat.goalsAgainst += match.awayScore;
+          homeStat.goalsFor += match.homeScore;
+          homeStat.goalsAgainst += match.awayScore;
 
-        awayStat.goalsFor += match.awayScore;
-        awayStat.goalsAgainst += match.homeScore;
+          awayStat.goalsFor += match.awayScore;
+          awayStat.goalsAgainst += match.homeScore;
 
-        if (match.homeScore > match.awayScore) {
-          homeStat.wins++;
-          awayStat.losses++;
-          homeStat.points += 3;
-        } else if (match.homeScore < match.awayScore) {
-          awayStat.wins++;
-          homeStat.losses++;
-          awayStat.points += 3;
-        } else {
-          homeStat.draws++;
-          awayStat.draws++;
-          homeStat.points++;
-          awayStat.points++;
-        }
-      });
+          if (match.homeScore > match.awayScore) {
+            homeStat.wins++;
+            awayStat.losses++;
+            homeStat.points += 3;
+          } else if (match.homeScore < match.awayScore) {
+            awayStat.wins++;
+            homeStat.losses++;
+            awayStat.points += 3;
+          } else {
+            homeStat.draws++;
+            awayStat.draws++;
+            homeStat.points++;
+            awayStat.points++;
+          }
+        });
 
       const tableArray = Array.from(stats.values());
       tableArray.sort((a, b) => {
@@ -3294,6 +3327,7 @@ async function renderFixturesPage() {
 
       return tableArray;
     }
+
         // -----------------------------
     // امتیازدهی پیش‌بینی‌ها (طبق قانون کالیگا)
     // -----------------------------
@@ -3563,16 +3597,20 @@ async function renderFixturesPage() {
 
       const topScorersDemo = [
         { player: "امیرحسین احمدیان", team: "امامزاده پیش", goals: 6 },
+        { player: "حسام جعفری", team: "زنده یاد محمدرضا جعفری", goals: 6 },
         { player: "مهدی نبوی", team: "زنده یاد سید مهدی نبوی", goals: 6 },
-        { player: "بهزاد رضاییان", team: "زنده یاد بهمن و مصطفی جعفری", goals: 4 },
+        { player: "بهزاد رضاییان", team: "زنده یاد بهمن و مصطفی جعفری", goals: 5 },
+        { player: "امیرحسین صفایی", team: "زنده یاد محمدرضا جعفری", goals: 4 },
+        { player: "امیر جعفری", team: "زنده یاد محمدرضا جعفری", goals: 4 },
+        
         { player: "سعید جعفری", team: "زنده یاد مجید جعفری", goals: 3 },
         { player: "ابوالفضل احمدیان", team: "زنده یاد مجید جعفری", goals: 3 },
-        { player: "امیرحسین صفایی", team: "زنده یاد محمدرضا جعفری", goals: 2 },
-        { player: "امیر جعفری", team: "زنده یاد محمدرضا جعفری", goals: 2 },
+        { player: "سعید جعفری", team: "هیئت جوانان", goals: 3 },
+
         { player: "حامد نبوی", team: "زنده یاد بهمن و مصطفی جعفری", goals: 2 },
-        { player: "حسام جعفری", team: "زنده یاد محمدرضا جعفری", goals: 2 },
         { player: "حسن نبوی", team: "استودیو نامبر وان", goals: 2 },
-        { player: "سعید جعفری", team: "هیئت جوانان", goals: 2 },
+        { player: "جواد متولیان", team: "هیئت جوانان", goals: 2 },
+
         { player: "سهیل موسوی", team: "شهید سید احسان موسوی", goals: 2 },
         { player: "متین احمدیان", team: "کافه لوین", goals: 2 },
         { player: "مهدیار جعفری", team: "استودیو نامبر وان", goals: 2 },
@@ -3727,6 +3765,79 @@ async function renderFixturesPage() {
 
       container.innerHTML = html;
     }
+
+    async function adminSaveMatchResult(matchId) {
+      const match = matches.find(m => m.id === matchId);
+      if (!match) {
+        alert("بازی پیدا نشد.");
+        return;
+      }
+
+      const homeInput = document.getElementById(`admin-home-score-${matchId}`);
+      const awayInput = document.getElementById(`admin-away-score-${matchId}`);
+      if (!homeInput || !awayInput) {
+        alert("ورودی‌های نتیجه پیدا نشد.");
+        return;
+      }
+
+      const hs = parseInt(homeInput.value, 10);
+      const as = parseInt(awayInput.value, 10);
+
+      if (isNaN(hs) || isNaN(as)) {
+        alert("لطفاً برای نتیجه، عدد وارد کن.");
+        return;
+      }
+
+      const homeScText = (document.getElementById(`admin-home-scorers-${matchId}`)?.value || "").trim();
+      const awayScText = (document.getElementById(`admin-away-scorers-${matchId}`)?.value || "").trim();
+      const yellowText  = (document.getElementById(`admin-yellow-${matchId}`)?.value || "").trim();
+      const redText     = (document.getElementById(`admin-red-${matchId}`)?.value || "").trim();
+
+      try {
+        const payload = {
+          match_id: matchId,
+          home_score: hs,
+          away_score: as,
+          status: "finished",
+          home_scorers: homeScText || null,
+          away_scorers: awayScText || null,
+          yellow_cards: yellowText || null,
+          red_cards: redText || null
+        };
+
+        const { error } = await db
+          .from("match_results")
+          .upsert(payload, { onConflict: "match_id" });
+
+        if (error) {
+          console.error("خطا در ذخیره نتیجه بازی:", error);
+          alert("در ذخیره نتیجه خطایی رخ داد.");
+          return;
+        }
+
+        // آپدیت کش لوکال
+        matchOverrides[matchId] = {
+          match_id: matchId,
+          home_score: hs,
+          away_score: as,
+          status: "finished"
+        };
+
+        matchDetailsAdmin[matchId] = {
+          homeScorers: homeScText.split("\n").map(s => s.trim()).filter(Boolean),
+          awayScorers: awayScText.split("\n").map(s => s.trim()).filter(Boolean),
+          yellowCards: yellowText.split("\n").map(s => s.trim()).filter(Boolean),
+          redCards: redText.split("\n").map(s => s.trim()).filter(Boolean)
+        };
+
+        alert("نتیجه و جزئیات بازی ذخیره شد و روی سایت اعمال شد.");
+        renderAdminPredictionsPage(); // رفرش صفحه ادمین تا جدول‌ها هم آپدیت بشن
+      } catch (e) {
+        console.error("استثناء در adminSaveMatchResult:", e);
+        alert("یک خطای غیرمنتظره در ذخیره نتیجه رخ داد.");
+      }
+    }
+
    // -----------------------------
 // ۱۰-ب) صفحه مخفی ادمین: امتیاز پیش‌بینی‌ها
 // -----------------------------
@@ -3782,7 +3893,7 @@ async function renderAdminPredictionsPage() {
 
     // فقط بازی‌های تمام‌شده برای محاسبه امتیاز
     const finishedMatchesMap = new Map();
-    matches
+    getAllEffectiveMatches()
       .filter(m => m.status === "finished")
       .forEach(m => finishedMatchesMap.set(m.id, m));
 
@@ -3962,6 +4073,97 @@ async function renderAdminPredictionsPage() {
         </div>
       </div>
     `;
+    // 🔹 بخش سوم: مدیریت نتایج بازی‌ها
+    const allMatchesEffective = getAllEffectiveMatches();
+    const futureMatches = allMatchesEffective.filter(m => m.status !== "finished");
+
+    html += `
+      <div class="card">
+        <div style="font-weight:600;font-size:13px;margin-bottom:6px;">⚙️ مدیریت نتایج بازی‌ها</div>
+        <div style="font-size:11px;color:var(--text-soft);margin-bottom:8px;line-height:1.7;">
+          در این بخش می‌تونی برای بازی‌های آینده نتیجه نهایی و جزئیات رو ثبت یا ویرایش کنی.
+          بعد از ذخیره، نتایج به صورت خودکار در جدول لیگ، صفحه نتایج و جزئیات بازی‌ها اعمال می‌شن.
+        </div>
+    `;
+
+    if (!futureMatches.length) {
+      html += `
+        <div style="font-size:12px;color:var(--text-soft);">
+          فعلاً بازیِ در وضعیت «انجام نشده» وجود ندارد.
+        </div>
+      `;
+    } else {
+      futureMatches.forEach(match => {
+        const home = getTeamById(match.homeTeamId);
+        const away = getTeamById(match.awayTeamId);
+        const ov = matchOverrides[match.id] || null;
+        const det = matchDetailsAdmin[match.id] || {
+          homeScorers: [],
+          awayScorers: [],
+          yellowCards: [],
+          redCards: []
+        };
+
+        const homeScoreVal = ov ? ov.home_score : (match.status === "finished" ? match.homeScore : "");
+        const awayScoreVal = ov ? ov.away_score : (match.status === "finished" ? match.awayScore : "");
+
+        html += `
+          <div style="border-top:1px dashed rgba(148,163,184,0.5);padding-top:8px;margin-top:8px;">
+            <div style="font-size:12px;font-weight:600;margin-bottom:4px;">
+              هفته ${match.week} • ${escapeHtml(home.name)} vs ${escapeHtml(away.name)}
+            </div>
+            <div style="font-size:11px;color:var(--text-soft);margin-bottom:6px;">
+              تاریخ: ${formatDate(match.date)} • ${match.time} • ${escapeHtml(match.stadium)}
+            </div>
+
+            <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;font-size:12px;flex-wrap:wrap;">
+              <span>${escapeHtml(home.shortName)}:</span>
+              <input type="number"
+                     id="admin-home-score-${match.id}"
+                     value="${homeScoreVal !== "" ? homeScoreVal : ""}"
+                     style="width:50px;padding:2px 4px;border-radius:8px;border:1px solid rgba(148,163,184,0.7);background:rgba(15,23,42,0.9);color:var(--text);">
+              <span>-</span>
+              <span>${escapeHtml(away.shortName)}:</span>
+              <input type="number"
+                     id="admin-away-score-${match.id}"
+                     value="${awayScoreVal !== "" ? awayScoreVal : ""}"
+                     style="width:50px;padding:2px 4px;border-radius:8px;border:1px solid rgba(148,163,184,0.7);background:rgba(15,23,42,0.9);color:var(--text);">
+            </div>
+
+            <details style="font-size:11px;color:var(--text-soft);margin-bottom:6px;">
+              <summary style="cursor:pointer;">جزئیات گلزن‌ها و کارت‌ها</summary>
+              <div style="margin-top:6px;display:flex;flex-direction:column;gap:4px;">
+                <label>گلزن‌های ${escapeHtml(home.shortName)} (هر نفر در یک خط)</label>
+                <textarea id="admin-home-scorers-${match.id}"
+                          rows="2"
+                          style="width:100%;padding:4px 6px;border-radius:10px;border:1px solid rgba(148,163,184,0.7);background:rgba(15,23,42,0.9);color:var(--text);">${escapeHtml(det.homeScorers.join("\\n"))}</textarea>
+
+                <label>گلزن‌های ${escapeHtml(away.shortName)} (هر نفر در یک خط)</label>
+                <textarea id="admin-away-scorers-${match.id}"
+                          rows="2"
+                          style="width:100%;padding:4px 6px;border-radius:10px;border:1px solid rgba(148,163,184,0.7);background:rgba(15,23,42,0.9);color:var(--text);">${escapeHtml(det.awayScorers.join("\\n"))}</textarea>
+
+                <label>کارت‌های زرد (هر مورد در یک خط)</label>
+                <textarea id="admin-yellow-${match.id}"
+                          rows="2"
+                          style="width:100%;padding:4px 6px;border-radius:10px;border:1px solid rgba(148,163,184,0.7);background:rgba(15,23,42,0.9);color:var(--text);">${escapeHtml(det.yellowCards.join("\\n"))}</textarea>
+
+                <label>کارت‌های قرمز (هر مورد در یک خط)</label>
+                <textarea id="admin-red-${match.id}"
+                          rows="2"
+                          style="width:100%;padding:4px 6px;border-radius:10px;border:1px solid rgba(148,163,184,0.7);background:rgba(15,23,42,0.9);color:var(--text);">${escapeHtml(det.redCards.join("\\n"))}</textarea>
+              </div>
+            </details>
+
+            <button type="button" class="action-btn" onclick="adminSaveMatchResult(${match.id})">
+              💾 ذخیره / بروزرسانی این بازی
+            </button>
+          </div>
+        `;
+      });
+    }
+
+    html += `</div>`; // پایان کارت مدیریت بازی‌ها
 
     container.innerHTML = html;
   } catch (e) {
@@ -3986,15 +4188,22 @@ async function renderAdminPredictionsPage() {
 // ۱۱) اکشن پیش‌بینی
 // -----------------------------
 async function handlePrediction(matchId) {
-  const match = matches.find(m => m.id === matchId);
-  if (!match) return;
+  const baseMatch = matches.find(m => m.id === matchId);
+  if (!baseMatch) return;
 
-  // ۱) چک کنیم مهلت پیش‌بینی تموم نشده
+  const match = getEffectiveMatch(baseMatch);
+
+  // اگر بازی با override تمام شده، اجازه پیش‌بینی نده
+  if (match.status === "finished") {
+    alert("این بازی به پایان رسیده و امکان ثبت پیش‌بینی ندارد.");
+    return;
+  }
+
+  // چک کنیم مهلت پیش‌بینی تموم نشده
   if (!isPredictionOpen(match)) {
     alert("مهلت پیش‌بینی برای این بازی تمام شده است.");
     return;
   }
-
   const home = getTeamById(match.homeTeamId);
   const away = getTeamById(match.awayTeamId);
 
@@ -4319,6 +4528,24 @@ async function handlePrediction(matchId) {
       const overlay = document.getElementById("team-image-overlay");
       if (overlay) overlay.style.display = "none";
     }
+function getDetailsForMatch(matchId, homeName, awayName) {
+  const admin = matchDetailsAdmin[matchId];
+  const hasAdmin =
+    admin &&
+    ((admin.homeScorers && admin.homeScorers.length) ||
+     (admin.awayScorers && admin.awayScorers.length) ||
+     (admin.yellowCards && admin.yellowCards.length) ||
+     (admin.redCards && admin.redCards.length));
+
+  if (hasAdmin) return admin;
+
+  return matchDetails[matchId] || {
+    homeScorers: [`گلزن‌های تیم ${homeName}: ...`],
+    awayScorers: [`گلزن‌های تیم ${awayName}: ...`],
+    yellowCards: ["کارت زرد: ..."],
+    redCards: ["کارت قرمز: ..."]
+  };
+}
 
     // -----------------------------
     // ۱۵) جزئیات بازی
@@ -4328,22 +4555,19 @@ async function handlePrediction(matchId) {
       const content = document.getElementById("match-details-content");
       if (!overlay || !content) return;
 
-      const match = matches.find(m => m.id === matchId);
-      if (!match) return;
+      const baseMatch = matches.find(m => m.id === matchId);
+      if (!baseMatch) return;
+
+      const match = getEffectiveMatch(baseMatch);
 
       const home = getTeamById(match.homeTeamId);
       const away = getTeamById(match.awayTeamId);
 
-      const d = matchDetails[matchId] || {
-        homeScorers: [`گلزن‌های تیم ${home.name}: ...`],
-        awayScorers: [`گلزن‌های تیم ${away.name}: ...`],
-        yellowCards: ["کارت زرد: ..."],
-        redCards: ["کارت قرمز: ..."]
-      };
+      const d = getDetailsForMatch(matchId, home.name, away.name);
 
       let html = `
         <div class="match-details-title">
-          جزئیات بازی: ${escapeHtml(home.name)} ${match.homeScore} - ${match.awayScore} ${escapeHtml(away.name)}
+          جزئیات بازی: ${escapeHtml(home.name)} ${match.homeScore ?? "-"} - ${match.awayScore ?? "-"} ${escapeHtml(away.name)}
         </div>
         <div style="font-size:11px;color:var(--text-soft);margin-bottom:6px;">
           هفته ${match.week} • ${escapeHtml(match.stadium)} • ${formatDate(match.date)} • ${match.time}
@@ -4395,6 +4619,7 @@ async function handlePrediction(matchId) {
       content.innerHTML = html;
       overlay.style.display = "flex";
     }
+
 
     function closeMatchDetails() {
       const overlay = document.getElementById("match-details-overlay");
@@ -4464,9 +4689,13 @@ async function handlePrediction(matchId) {
    // -----------------------------
 // ۱۹) شروع کار
 // -----------------------------
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   setMode("dark");
 
+  // ⬅️ اول از Supabase هر overrideای هست می‌خوانیم
+  await loadMatchOverrides();
+
+  // بقیه همون قبلی خودت:
   document.querySelectorAll(".tab-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       setActivePage(btn.dataset.page);
@@ -4474,14 +4703,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 🔐 چک کردن اینکه آیا آدرس admin=1 هست یا نه
   const params = new URLSearchParams(window.location.search);
   const isAdminMode = params.get("admin") === "1";
 
   if (isAdminMode) {
-    const ok = checkAdminAccess(); // تابعی که بالا اضافه کردیم
+    const ok = checkAdminAccess();
     if (ok) {
-      renderAdminPredictionsPage(); // همون صفحه ادمینی که قبلاً برات نوشتیم
+      renderAdminPredictionsPage();
     } else {
       setActivePage("results");
     }
@@ -4489,7 +4717,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setActivePage("results");
   }
 
-  // تاریخ و ساعت زنده
   updateCurrentDateTime();
   setInterval(updateCurrentDateTime, 1000);
 
@@ -4505,7 +4732,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (audio && audioToggle) {
     audio.volume = 0.4;
-
     audio.play().catch(() => {});
 
     function updateAudioButton() {
@@ -4545,6 +4771,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   incrementPageView();
 });
+
 
 
   </script>
