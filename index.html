@@ -4734,13 +4734,23 @@ function getDetailsForMatch(matchId, homeName, awayName) {
     // -----------------------------
     // ۱۸) ثبت بازدید
     // -----------------------------
-    async function incrementPageView() {
-      try {
-        await db.from("page_views").insert({});
-      } catch (e) {
-        console.error("خطا در ثبت بازدید:", e);
-      }
-    }
+async function incrementPageView() {
+  try {
+    const visitor_id = getOrCreatePlayerId(); // همون plr_... که تو localStorage ذخیره می‌شه
+    const username = (getSavedUsername() || "").trim() || null;
+
+    await db.from("page_views").insert({
+      visitor_id,
+      username,
+      page_path: location.pathname || "/",
+      referrer: document.referrer || null,
+      user_agent: navigator.userAgent || null
+    });
+  } catch (e) {
+    console.error("خطا در ثبت بازدید:", e);
+  }
+}
+
 
     // -----------------------------
     // ۱۹) شروع کار
