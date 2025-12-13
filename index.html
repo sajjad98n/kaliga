@@ -2818,6 +2818,58 @@ async function getPredictionStats(matchId) {
     return null;
   }
 }
+// -----------------------------
+// کامنت‌ها: خواندن + ثبت در Supabase
+// Table: match_comments  (اگر جدول شما اسمش چیز دیگه است، اینجا تغییر بده)
+// columns: id, match_id, username, body, created_at
+// -----------------------------
+async function fetchComments(matchId) {
+  try {
+    const { data, error } = await db
+      .from("match_comments")
+      .select("id, match_id, username, body, created_at")
+      .eq("match_id", matchId)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("خطا در گرفتن کامنت‌ها:", error);
+      return [];
+    }
+    return data || [];
+  } catch (e) {
+    console.error("fetchComments exception:", e);
+    return [];
+  }
+}
+
+async function addComment(matchId, text) {
+  const body = (text || "").trim();
+  if (!body) return false;
+
+  const username = (getSavedUsername() || "").trim() || null;
+
+  try {
+    const { error } = await db
+      .from("match_comments")
+      .insert({
+        match_id: matchId,
+        username,
+        body
+      });
+
+    if (error) {
+      console.error("خطا در ثبت کامنت:", error);
+      alert("ثبت نظر انجام نشد. (احتمالاً RLS/Policy یا نام جدول/ستون‌ها مشکل دارد)");
+      return false;
+    }
+
+    return true;
+  } catch (e) {
+    console.error("addComment exception:", e);
+    alert("مشکل در ارتباط با سرور کامنت‌ها.");
+    return false;
+  }
+}
 
 
     async function loadAndRenderComments(matchId) {
