@@ -3656,47 +3656,63 @@ function normalizeMediaSrc(src) {
 
       const topScorersDemo = [
         { player: "امیرحسین احمدیان", team: "امامزاده پیش", goals: 9 },
+        { player: "حسام جعفری", team: "زنده یاد محمدرضا جعفری", goals: 8 },
         { player: "ابوالفضل احمدیان", team: "زنده یاد مجید جعفری", goals: 7 },
-        { player: "حسام جعفری", team: "زنده یاد محمدرضا جعفری", goals: 7 },
+        
         { player: "مهدی نبوی", team: "زنده یاد سید مهدی نبوی", goals: 7 },
         { player: "متین احمدیان", team: "کافه لوین", goals: 6 },
+        { player: "عارف جعفری", team: "زنده یاد بهمن و مصطفی جعفری", goals: 6 },
+        { player: "امیر خادم", team: "زنده یاد بهمن و مصطفی جعفری", goals: 5 },
         { player: "بهزاد رضاییان", team: "زنده یاد بهمن و مصطفی جعفری", goals: 5 },
         { player: "امیرحسین صفایی", team: "زنده یاد محمدرضا جعفری", goals: 5 },
         { player: "امیر جعفری", team: "زنده یاد محمدرضا جعفری", goals: 5 },
-        
+        { player: "علی سام احمدیان", team: "زنده یاد مجید جعفری", goals: 4 },
+        { player: "اسماعیل احمدیان", team: "زنده یاد مجید جعفری", goals: 4 },
         { player: "سعید جعفری", team: "زنده یاد مجید جعفری", goals: 4 },
         { player: "نصرالله جعفری", team: "شهید سید احسان موسوی", goals: 4 },
+        { player: "ایلیا نبوی", team: "زنده یاد هادی قادری", goals: 4 },
+        { player: "ارش قادری", team: "زنده یاد هادی قادری", goals: 3 },
+        { player: "عارف قادری", team: "زنده یاد هادی قادری", goals: 3 },
         { player: "سعید جعفری", team: "هیئت جوانان", goals: 3 },
         { player: "سعید نبوی", team: "کافه لوین", goals: 3 },
         { player: "پرهام جعفری", team: "زنده یاد بهمن و مصطفی جعفری", goals: 3 },
-        { player: "عارف جعفری", team: "زنده یاد بهمن و مصطفی جعفری", goals: 3 },
-        { player: "امیر خادم", team: "زنده یاد بهمن و مصطفی جعفری", goals: 3 },
+        { player: "محمد حسین نبوی", team: "استودیو نامبر وان", goals: 3 },
+        { player: "ابوالفضل طیبی", team: "استودیو نامبر وان", goals: 3 },
         { player: "مهدیار جعفری", team: "استودیو نامبر وان", goals: 3 },
         //{ player: "حامد نبوی", team: "زنده یاد بهمن و مصطفی جعفری", goals: 2 },
         { player: "حسن نبوی", team: "استودیو نامبر وان", goals: 3 },
         //{ player: "جواد متولیان", team: "هیئت جوانان", goals: 2 },
 
-       // { player: "سهیل موسوی", team: "شهید سید احسان موسوی", goals: 2 },
+        { player: "سهیل موسوی", team: "شهید سید احسان موسوی", goals: 23 },
         
       
         
       ];
 
       const cardsDemo = [
-        { player: "میلاد قادری", team: "زنده یاد هادی قادری", yellow: 1, red: 1 },
-        { player: "عسگری موسوی", team: "شهید سید احسان موسوی", yellow: 2, red: 0 },
-        { player: "ایلیا نبوی", team: "زنده یاد هادی قادری", yellow: 1, red: 0 },
+{ player: "میلاد قادری", team: "هادی قادری", yellow: 1, red: 0 },
+{ player: "مهدیار جعفری", team: "نامبر وان", yellow: 1, red: 0 },
+{ player: "علیرضا موسوی", team: "سید مهدی", yellow: 1, red: 0 },
+{ player: "محمود نبوی", team: "امامزاده پیش", yellow: 2, red: 0 },
+{ player: "آرمین ذوالفقاری", team: "امامزاده پیش", yellow: 0, red: 1 },
+{ player: "سید فرزاد نبوی", team: "پیشکسوتان", yellow: 1, red: 1 },
+{ player: "امید نبوی", team: "کافه لوین", yellow: 1, red: 0 },
+{ player: "سید تقی نبوی", team: "پیشکسوتان نیزوا", yellow: 1, red: 0 },
+{ player: "دانیال مداحی", team: "شهید احسان", yellow: 1, red: 0 },
+{ player: "علی اکبر عمادی", team: "مجید جعفری", yellow: 1, red: 0 },
+{ player: "بهزاد رضائیان", team: "بهمن و مصطفی", yellow: 1, red: 0 },
+{ player: "امیر جعفری", team: "محمد رضا جعفری", yellow: 1, red: 0 },
+{ player: "سامان رضائیان", team: "محمد رضا جعفری", yellow: 1, red: 0 },
+{ player: "مصطفی قادری", team: "محمد رضا جعفری", yellow: 1, red: 0 },
+{ player: "مهرداد نبوی", team: "هیئت جوانان", yellow: 1, red: 0 },
+{ player: "محمد کمال نبوی", team: "هیئت جوانان", yellow: 1, red: 0 },
+{ player: "ابوالفضل نبوی", team: "هیئت جوانان", yellow: 1, red: 0 },
+{ player: "عبدالمطلب", team: "شهید نجفعلی", yellow: 1, red: 0 },
+{ player: "متین قادری", team: "شهید نجفعلی", yellow: 1, red: 0 },
+{ player: "ابوالفضل احمدیان", team: "زنده یاد مجید جعفری", yellow: 1, red: 0 },
+{ player: "محمد احمدیان", team: "زنده یاد مجید جعفری", yellow: 1, red: 0 },
 
-        { player: "محمد رضا نبوی", team: "امامزاده پیش", yellow: 1, red: 0 },
-        { player: "امید نبوی", team: "کافه لوین", yellow: 1, red: 0 },
-        { player: "دانیال مداحی", team: "شهید سید احسان موسوی", yellow: 1, red: 0 },
-        { player: "علی اکبر عمادی", team: "زنده یاد مجید جعفری", yellow: 1, red: 0 },
-        { player: "بهزاد رضاییان", team: "زنده یاد بهمن و مصطفی جعفری", yellow: 1, red: 0 },
-        { player: "سامان رضاییان", team: "زنده یاد محمد رضا جعفری", yellow: 1, red: 0 },
-        { player: "امیر جعفری", team: "زنده یاد محمد رضا جعفری", yellow: 1, red: 0 },
-        { player: "مهرداد نبوی", team: "هیئت جوانان", yellow: 1, red: 0 },
-
-        { player: "سینا نبوی", team: "پیشکسوتان نیزوا", yellow: 1, red: 0 }
+        
       ];
 
       let html = `
