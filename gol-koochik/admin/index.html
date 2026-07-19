@@ -1,0 +1,20 @@
+<!doctype html><html lang="fa" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>مدیریت ثبت‌نام‌ها | کالیگا</title>
+<link rel="stylesheet" href="../styles.css?v=7"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head>
+<body><main class="shell">
+<header class="topbar"><a class="brand" href="../"><img src="../../logo.png" alt="لوگوی کالیگا"><span><strong>مدیریت گل کوچک</strong><span>ثبت‌نام تیم‌ها</span></span></a><nav class="top-actions"><a class="link-button" href="../">صفحه مسابقات</a><button class="link-button hidden" id="logout-button" type="button">خروج</button></nav></header>
+<section class="auth-box" id="login-panel"><div class="panel"><h1>ورود مدیر</h1><p class="lead">این بخش فقط برای مسئول برگزاری مسابقات است.</p><form id="admin-login" class="form-shell"><div class="field"><label for="admin-username">نام کاربری</label><input id="admin-username" required autocomplete="username"></div><div class="field"><label for="admin-password">رمز ورود</label><input id="admin-password" type="password" required autocomplete="current-password" minlength="8"></div><div class="submit-row"><button class="button primary" type="submit">ورود به مدیریت</button><div class="message" id="login-message"></div></div></form></div></section>
+<section id="dashboard" class="hidden">
+<div class="dashboard-head"><div><h1>مدیریت ثبت‌نام تیم‌ها</h1><p>بررسی مدارک، فیش واریزی و اعلام وضعیت هر تیم</p></div><span class="status-badge approved" id="team-count">۰ تیم</span></div>
+<h2 class="section-title">تنظیمات ثبت‌نام</h2><div class="admin-layout"><aside class="panel sticky"><form id="settings-form" class="form-shell">
+<div class="field"><label class="checkbox"><input id="registration-open" type="checkbox"><span>ثبت‌نام فعال باشد</span></label></div>
+<div class="field"><label for="deadline-input">مهلت ثبت‌نام</label><input id="deadline-input" type="datetime-local" required></div>
+<div class="field"><label for="deadline-label">متن نمایشی مهلت</label><input id="deadline-label" required placeholder="۶ مرداد ۱۴۰۵"></div>
+<div class="field"><label for="minimum-age">حداقل سن</label><input id="minimum-age" type="number" min="1" max="99" required></div>
+<div class="field"><label for="fee-input">هزینه هر تیم ـ تومان</label><input id="fee-input" type="number" min="0" step="1000" required></div>
+<div class="field"><label for="bank-account">شماره حساب یا کارت</label><input id="bank-account" placeholder="فعلاً می‌تواند خالی بماند"></div>
+<div class="field"><label for="account-holder">نام صاحب حساب</label><input id="account-holder" placeholder="فعلاً می‌تواند خالی بماند"></div>
+<div class="submit-row"><button class="button primary" type="submit">ذخیره تنظیمات</button><div class="message" id="settings-message"></div></div></form></aside>
+<div><div class="topbar" style="margin-bottom:10px"><div><strong>فهرست تیم‌ها</strong></div><div class="top-actions"><button class="link-button" id="refresh-button" type="button">تازه‌سازی</button><button class="link-button" id="export-button" type="button">خروجی CSV</button></div></div><div id="teams-list"><div class="empty">در حال دریافت تیم‌ها...</div></div></div></div>
+</section><footer>Desinged by Sajjad Nabavi</footer></main>
+<script src="../config.js?v=7"></script><script src="../common.js?v=7"></script><script src="admin.js?v=7"></script></body></html>

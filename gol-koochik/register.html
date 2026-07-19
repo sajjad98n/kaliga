@@ -1,0 +1,72 @@
+<!doctype html><html lang="fa" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ثبت‌نام تیم | گل کوچک کالیگا</title>
+<meta name="description" content="فرم ثبت‌نام تیمی مسابقات گل کوچک کالیگا">
+<link rel="stylesheet" href="styles.css?v=8"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script></head>
+<body><main class="shell">
+<header class="topbar"><a class="brand" href="./"><img src="../logo.png" alt="لوگوی کالیگا"><span><strong>ثبت‌نام تیم</strong><span>مسابقات گل کوچک</span></span></a><nav class="top-actions"><a class="link-button" href="login.html">ورود تیم‌ها</a><a class="link-button" href="./">بازگشت</a></nav></header>
+<div class="notice danger"><strong>ثبت‌نام انفرادی ممنوع است.</strong> فقط کاپیتان یا مسئول تیم باید فرم را یک‌بار برای کل تیم تکمیل کند و اطلاعات هر پنج بازیکن را بفرستد. هر بازیکن نباید جداگانه ثبت‌نام کند.</div>
+<section class="panel"><div class="info-list"><div class="info-item"><span>اعضای تیم</span><strong>۵ بازیکن</strong></div><div class="info-item"><span>حداقل سن</span><strong id="minimum-age">۱۵ سال تمام</strong></div><div class="info-item"><span>هزینه هر تیم</span><strong id="fee">۱٬۵۰۰٬۰۰۰ تومان</strong></div><div class="info-item"><span>مهلت ثبت‌نام</span><strong id="deadline">۶ مرداد ۱۴۰۵</strong></div><div class="info-item"><span>زمان مسابقات</span><strong>۹ مرداد ۱۴۰۵</strong></div><div class="info-item"><span>محل مسابقات</span><strong>مدرسه شهادت روستای چاشم</strong></div></div>
+<p>پس از ثبت‌نام، مبلغ باید به شماره حساب <strong id="bank">________________</strong> به نام <strong id="holder">________________</strong> واریز شود و تصویر فیش از صفحه اختصاصی تیم بارگذاری شود. پس از ارسال فیش، وضعیت ثبت‌نام در صفحه تیم قابل مشاهده است.</p></section>
+<h1 class="section-title">فرم ثبت‌نام تیم</h1>
+<form id="registration-form" class="form-shell" novalidate>
+  <section class="form-section"><h2>اطلاعات حساب تیم</h2><div class="form-grid">
+    <div class="field"><label for="team-name">نام تیم</label><input id="team-name" required maxlength="60" autocomplete="username"><small>نام تیم، نام کاربری ورود خواهد بود و باید یکتا باشد.</small></div>
+    <div class="field"><label for="captain-phone">شماره تماس کاپیتان</label><input id="captain-phone" required inputmode="tel" maxlength="11" placeholder="09xxxxxxxxx"></div>
+    <div class="field"><label for="password">رمز ورود تیم</label><input id="password" type="password" required minlength="8" maxlength="72" autocomplete="new-password"><small>حداقل ۸ نویسه؛ رمز را در اختیار اعضای غیرمسئول قرار ندهید.</small></div>
+    <div class="field"><label for="password-confirm">تکرار رمز ورود</label><input id="password-confirm" type="password" required minlength="8" maxlength="72" autocomplete="new-password"></div>
+  </div></section>
+  <section class="form-section"><h2>اطلاعات پنج بازیکن</h2><p>بازیکن شماره ۱ به‌عنوان کاپیتان و مسئول تیم ثبت می‌شود.</p>
+      <section class="player-card" data-player="1">
+        <div class="player-title"><h3>بازیکن 1</h3><span class="captain-badge">کاپیتان و مسئول تیم</span></div>
+        <div class="form-grid">
+          <div class="field"><label for="full-name-1">نام و نام خانوادگی</label><input id="full-name-1" required maxlength="100" autocomplete="off"></div>
+          <div class="field"><label for="father-name-1">نام پدر</label><input id="father-name-1" required maxlength="80" autocomplete="off"></div>
+          <div class="field"><label for="national-id-1">شماره ملی</label><input id="national-id-1" required inputmode="numeric" maxlength="10" placeholder="۱۰ رقم"></div>
+          <div class="field"><label>تاریخ تولد شمسی</label><div class="birth-row"><input id="birth-year-1" required inputmode="numeric" maxlength="4" placeholder="سال"><input id="birth-month-1" required inputmode="numeric" maxlength="2" placeholder="ماه"><input id="birth-day-1" required inputmode="numeric" maxlength="2" placeholder="روز"></div></div>
+          <div class="field full"><label for="insurance-1">تصویر بیمه ورزشی</label><input id="insurance-1" type="file" required accept="image/jpeg,image/png,application/pdf"><small>JPG، PNG یا PDF؛ حداکثر ۶ مگابایت</small></div>
+        </div>
+      </section>
+      <section class="player-card" data-player="2">
+        <div class="player-title"><h3>بازیکن 2</h3></div>
+        <div class="form-grid">
+          <div class="field"><label for="full-name-2">نام و نام خانوادگی</label><input id="full-name-2" required maxlength="100" autocomplete="off"></div>
+          <div class="field"><label for="father-name-2">نام پدر</label><input id="father-name-2" required maxlength="80" autocomplete="off"></div>
+          <div class="field"><label for="national-id-2">شماره ملی</label><input id="national-id-2" required inputmode="numeric" maxlength="10" placeholder="۱۰ رقم"></div>
+          <div class="field"><label>تاریخ تولد شمسی</label><div class="birth-row"><input id="birth-year-2" required inputmode="numeric" maxlength="4" placeholder="سال"><input id="birth-month-2" required inputmode="numeric" maxlength="2" placeholder="ماه"><input id="birth-day-2" required inputmode="numeric" maxlength="2" placeholder="روز"></div></div>
+          <div class="field full"><label for="insurance-2">تصویر بیمه ورزشی</label><input id="insurance-2" type="file" required accept="image/jpeg,image/png,application/pdf"><small>JPG، PNG یا PDF؛ حداکثر ۶ مگابایت</small></div>
+        </div>
+      </section>
+      <section class="player-card" data-player="3">
+        <div class="player-title"><h3>بازیکن 3</h3></div>
+        <div class="form-grid">
+          <div class="field"><label for="full-name-3">نام و نام خانوادگی</label><input id="full-name-3" required maxlength="100" autocomplete="off"></div>
+          <div class="field"><label for="father-name-3">نام پدر</label><input id="father-name-3" required maxlength="80" autocomplete="off"></div>
+          <div class="field"><label for="national-id-3">شماره ملی</label><input id="national-id-3" required inputmode="numeric" maxlength="10" placeholder="۱۰ رقم"></div>
+          <div class="field"><label>تاریخ تولد شمسی</label><div class="birth-row"><input id="birth-year-3" required inputmode="numeric" maxlength="4" placeholder="سال"><input id="birth-month-3" required inputmode="numeric" maxlength="2" placeholder="ماه"><input id="birth-day-3" required inputmode="numeric" maxlength="2" placeholder="روز"></div></div>
+          <div class="field full"><label for="insurance-3">تصویر بیمه ورزشی</label><input id="insurance-3" type="file" required accept="image/jpeg,image/png,application/pdf"><small>JPG، PNG یا PDF؛ حداکثر ۶ مگابایت</small></div>
+        </div>
+      </section>
+      <section class="player-card" data-player="4">
+        <div class="player-title"><h3>بازیکن 4</h3></div>
+        <div class="form-grid">
+          <div class="field"><label for="full-name-4">نام و نام خانوادگی</label><input id="full-name-4" required maxlength="100" autocomplete="off"></div>
+          <div class="field"><label for="father-name-4">نام پدر</label><input id="father-name-4" required maxlength="80" autocomplete="off"></div>
+          <div class="field"><label for="national-id-4">شماره ملی</label><input id="national-id-4" required inputmode="numeric" maxlength="10" placeholder="۱۰ رقم"></div>
+          <div class="field"><label>تاریخ تولد شمسی</label><div class="birth-row"><input id="birth-year-4" required inputmode="numeric" maxlength="4" placeholder="سال"><input id="birth-month-4" required inputmode="numeric" maxlength="2" placeholder="ماه"><input id="birth-day-4" required inputmode="numeric" maxlength="2" placeholder="روز"></div></div>
+          <div class="field full"><label for="insurance-4">تصویر بیمه ورزشی</label><input id="insurance-4" type="file" required accept="image/jpeg,image/png,application/pdf"><small>JPG، PNG یا PDF؛ حداکثر ۶ مگابایت</small></div>
+        </div>
+      </section>
+      <section class="player-card" data-player="5">
+        <div class="player-title"><h3>بازیکن 5</h3></div>
+        <div class="form-grid">
+          <div class="field"><label for="full-name-5">نام و نام خانوادگی</label><input id="full-name-5" required maxlength="100" autocomplete="off"></div>
+          <div class="field"><label for="father-name-5">نام پدر</label><input id="father-name-5" required maxlength="80" autocomplete="off"></div>
+          <div class="field"><label for="national-id-5">شماره ملی</label><input id="national-id-5" required inputmode="numeric" maxlength="10" placeholder="۱۰ رقم"></div>
+          <div class="field"><label>تاریخ تولد شمسی</label><div class="birth-row"><input id="birth-year-5" required inputmode="numeric" maxlength="4" placeholder="سال"><input id="birth-month-5" required inputmode="numeric" maxlength="2" placeholder="ماه"><input id="birth-day-5" required inputmode="numeric" maxlength="2" placeholder="روز"></div></div>
+          <div class="field full"><label for="insurance-5">تصویر بیمه ورزشی</label><input id="insurance-5" type="file" required accept="image/jpeg,image/png,application/pdf"><small>JPG، PNG یا PDF؛ حداکثر ۶ مگابایت</small></div>
+        </div>
+      </section></section>
+  <section class="form-section"><label class="checkbox"><input id="rules-accept" type="checkbox" required><span>تأیید می‌کنم اطلاعات واردشده صحیح است، شرایط سنی رعایت شده و مسئولیت ثبت‌نام این تیم را برعهده دارم.</span></label><div class="submit-row" style="margin-top:16px"><button id="submit-button" class="button primary" type="submit">ثبت نهایی تیم</button><div class="message" id="message" role="status"></div></div></section>
+</form>
+<div id="report-root" class="hidden"></div><footer>Desinged by Sajjad Nabavi</footer></main>
+<script src="config.js?v=8"></script><script src="common.js?v=8"></script><script src="register.js?v=8"></script></body></html>

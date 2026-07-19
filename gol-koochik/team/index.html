@@ -1,0 +1,21 @@
+<!doctype html><html lang="fa" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>صفحه تیم | گل کوچک کالیگا</title>
+<link rel="stylesheet" href="../styles.css?v=8"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head>
+<body><main class="shell">
+<header class="topbar"><a class="brand" href="../"><img src="../../logo.png" alt="لوگوی کالیگا"><span><strong>صفحه اختصاصی تیم</strong><span>مسابقات گل کوچک</span></span></a><nav class="top-actions"><a class="link-button" href="../">صفحه مسابقات</a><button class="link-button" id="logout-button" type="button">خروج</button></nav></header>
+<section class="dashboard-head"><div><h1 id="team-title">در حال دریافت اطلاعات...</h1><p id="team-subtitle">صفحه اختصاصی تیم</p></div><span class="status-badge" id="status-badge">در حال بررسی</span></section>
+<div class="notice" id="status-notice">اطلاعات وضعیت ثبت‌نام در حال دریافت است.</div>
+<section class="grid">
+<article class="card"><div class="icon">📞</div><h2>مسئول تیم</h2><p>شماره تماس ثبت‌شده برای هماهنگی مسابقات</p><div class="value" id="captain-phone">—</div></article>
+<article class="card"><div class="icon">💳</div><h2>هزینه ثبت‌نام</h2><p>مبلغ تعیین‌شده برای هر تیم</p><div class="value" id="fee-value">—</div></article>
+<article class="card"><div class="icon">📅</div><h2>مهلت ثبت‌نام</h2><p>آخرین زمان تکمیل ثبت‌نام و ارسال مدارک</p><div class="value" id="deadline-value">—</div></article>
+<article class="card"><div class="icon">🗓️</div><h2>زمان مسابقات</h2><p>تاریخ برگزاری مسابقات گل‌کوچیک</p><div class="value">۹ مرداد ۱۴۰۵</div></article>
+<article class="card"><div class="icon">📍</div><h2>محل مسابقات</h2><p>محل برگزاری مسابقات گل‌کوچیک</p><div class="value">مدرسه شهادت روستای چاشم</div></article>
+</section>
+<h2 class="section-title">اطلاعات اعضای تیم</h2><section class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>بازیکن</th><th>نقش</th><th>نام و نام خانوادگی</th><th>نام پدر</th><th>شماره ملی</th><th>تاریخ تولد</th><th>بیمه ورزشی</th></tr></thead><tbody id="players-body"></tbody></table></div></section>
+<h2 class="section-title">پرداخت و فیش واریزی</h2><section class="panel"><div class="info-list"><div class="info-item"><span>شماره حساب</span><strong id="bank-value">________________</strong></div><div class="info-item"><span>به نام</span><strong id="holder-value">________________</strong></div></div>
+<p>مبلغ ثبت‌نام را به حساب بالا واریز کنید و تصویر فیش را در این قسمت بفرستید. پس از ارسال، نتیجه بررسی در همین صفحه نمایش داده می‌شود.</p>
+<form id="receipt-form" class="form-shell"><div class="field"><label for="receipt-file">تصویر فیش واریزی</label><input id="receipt-file" type="file" accept="image/jpeg,image/png,application/pdf" required><small>JPG، PNG یا PDF؛ حداکثر ۸ مگابایت</small></div><div class="submit-row"><button class="button primary" id="receipt-button" type="submit">ارسال فیش واریزی</button><a class="button hidden" id="current-receipt" target="_blank" rel="noopener">مشاهده فیش فعلی</a><div class="message" id="receipt-message"></div></div></form></section>
+<h2 class="section-title">فایل ثبت‌نام</h2><section class="panel"><div class="file-links"><a class="mini-link hidden" id="report-link" target="_blank" rel="noopener">دانلود خلاصه ثبت‌نام</a></div></section>
+<footer>Desinged by Sajjad Nabavi</footer></main>
+<script src="../config.js?v=8"></script><script src="../common.js?v=8"></script><script src="team.js?v=8"></script></body></html>

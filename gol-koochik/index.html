@@ -3,27 +3,72 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>کالیگا | مسابقات گل کوچک</title>
-  <meta name="description" content="ثبت‌نام، اخبار و برنامه مسابقات گل کوچک روستای چاشم">
+  <meta name="description" content="ثبت‌نام تیمی مسابقات گل کوچک روستای چاشم">
   <meta name="theme-color" content="#052616">
-  <style>
-    :root{color-scheme:dark;--text:#f8fafc;--muted:#a9c5b4;--green:#22c55e;--line:rgba(134,239,172,.22)}*{box-sizing:border-box}
-    body{margin:0;min-height:100vh;font-family:Tahoma,Arial,sans-serif;color:var(--text);background:#03130b;padding:22px}
-    .shell{width:min(1050px,100%);margin:auto}.hero{position:relative;min-height:440px;border-radius:30px;overflow:hidden;border:1px solid var(--line);display:flex;align-items:end;padding:38px;background:#05180d;box-shadow:0 26px 75px rgba(0,0,0,.48)}
-    .hero::before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(3,19,11,.98),rgba(3,19,11,.28) 75%),linear-gradient(90deg,rgba(3,19,11,.92),rgba(3,19,11,.08)),url("../assets/gol-koochik-v5.jpg?v=5") center/cover no-repeat}
-    .content{position:relative;z-index:1;max-width:670px}.tag{display:inline-flex;padding:6px 12px;border-radius:999px;background:rgba(34,197,94,.14);border:1px solid rgba(34,197,94,.4);color:#8cf2ac;font-size:12px}
-    h1{font-size:clamp(36px,6vw,62px);margin:18px 0 8px}.lead{color:#c3d8ca;line-height:2;font-size:14px}.soon{display:inline-block;margin-top:12px;color:#8cf2ac;font-weight:bold}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}.card{padding:20px;border-radius:21px;background:linear-gradient(145deg,#0b2818,#06150d);border:1px solid var(--line)}.card .icon{font-size:27px}.card h2{font-size:17px;margin:13px 0 7px}.card p{font-size:12px;color:var(--muted);line-height:1.9;margin:0}.disabled{margin-top:15px;width:100%;padding:10px;border:1px dashed rgba(134,239,172,.32);border-radius:12px;text-align:center;color:#8fb69c;font-size:11px}
-    .back{display:inline-flex;margin:22px 0 5px;text-decoration:none;color:#dff5e7;border:1px solid var(--line);border-radius:999px;padding:10px 17px;background:#0a2415}.back:hover{border-color:var(--green)}
-    @media(max-width:760px){.grid{grid-template-columns:1fr}.hero{min-height:510px;padding:25px 18px}.hero::before{background:linear-gradient(0deg,rgba(3,19,11,.98) 10%,rgba(3,19,11,.35) 78%),url("../assets/gol-koochik-v5.jpg?v=5") center/cover no-repeat}}
-  </style>
+  <link rel="stylesheet" href="styles.css?v=7">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body><main class="shell">
-  <section class="hero"><div class="content"><span class="tag">🥅 بخش جدید کالیگا</span><h1>مسابقات گل کوچک</h1><p class="lead">در این بخش ثبت‌نام تیم‌ها و بازیکنان، اطلاعیه‌های مسابقات، قرعه‌کشی، برنامه بازی‌ها، نتایج و جدول نهایی نمایش داده می‌شود.</p><span class="soon">ثبت‌نام و جزئیات مسابقات به‌زودی فعال خواهد شد.</span></div></section>
-  <section class="grid">
-    <article class="card"><div class="icon">📝</div><h2>ثبت‌نام</h2><p>فرم ثبت تیم، مشخصات بازیکنان و سایر اطلاعات در این قسمت قرار می‌گیرد.</p><div class="disabled">فعلاً غیرفعال</div></article>
-    <article class="card"><div class="icon">📅</div><h2>برنامه و نتایج</h2><p>بعد از قرعه‌کشی، زمان بازی‌ها، نتایج و جزئیات مسابقات در این قسمت نمایش داده می‌شود.</p><div class="disabled">پس از آغاز مسابقات</div></article>
-    <article class="card"><div class="icon">📊</div><h2>جدول مسابقات</h2><p>رتبه تیم‌ها، امتیاز، گل زده، گل خورده و آمار مسابقات محاسبه خواهد شد.</p><div class="disabled">پس از ثبت نتایج</div></article>
+<body>
+<main class="shell">
+  <header class="topbar">
+    <a class="brand" href="../"><img src="../logo.png" alt="لوگوی کالیگا"><span><strong>کالیگا</strong><span>مسابقات گل کوچک</span></span></a>
+    <nav class="top-actions"><a class="link-button" href="login.html">ورود تیم‌ها</a><a class="link-button" href="admin/">مدیریت</a></nav>
+  </header>
+
+  <section class="hero"><div class="hero-content">
+    <span class="tag">🥅 ثبت‌نام تیمی فعال است</span>
+    <h1>مسابقات گل کوچک</h1>
+    <p class="lead">ثبت‌نام هر تیم فقط یک‌بار و توسط کاپیتان یا مسئول تیم انجام می‌شود. کاپیتان باید اطلاعات کامل هر پنج عضو را وارد کند؛ بازیکنان نباید جداگانه ثبت‌نام کنند.</p>
+    <div class="hero-actions"><a class="button primary" id="register-button" href="register.html">ثبت‌نام تیم</a><a class="button" href="login.html">ورود به صفحه تیم</a>
+  </div></section>
+
+  <div class="notice"><strong>توجه:</strong> نام تیم، نام کاربری آن تیم خواهد بود و نباید تکراری باشد. رمز ورود را کاپیتان هنگام ثبت‌نام تعیین می‌کند و پس از ثبت‌نام می‌تواند وضعیت تیم، اطلاعات اعضا و فیش واریزی را از صفحه اختصاصی تیم پیگیری کند.</div>
+
+  <section class="grid" aria-label="شرایط ثبت‌نام">
+    <article class="card"><div class="icon">👥</div><h2>اعضای تیم</h2><p>هر تیم شامل دقیقاً پنج بازیکن (سه نفر در بازی و دو نفر تعویضی) است که یک نفر از آن‌ها کاپیتان و مسئول ثبت‌نام خواهد بود.</p><div class="value">۵ بازیکن</div></article>
+    <article class="card"><div class="icon">🎂</div><h2>شرایط سنی</h2><p>شرکت در مسابقات برای بازیکنانی مجاز است که تا زمان اعلام‌شده حداقل پانزده سال تمام داشته باشند.</p><div class="value" id="age-value">بالای ۱۵ سال</div></article>
+    <article class="card"><div class="icon">💳</div><h2>هزینه ثبت‌نام</h2><p>هزینه به‌صورت یکجا برای هر تیم پرداخت می‌شود و فیش واریزی از صفحه اختصاصی تیم بارگذاری خواهد شد.</p><div class="value" id="fee-value">۱٬۵۰۰٬۰۰۰ تومان</div></article>
+    <article class="card"><div class="icon">💳</div><h2>رضایت نامه</h2><p>رضایتنامه ی والدین برای شرکت کنندگان زیر 18 سال الزامی می‌باشد.</p><div class="value" id="age-value">زیر 18 سال</div></article>
+
   </section>
-  <a class="back" href="../">بازگشت به صفحه اصلی ←</a>
-</main></body>
-</html>
+
+  <h2 class="section-title">زمان و نحوه پرداخت</h2>
+  <section class="panel">
+    <div class="info-list">
+      <div class="info-item"><span>مهلت ثبت‌نام</span><strong id="deadline-value">تا ۶ مرداد ۱۴۰۵</strong></div>
+      <div class="info-item"><span>زمان برگزاری مسابقات</span><strong>۹ مرداد ۱۴۰۵</strong></div>
+      <div class="info-item"><span>مکان برگزاری مسابقات</span><strong>مدرسه شهادت روستای چاشم</strong></div>
+      <div class="info-item"><span>وضعیت ثبت‌نام</span><strong id="open-value">فعال</strong></div>
+      <div class="info-item"><span>شماره حساب</span><strong id="bank-value">63934610522263270</strong></div>
+      <div class="info-item"><span>به نام</span><strong id="holder-value">علی قادری چاشمی</strong></div>
+      <div class="info-item">
+  <span>هماهنگی و اطلاعات بیشتر</span>
+  <strong>
+    سید محمود نبوی چاشمی
+    <a href="tel:09193323394" dir="ltr">09193323394</a>
+  </strong>
+</div>
+    </div>
+    <p>پس از تکمیل فرم، مبلغ ثبت‌نام باید به شماره حساب اعلام‌شده واریز شود. سپس کاپیتان وارد صفحه اختصاصی تیم می‌شود و تصویر فیش واریزی را بارگذاری می‌کند. پس از ارسال فیش، وضعیت بررسی و تأیید ثبت‌نام در همان صفحه قابل مشاهده خواهد بود.</p>
+  </section>
+
+  <footer>Desinged by Sajjad Nabavi</footer>
+</main>
+<script src="config.js?v=7"></script><script src="common.js?v=7"></script>
+<script>
+(async()=>{
+  const K=window.KaligaGol;
+  try{
+    const s=await K.getSettings();
+    document.getElementById('fee-value').textContent=K.formatToman(s.fee_toman);
+    document.getElementById('age-value').textContent=`بالای ${K.toPersianDigits(s.min_age)} سال`;
+    document.getElementById('deadline-value').textContent=`تا ${s.deadline_label}`;
+    document.getElementById('bank-value').textContent=s.bank_account||'________________';
+    document.getElementById('holder-value').textContent=s.account_holder||'________________';
+    const open=K.registrationIsOpen(s);
+    document.getElementById('open-value').textContent=open?'فعال':'پایان یافته';
+    if(!open){const b=document.getElementById('register-button');b.removeAttribute('href');b.textContent='مهلت ثبت‌نام پایان یافته';b.classList.add('danger');}
+  }catch(e){console.error(e)}
+})();
+</script>
+</body></html>
