@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="../styles.css?v=7"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head>
 <body><main class="shell">
 <header class="topbar"><a class="brand" href="../"><img src="../../logo.png" alt="لوگوی کالیگا"><span><strong>مدیریت گل کوچک</strong><span>ثبت‌نام تیم‌ها</span></span></a><nav class="top-actions"><a class="link-button" href="../">صفحه مسابقات</a><button class="link-button hidden" id="logout-button" type="button">خروج</button></nav></header>
-<section class="auth-box" id="login-panel"><div class="panel"><h1>ورود مدیر</h1><p class="lead">این بخش فقط برای مسئول برگزاری مسابقات است.</p><form id="admin-login" class="form-shell"><div class="field"><label for="admin-username">نام کاربری</label><input id="admin-username" required autocomplete="username"></div><div class="field"><label for="admin-password">رمز ورود</label><input id="admin-password" type="password" required autocomplete="current-password" minlength="8"></div><div class="submit-row"><button class="button primary" type="submit">ورود به مدیریت</button><div class="message" id="login-message"></div></div></form></div></section>
+<section class="auth-box" id="login-panel"><div class="panel"><h1>ورود مدیر</h1><p class="lead">این بخش فقط برای مسئول برگزاری مسابقات است.</p><form id="admin-login" class="form-shell"><div class="field"><label for="admin-username">نام کاربری</label><input id="admin-username" name="kaliga-admin-user" type="text" required value="" placeholder="نام کاربری مدیر" autocomplete="off" autocapitalize="none" spellcheck="false"></div><div class="field"><label for="admin-password">رمز ورود</label><input id="admin-password" name="kaliga-admin-password" type="password" required autocomplete="off" minlength="6"></div><div class="submit-row"><button class="button primary" type="submit">ورود به مدیریت</button><div class="message" id="login-message"></div></div></form></div></section>
 <section id="dashboard" class="hidden">
 <div class="dashboard-head"><div><h1>مدیریت ثبت‌نام تیم‌ها</h1><p>بررسی مدارک، فیش واریزی و اعلام وضعیت هر تیم</p></div><span class="status-badge approved" id="team-count">۰ تیم</span></div>
 <h2 class="section-title">تنظیمات ثبت‌نام</h2><div class="admin-layout"><aside class="panel sticky"><form id="settings-form" class="form-shell">
@@ -17,4 +17,13 @@
 <div class="submit-row"><button class="button primary" type="submit">ذخیره تنظیمات</button><div class="message" id="settings-message"></div></div></form></aside>
 <div><div class="topbar" style="margin-bottom:10px"><div><strong>فهرست تیم‌ها</strong></div><div class="top-actions"><button class="link-button" id="refresh-button" type="button">تازه‌سازی</button><button class="link-button" id="export-button" type="button">خروجی CSV</button></div></div><div id="teams-list"><div class="empty">در حال دریافت تیم‌ها...</div></div></div></div>
 </section><footer>Desinged by Sajjad Nabavi</footer></main>
+<script>
+window.addEventListener('DOMContentLoaded', function () {
+  const usernameInput = document.getElementById('admin-username');
+  const passwordInput = document.getElementById('admin-password');
+
+  if (usernameInput) usernameInput.value = '';
+  if (passwordInput) passwordInput.value = '';
+});
+</script>
 <script src="../config.js?v=7"></script><script src="../common.js?v=7"></script><script src="admin.js?v=7"></script></body></html>
