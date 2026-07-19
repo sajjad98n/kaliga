@@ -10,7 +10,6 @@
   let settings;
   let teams = [];
 
-  document.getElementById('admin-username').value = K.config.adminUsername;
 
   async function isAdmin(userId) {
     const { data, error } = await K.client.from('gol_admins').select('user_id,username').eq('user_id', userId).maybeSingle();
@@ -180,18 +179,58 @@
 
   loginForm.addEventListener('submit', async event => {
     event.preventDefault();
+
     const button = loginForm.querySelector('button');
-    button.disabled = true; K.setMessage(loginMessage, 'در حال ورود...', 'info');
+    const usernameInput = document.getElementById('admin-username');
+    const passwordInput = document.getElementById('admin-password');
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value;
+
+    button.disabled = true;
+    K.setMessage(loginMessage, 'در حال ورود...', 'info');
+
     try {
-      const username = document.getElementById('admin-username').value;
-      const password = document.getElementById('admin-password').value;
+      if (!username || !password) {
+        throw new Error('نام کاربری و رمز ورود را کامل وارد کنید.');
+      }
+
       const email = await K.accountEmail('admin', username);
-      const result = await K.client.auth.signInWithPassword({ email, password });
-      if (result.error) throw result.error;
-      await showDashboard(result.data.session);
+      const { data, error } = await K.client.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        const message = String(error.message || '').toLowerCase();
+
+        if (message.includes('invalid login credentials')) {
+          throw new Error(
+            `ورود در بخش Authentication ناموفق بود. رمز عبور این حساب درست نیست یا کاربر با ایمیل داخلی ${email} در همین پروژه Supabase وجود ندارد.`
+          );
+        }
+
+        if (message.includes('email not confirmed')) {
+          throw new Error('ایمیل حساب مدیر هنوز تأیید نشده است. در Supabase گزینه Confirm user را فعال کنید.');
+        }
+
+        throw new Error(`خطای ورود Supabase: ${error.message || 'خطای ناشناخته'}`);
+      }
+
+      if (!data?.session?.user?.id) {
+        throw new Error('ورود انجام شد، اما نشست کاربری ساخته نشد.');
+      }
+
+      const allowed = await isAdmin(data.session.user.id);
+      if (!allowed) {
+        await K.client.auth.signOut();
+        throw new Error('ورود به حساب انجام شد، اما این کاربر در جدول gol_admins دسترسی مدیریت ندارد.');
+      }
+
+      loginPanel.classList.add('hidden');
+      dashboard.classList.remove('hidden');
+      logoutButton.classList.remove('hidden');
+      await loadSettings();
+      await loadTeams();
     } catch (error) {
       console.error(error);
-      K.setMessage(loginMessage, 'نام کاربری یا رمز مدیر صحیح نیست، یا حساب مدیر هنوز در Supabase تنظیم نشده است.', 'error');
+      K.setMessage(loginMessage, error.message || 'ورود انجام نشد.', 'error');
       button.disabled = false;
     }
   });
