@@ -27,7 +27,7 @@
   }
   function hero(){
     const champ=team(D.summary.championTeamId);
-    return `<section class="hero"><div class="hero-card"><h2>آرشیو کامل فصل ۱۴۰۴</h2><p>این نسخه از داده‌های نهایی فصل ساخته شده و برای نمایش نتایج به دیتابیس متصل نمی‌شود. ثبت پیش‌بینی، نظر و نتیجه جدید در این آرشیو بسته است.</p></div><div class="metric"><strong>${fa(D.summary.matches)}</strong><span>مسابقه</span></div><div class="metric"><strong>${fa(D.summary.goals)}</strong><span>گل ثبت‌شده</span></div><div class="metric"><strong>${esc(champ.name)}</strong><span>قهرمان فصل</span></div></section>`;
+    return `<section class="hero"><div class="hero-card"><h2>آرشیو کامل فصل ۱۴۰۴</h2><p>فصل ۱۴۰۴ کالیگا با همه‌ی رقابت‌ها، گل‌ها و خاطره‌های ماندگارش اینجا ثبت شده است. برنامه و نتایج بازی‌ها، جدول نهایی، آمار تیم‌ها و جزئیات این فصل را می‌توانید مرور کنید.</p></div><div class="metric"><strong>${fa(D.summary.matches)}</strong><span>مسابقه</span></div><div class="metric"><strong>${fa(D.summary.goals)}</strong><span>گل ثبت‌شده</span></div><div class="metric"><strong>${esc(champ.name)}</strong><span>قهرمان فصل</span></div></section>`;
   }
   function predictionHtml(match){
     const p=D.predictionSummary[String(match.id)] || D.predictionSummary[match.id];
