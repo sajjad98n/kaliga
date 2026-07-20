@@ -96,7 +96,8 @@
   function buildReport(teamName, captainPhone, players) {
     const root = document.getElementById('report-root');
     root.className = '';
-    root.style.cssText = 'direction:rtl;background:white;color:#111;font-family:Tahoma,Arial,sans-serif;width:760px;padding:34px;line-height:1.8';
+    root.setAttribute('aria-hidden', 'true');
+    root.style.cssText = 'position:fixed;left:-12000px;top:0;display:block!important;visibility:visible!important;direction:rtl;background:#fff;color:#111;font-family:Tahoma,Arial,sans-serif;width:760px;padding:34px;line-height:1.8;box-sizing:border-box;z-index:-1';
     root.innerHTML = '';
 
     const title = document.createElement('h1');
@@ -188,6 +189,75 @@
       cacheControl: '3600'
     });
     if (error) throw error;
+  }
+
+
+  function nextPaint() {
+    return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  }
+
+  async function createReportBlob(teamName, captainPhone, players) {
+    const reportElement = buildReport(teamName, captainPhone, players);
+    try {
+      if (document.fonts?.ready) await document.fonts.ready;
+      await nextPaint();
+
+      const blob = await window.html2pdf().set({
+        margin: 8,
+        filename: 'registration-summary.pdf',
+        image: { type: 'jpeg', quality: 0.97 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: '#ffffff',
+          logging: false,
+          windowWidth: 900,
+          onclone: clonedDocument => {
+            const clonedRoot = clonedDocument.getElementById('report-root');
+            if (clonedRoot) {
+              clonedRoot.className = '';
+              clonedRoot.style.position = 'static';
+              clonedRoot.style.left = 'auto';
+              clonedRoot.style.top = 'auto';
+              clonedRoot.style.display = 'block';
+              clonedRoot.style.visibility = 'visible';
+              clonedRoot.style.zIndex = 'auto';
+            }
+          }
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
+        pagebreak: { mode: ['css', 'legacy'] }
+      }).from(reportElement).toPdf().outputPdf('blob');
+
+      if (!(blob instanceof Blob) || blob.size < 1500) {
+        throw new Error('فایل خلاصه ثبت‌نام به‌درستی ساخته نشد. صفحه را تازه‌سازی و دوباره تلاش کنید.');
+      }
+      return blob;
+    } finally {
+      reportElement.className = 'hidden';
+      reportElement.removeAttribute('style');
+      reportElement.removeAttribute('aria-hidden');
+      reportElement.textContent = '';
+    }
+  }
+
+  function friendlyRegistrationError(error) {
+    const raw = String(error?.message || '').trim();
+    const lower = raw.toLowerCase();
+
+    if (!raw) return 'ثبت‌نام کامل نشد. اتصال اینترنت را بررسی و دوباره تلاش کنید.';
+    if (/[آ-ی]/.test(raw)) return raw;
+    if (lower.includes('email logins are disabled')) return 'سامانه ورود تیم‌ها موقتاً غیرفعال است. موضوع را به مسئول برگزاری اطلاع دهید.';
+    if (lower.includes('email not confirmed')) return 'حساب تیم ساخته شده اما هنوز فعال نشده است. با مسئول برگزاری تماس بگیرید.';
+    if (lower.includes('signups not allowed') || lower.includes('signup is disabled')) return 'ساخت حساب جدید در سامانه موقتاً بسته است. با مسئول برگزاری تماس بگیرید.';
+    if (lower.includes('user already registered') || lower.includes('already been registered')) return 'این نام تیم قبلاً برای یک حساب استفاده شده است. با رمز همان تیم وارد شوید یا نام دیگری انتخاب کنید.';
+    if (lower.includes('invalid login credentials')) return 'این نام تیم قبلاً ثبت شده است یا رمز واردشده با حساب موجود مطابقت ندارد.';
+    if (lower.includes('duplicate key') || error?.code === '23505') return 'نام تیم یا یکی از شماره‌های ملی قبلاً ثبت شده است.';
+    if (lower.includes('row-level security') || lower.includes('permission denied')) return 'سامانه اجازه ذخیره این اطلاعات را نداد. با مسئول برگزاری تماس بگیرید.';
+    if (lower.includes('bucket not found')) return 'فضای بارگذاری مدارک تنظیم نشده است. با مسئول برگزاری تماس بگیرید.';
+    if (lower.includes('payload too large') || lower.includes('maximum allowed size')) return 'حجم یکی از فایل‌ها بیشتر از حد مجاز است.';
+    if (lower.includes('failed to fetch') || lower.includes('network') || lower.includes('load failed')) return 'ارتباط با سامانه برقرار نشد. اینترنت را بررسی و دوباره تلاش کنید.';
+    return raw;
   }
 
   form.addEventListener('submit', async (event) => {
@@ -282,15 +352,7 @@
       }
 
       K.setMessage(message, 'در حال ساخت فایل خلاصه ثبت‌نام...', 'info');
-      const reportElement = buildReport(teamName, captainPhone, players);
-      const reportBlob = await window.html2pdf().set({
-        margin: 8,
-        filename: 'registration-summary.pdf',
-        image: { type: 'jpeg', quality: 0.96 },
-        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      }).from(reportElement).outputPdf('blob');
-      reportElement.className = 'hidden';
+      const reportBlob = await createReportBlob(teamName, captainPhone, players);
       const reportPath = `${user.id}/reports/registration-summary.pdf`;
       await uploadFile(reportPath, new File([reportBlob], 'registration-summary.pdf', { type: 'application/pdf' }));
 
@@ -301,7 +363,7 @@
       setTimeout(() => window.location.replace('team/'), 900);
     } catch (error) {
       console.error(error);
-      K.setMessage(message, error.message || 'ثبت‌نام کامل نشد. دوباره تلاش کنید.', 'error');
+      K.setMessage(message, friendlyRegistrationError(error), 'error');
       submitButton.disabled = false;
       submitButton.textContent = 'ثبت نهایی تیم';
     }

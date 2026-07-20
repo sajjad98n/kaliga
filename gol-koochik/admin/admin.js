@@ -77,6 +77,295 @@
     return button;
   }
 
+
+  function cleanNumber(value) {
+    return K.toEnglishDigits(value).replace(/\D/g, '');
+  }
+
+  function validNationalId(value) {
+    const code = cleanNumber(value);
+    if (!/^\d{10}$/.test(code) || /^(\d)\1{9}$/.test(code)) return false;
+    const sum = code.slice(0, 9).split('').reduce((total, digit, index) => total + Number(digit) * (10 - index), 0);
+    const remainder = sum % 11;
+    const expected = remainder < 2 ? remainder : 11 - remainder;
+    return Number(code[9]) === expected;
+  }
+
+  function validJalaliDate(year, month, day) {
+    if (!Number.isInteger(year) || year < 1300 || year > 1500) return false;
+    if (!Number.isInteger(month) || month < 1 || month > 12) return false;
+    const maxDay = month <= 6 ? 31 : 30;
+    return Number.isInteger(day) && day >= 1 && day <= maxDay;
+  }
+
+  function oldEnough(year, month, day) {
+    const latest = [
+      Number(settings.age_reference_year) - Number(settings.min_age),
+      Number(settings.age_reference_month),
+      Number(settings.age_reference_day)
+    ];
+    const birth = [year, month, day];
+    for (let i = 0; i < 3; i += 1) {
+      if (birth[i] < latest[i]) return true;
+      if (birth[i] > latest[i]) return false;
+    }
+    return true;
+  }
+
+  function makeField(labelText, input) {
+    const field = document.createElement('div');
+    field.className = 'field';
+    field.appendChild(createText('label', labelText));
+    field.appendChild(input);
+    return field;
+  }
+
+  function textInput(value, maxLength, inputMode = '') {
+    const input = document.createElement('input');
+    input.value = value ?? '';
+    input.required = true;
+    if (maxLength) input.maxLength = maxLength;
+    if (inputMode) input.inputMode = inputMode;
+    input.autocomplete = 'off';
+    return input;
+  }
+
+  function nextPaint() {
+    return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  }
+
+  function buildAdminReport(team) {
+    const root = document.createElement('div');
+    root.id = `admin-report-${team.id}`;
+    root.setAttribute('aria-hidden', 'true');
+    root.style.cssText = 'position:fixed;left:-12000px;top:0;display:block!important;visibility:visible!important;direction:rtl;background:#fff;color:#111;font-family:Tahoma,Arial,sans-serif;width:760px;padding:34px;line-height:1.8;box-sizing:border-box;z-index:-1';
+
+    const title = createText('h1', 'خلاصه ثبت‌نام مسابقات گل کوچک کالیگا');
+    title.style.cssText = 'font-size:24px;text-align:center;margin:0 0 20px';
+    root.appendChild(title);
+
+    const meta = document.createElement('div');
+    meta.style.cssText = 'border:1px solid #ccc;border-radius:12px;padding:14px;margin-bottom:18px';
+    [
+      ['نام تیم', team.team_name],
+      ['شماره تماس کاپیتان', team.captain_phone],
+      ['هزینه ثبت‌نام', K.formatToman(settings.fee_toman)],
+      ['مهلت ثبت‌نام', settings.deadline_label],
+      ['آخرین بازسازی فایل', new Date().toLocaleString('fa-IR')]
+    ].forEach(([label, value]) => {
+      const p = document.createElement('p');
+      p.style.margin = '4px 0';
+      const strong = createText('strong', `${label}: `);
+      p.append(strong, document.createTextNode(value));
+      meta.appendChild(p);
+    });
+    root.appendChild(meta);
+
+    const table = document.createElement('table');
+    table.style.cssText = 'width:100%;border-collapse:collapse;font-size:13px';
+    const thead = document.createElement('thead');
+    const hr = document.createElement('tr');
+    ['ردیف','نقش','نام و نام خانوادگی','نام پدر','شماره ملی','تاریخ تولد'].forEach(text => {
+      const th = createText('th', text);
+      th.style.cssText = 'border:1px solid #bbb;padding:8px;background:#eee';
+      hr.appendChild(th);
+    });
+    thead.appendChild(hr);
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    [...(team.gol_players || [])].sort((a, b) => a.player_order - b.player_order).forEach(player => {
+      const tr = document.createElement('tr');
+      [
+        K.toPersianDigits(player.player_order),
+        player.is_captain ? 'کاپیتان' : 'بازیکن',
+        player.full_name,
+        player.father_name,
+        K.toPersianDigits(player.national_id),
+        `${K.toPersianDigits(player.birth_year)}/${K.toPersianDigits(String(player.birth_month).padStart(2, '0'))}/${K.toPersianDigits(String(player.birth_day).padStart(2, '0'))}`
+      ].forEach(value => {
+        const td = createText('td', value);
+        td.style.cssText = 'border:1px solid #bbb;padding:8px;text-align:center';
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    root.appendChild(table);
+
+    const note = createText('p', 'این فایل به‌صورت خودکار ساخته شده و شامل رمز ورود تیم نیست.');
+    note.style.cssText = 'margin-top:18px;color:#555;font-size:11px';
+    root.appendChild(note);
+    document.body.appendChild(root);
+    return root;
+  }
+
+  async function createAdminReportBlob(team) {
+    const root = buildAdminReport(team);
+    try {
+      if (document.fonts?.ready) await document.fonts.ready;
+      await nextPaint();
+      const blob = await window.html2pdf().set({
+        margin: 8,
+        filename: 'registration-summary.pdf',
+        image: { type: 'jpeg', quality: 0.97 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: '#ffffff',
+          logging: false,
+          windowWidth: 900,
+          onclone: clonedDocument => {
+            const clonedRoot = clonedDocument.getElementById(root.id);
+            if (clonedRoot) {
+              clonedRoot.style.position = 'static';
+              clonedRoot.style.left = 'auto';
+              clonedRoot.style.top = 'auto';
+              clonedRoot.style.display = 'block';
+              clonedRoot.style.visibility = 'visible';
+              clonedRoot.style.zIndex = 'auto';
+            }
+          }
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
+        pagebreak: { mode: ['css', 'legacy'] }
+      }).from(root).toPdf().outputPdf('blob');
+      if (!(blob instanceof Blob) || blob.size < 1500) throw new Error('فایل PDF ساخته نشد.');
+      return blob;
+    } finally {
+      root.remove();
+    }
+  }
+
+  async function regenerateTeamReport(teamId) {
+    const { data: team, error: readError } = await K.client
+      .from('gol_teams')
+      .select('*, gol_players(*)')
+      .eq('id', teamId)
+      .single();
+    if (readError) throw readError;
+
+    const blob = await createAdminReportBlob(team);
+    const path = `${team.owner_id}/reports/registration-summary.pdf`;
+    const upload = await K.client.storage.from(K.config.storageBucket).upload(
+      path,
+      new File([blob], 'registration-summary.pdf', { type: 'application/pdf' }),
+      { upsert: true, contentType: 'application/pdf', cacheControl: '3600' }
+    );
+    if (upload.error) throw upload.error;
+
+    const savePath = await K.client.rpc('gol_admin_set_report_path', {
+      p_team_id: team.id,
+      p_report_path: path
+    });
+    if (savePath.error) throw savePath.error;
+    return path;
+  }
+
+  function createPlayerEditor(team, player) {
+    const editor = document.createElement('section');
+    editor.className = 'panel hidden';
+    editor.style.marginTop = '10px';
+    editor.appendChild(createText('h4', `ویرایش ${player.is_captain ? 'کاپیتان' : `بازیکن ${K.toPersianDigits(player.player_order)}`}`));
+
+    const grid = document.createElement('div');
+    grid.className = 'form-grid';
+    const fullName = textInput(player.full_name, 100);
+    const fatherName = textInput(player.father_name, 80);
+    const nationalId = textInput(player.national_id, 10, 'numeric');
+    const birthYear = textInput(player.birth_year, 4, 'numeric');
+    const birthMonth = textInput(player.birth_month, 2, 'numeric');
+    const birthDay = textInput(player.birth_day, 2, 'numeric');
+    const insurance = document.createElement('input');
+    insurance.type = 'file';
+    insurance.accept = 'image/jpeg,image/png,application/pdf';
+
+    grid.append(
+      makeField('نام و نام خانوادگی', fullName),
+      makeField('نام پدر', fatherName),
+      makeField('شماره ملی', nationalId),
+      makeField('سال تولد', birthYear),
+      makeField('ماه تولد', birthMonth),
+      makeField('روز تولد', birthDay),
+      makeField('تعویض بیمه ورزشی ـ اختیاری', insurance)
+    );
+    editor.appendChild(grid);
+
+    const actions = document.createElement('div');
+    actions.className = 'admin-actions';
+    const save = createText('button', 'ذخیره اطلاعات بازیکن', 'button primary');
+    save.type = 'button';
+    const feedback = createText('span', '', 'message');
+
+    save.addEventListener('click', async () => {
+      save.disabled = true;
+      K.setMessage(feedback, 'در حال ذخیره...', 'info');
+      try {
+        const cleanFullName = fullName.value.trim();
+        const cleanFatherName = fatherName.value.trim();
+        const cleanNationalId = cleanNumber(nationalId.value);
+        const year = Number(cleanNumber(birthYear.value));
+        const month = Number(cleanNumber(birthMonth.value));
+        const day = Number(cleanNumber(birthDay.value));
+
+        if (cleanFullName.length < 3) throw new Error('نام و نام خانوادگی را کامل وارد کنید.');
+        if (cleanFatherName.length < 2) throw new Error('نام پدر را وارد کنید.');
+        if (!validNationalId(cleanNationalId)) throw new Error('شماره ملی معتبر نیست.');
+        if (!validJalaliDate(year, month, day)) throw new Error('تاریخ تولد معتبر نیست.');
+        if (!oldEnough(year, month, day)) throw new Error(`بازیکن باید حداقل ${K.toPersianDigits(settings.min_age)} سال تمام داشته باشد.`);
+
+        let insurancePath = null;
+        const file = insurance.files[0];
+        if (file) {
+          const fileError = K.validateFile(file, 6);
+          if (fileError) throw new Error(fileError);
+          insurancePath = `${team.owner_id}/insurance/player-${player.player_order}.${K.safeExtension(file)}`;
+          const upload = await K.client.storage.from(K.config.storageBucket).upload(insurancePath, file, {
+            upsert: true,
+            contentType: file.type,
+            cacheControl: '3600'
+          });
+          if (upload.error) throw upload.error;
+        }
+
+        const result = await K.client.rpc('gol_admin_update_player', {
+          p_player_id: player.id,
+          p_full_name: cleanFullName,
+          p_father_name: cleanFatherName,
+          p_national_id: cleanNationalId,
+          p_birth_year: year,
+          p_birth_month: month,
+          p_birth_day: day,
+          p_insurance_path: insurancePath
+        });
+        if (result.error) {
+          if (result.error.code === '23505' || String(result.error.message || '').toLowerCase().includes('duplicate key')) {
+            throw new Error('این شماره ملی قبلاً برای بازیکن دیگری ثبت شده است.');
+          }
+          throw result.error;
+        }
+
+        K.setMessage(feedback, 'اطلاعات ذخیره شد؛ فایل خلاصه در حال بازسازی است...', 'info');
+        try {
+          await regenerateTeamReport(team.id);
+          K.setMessage(feedback, 'اطلاعات بازیکن و فایل خلاصه ذخیره شد.', 'success');
+        } catch (reportError) {
+          console.error(reportError);
+          K.setMessage(feedback, 'اطلاعات بازیکن ذخیره شد، اما بازسازی فایل خلاصه انجام نشد. دکمه بازسازی PDF را بزنید.', 'error');
+        }
+        setTimeout(loadTeams, 700);
+      } catch (error) {
+        console.error(error);
+        K.setMessage(feedback, error.message || 'ذخیره اطلاعات بازیکن انجام نشد.', 'error');
+        save.disabled = false;
+      }
+    });
+
+    actions.append(save, feedback);
+    editor.appendChild(actions);
+    return editor;
+  }
+
   function renderTeams() {
     teamsList.textContent = '';
     document.getElementById('team-count').textContent = `${K.toPersianDigits(teams.length)} تیم`;
@@ -103,9 +392,10 @@
       table.className = 'data-table';
       const thead = document.createElement('thead');
       const hr = document.createElement('tr');
-      ['نقش','نام','نام پدر','شماره ملی','تولد','بیمه'].forEach(label => hr.appendChild(createText('th', label)));
+      ['نقش','نام','نام پدر','شماره ملی','تولد','بیمه','ویرایش'].forEach(label => hr.appendChild(createText('th', label)));
       thead.appendChild(hr); table.appendChild(thead);
       const tbody = document.createElement('tbody');
+      const editors = document.createElement('div');
       players.forEach(player => {
         const tr = document.createElement('tr');
         const values = [
@@ -118,14 +408,45 @@
         values.forEach(value => tr.appendChild(createText('td', value)));
         const fileCell = document.createElement('td');
         fileCell.appendChild(fileButton('مشاهده', player.insurance_path));
-        tr.appendChild(fileCell); tbody.appendChild(tr);
+        tr.appendChild(fileCell);
+
+        const editor = createPlayerEditor(team, player);
+        const editCell = document.createElement('td');
+        const editButton = createText('button', 'ویرایش', 'mini-link');
+        editButton.type = 'button';
+        editButton.addEventListener('click', () => {
+          editor.classList.toggle('hidden');
+          editButton.textContent = editor.classList.contains('hidden') ? 'ویرایش' : 'بستن';
+        });
+        editCell.appendChild(editButton);
+        tr.appendChild(editCell);
+        tbody.appendChild(tr);
+        editors.appendChild(editor);
       });
       table.appendChild(tbody); tableWrap.appendChild(table); card.appendChild(tableWrap);
+      card.appendChild(editors);
 
       const files = document.createElement('div');
       files.className = 'file-links';
       files.appendChild(fileButton('فیش واریزی', team.payment_receipt_path));
       files.appendChild(fileButton('خلاصه ثبت‌نام PDF', team.registration_report_path));
+      const rebuildReport = createText('button', 'بازسازی فایل خلاصه PDF', 'mini-link');
+      rebuildReport.type = 'button';
+      const reportFeedback = createText('span', '', 'message');
+      rebuildReport.addEventListener('click', async () => {
+        rebuildReport.disabled = true;
+        K.setMessage(reportFeedback, 'در حال بازسازی فایل...', 'info');
+        try {
+          await regenerateTeamReport(team.id);
+          K.setMessage(reportFeedback, 'فایل خلاصه با موفقیت بازسازی شد.', 'success');
+          await loadTeams();
+        } catch (error) {
+          console.error(error);
+          K.setMessage(reportFeedback, error.message || 'بازسازی فایل انجام نشد.', 'error');
+          rebuildReport.disabled = false;
+        }
+      });
+      files.append(rebuildReport, reportFeedback);
       card.appendChild(files);
 
       const controls = document.createElement('div');
