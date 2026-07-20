@@ -325,30 +325,65 @@
       const removeOld = await K.client.from('gol_players').delete().eq('team_id', team.id);
       if (removeOld.error) throw removeOld.error;
 
-      const playerRows = [];
-      for (const player of players) {
-        K.setMessage(message, `در حال بارگذاری بیمه بازیکن ${K.toPersianDigits(player.player_order)} از ۵...`, 'info');
-        const extension = K.safeExtension(player.insuranceFile);
-        const path = `${user.id}/insurance/player-${player.player_order}.${extension}`;
-        await uploadFile(path, player.insuranceFile);
-        playerRows.push({
-          team_id: team.id,
-          player_order: player.player_order,
-          is_captain: player.is_captain,
-          full_name: player.full_name,
-          father_name: player.father_name,
-          national_id: player.national_id,
-          birth_year: player.birth_year,
-          birth_month: player.birth_month,
-          birth_day: player.birth_day,
-          insurance_path: path
-        });
-      }
+      const uploadedInsurancePaths = [];
 
-      const playerInsert = await K.client.from('gol_players').insert(playerRows);
-      if (playerInsert.error) {
-        if (playerInsert.error.code === '23505') throw new Error('یکی از شماره‌های ملی قبلاً برای تیم دیگری ثبت شده است.');
-        throw playerInsert.error;
+      try {
+        for (const player of players) {
+          K.setMessage(
+            message,
+            `در حال ثبت بازیکن ${K.toPersianDigits(player.player_order)} از ۵، ${player.full_name}...`,
+            'info'
+          );
+
+          const extension = K.safeExtension(player.insuranceFile);
+          const path = `${user.id}/insurance/player-${player.player_order}.${extension}`;
+          await uploadFile(path, player.insuranceFile);
+          uploadedInsurancePaths.push(path);
+
+          const playerInsert = await K.client.from('gol_players').insert({
+            team_id: team.id,
+            player_order: player.player_order,
+            is_captain: player.is_captain,
+            full_name: player.full_name,
+            father_name: player.father_name,
+            national_id: player.national_id,
+            birth_year: player.birth_year,
+            birth_month: player.birth_month,
+            birth_day: player.birth_day,
+            insurance_path: path
+          });
+
+          if (playerInsert.error) {
+            if (playerInsert.error.code === '23505') {
+              throw new Error(
+                `کد ملی بازیکن ${K.toPersianDigits(player.player_order)}، ${player.full_name}، قبلاً برای تیم دیگری ثبت شده است.`
+              );
+            }
+            throw playerInsert.error;
+          }
+        }
+      } catch (playerError) {
+        // جلوگیری از باقی‌ماندن ثبت نیمه‌کاره بازیکنان همین تیم
+        const cleanupPlayers = await K.client
+          .from('gol_players')
+          .delete()
+          .eq('team_id', team.id);
+
+        if (cleanupPlayers.error) {
+          console.error('خطا در پاک‌سازی بازیکنان ثبت ناقص:', cleanupPlayers.error);
+        }
+
+        if (uploadedInsurancePaths.length) {
+          const cleanupFiles = await K.client.storage
+            .from(K.config.storageBucket)
+            .remove(uploadedInsurancePaths);
+
+          if (cleanupFiles.error) {
+            console.error('خطا در پاک‌سازی فایل‌های بیمه ثبت ناقص:', cleanupFiles.error);
+          }
+        }
+
+        throw playerError;
       }
 
       K.setMessage(message, 'در حال ساخت فایل خلاصه ثبت‌نام...', 'info');
