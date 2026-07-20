@@ -196,43 +196,185 @@
     return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
   }
 
+
+  async function renderElementToPdfBlob(element) {
+    if (typeof window.html2canvas !== 'function') {
+      throw new Error('کتابخانه ساخت تصویر گزارش بارگذاری نشده است.');
+    }
+
+    const JsPdf = window.jspdf?.jsPDF || window.jsPDF;
+    if (!JsPdf) {
+      throw new Error('کتابخانه ساخت PDF بارگذاری نشده است.');
+    }
+
+    const blocker = document.createElement('div');
+    blocker.setAttribute('aria-hidden', 'true');
+    blocker.style.cssText = [
+      'position:fixed',
+      'inset:0',
+      'z-index:2147483647',
+      'display:flex',
+      'align-items:center',
+      'justify-content:center',
+      'background:#07111f',
+      'color:#fff',
+      'font-family:Tahoma,Arial,sans-serif',
+      'font-size:18px',
+      'text-align:center',
+      'padding:24px'
+    ].join(';');
+    blocker.textContent = 'در حال ساخت فایل خلاصه ثبت‌نام…';
+
+    const oldStyle = element.getAttribute('style');
+    const oldClass = element.getAttribute('class');
+    const oldAria = element.getAttribute('aria-hidden');
+
+    document.body.appendChild(blocker);
+
+    try {
+      element.className = '';
+      element.setAttribute('aria-hidden', 'true');
+      element.style.cssText = [
+        'position:fixed',
+        'left:0',
+        'top:0',
+        'z-index:2147483646',
+        'display:block',
+        'visibility:visible',
+        'opacity:1',
+        'transform:none',
+        'direction:rtl',
+        'background:#fff',
+        'color:#111',
+        'font-family:Tahoma,Arial,sans-serif',
+        'width:760px',
+        'padding:34px',
+        'line-height:1.8',
+        'box-sizing:border-box',
+        'overflow:visible'
+      ].join(';');
+
+      if (document.fonts?.ready) await document.fonts.ready;
+      await nextPaint();
+      await new Promise(resolve => setTimeout(resolve, 180));
+
+      const width = Math.max(760, element.scrollWidth);
+      const height = Math.max(400, element.scrollHeight);
+
+      const canvas = await window.html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: false,
+        backgroundColor: '#ffffff',
+        logging: false,
+        scrollX: 0,
+        scrollY: 0,
+        width,
+        height,
+        windowWidth: Math.max(900, width),
+        windowHeight: Math.max(1200, height)
+      });
+
+      if (!canvas || canvas.width < 100 || canvas.height < 100) {
+        throw new Error('تصویر گزارش ساخته نشد.');
+      }
+
+      // Prevent uploading a technically valid but visually blank PDF.
+      const context = canvas.getContext('2d', { willReadFrequently: true });
+      const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+      const step = Math.max(4, Math.floor((canvas.width * canvas.height) / 25000));
+      let visibleSamples = 0;
+
+      for (let pixel = 0; pixel < pixels.length; pixel += 4 * step) {
+        const red = pixels[pixel];
+        const green = pixels[pixel + 1];
+        const blue = pixels[pixel + 2];
+        const alpha = pixels[pixel + 3];
+
+        if (alpha > 20 && (red < 245 || green < 245 || blue < 245)) {
+          visibleSamples += 1;
+          if (visibleSamples > 80) break;
+        }
+      }
+
+      if (visibleSamples <= 80) {
+        throw new Error('محتوای گزارش سفید تشخیص داده شد و فایل جایگزین نشد.');
+      }
+
+      const pdf = new JsPdf({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+        compress: true
+      });
+
+      const pageWidth = 210;
+      const pageHeight = 297;
+      const margin = 8;
+      const printableWidth = pageWidth - margin * 2;
+      const printableHeight = pageHeight - margin * 2;
+      const pagePixelHeight = Math.floor(canvas.width * printableHeight / printableWidth);
+
+      let sourceY = 0;
+      let pageNumber = 0;
+
+      while (sourceY < canvas.height) {
+        const sliceHeight = Math.min(pagePixelHeight, canvas.height - sourceY);
+        const pageCanvas = document.createElement('canvas');
+        pageCanvas.width = canvas.width;
+        pageCanvas.height = sliceHeight;
+
+        const pageContext = pageCanvas.getContext('2d');
+        pageContext.fillStyle = '#ffffff';
+        pageContext.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+        pageContext.drawImage(
+          canvas,
+          0, sourceY, canvas.width, sliceHeight,
+          0, 0, canvas.width, sliceHeight
+        );
+
+        if (pageNumber > 0) pdf.addPage();
+
+        const renderedHeight = sliceHeight * printableWidth / canvas.width;
+        pdf.addImage(
+          pageCanvas.toDataURL('image/jpeg', 0.96),
+          'JPEG',
+          margin,
+          margin,
+          printableWidth,
+          renderedHeight,
+          undefined,
+          'FAST'
+        );
+
+        sourceY += sliceHeight;
+        pageNumber += 1;
+      }
+
+      const blob = pdf.output('blob');
+      if (!(blob instanceof Blob) || blob.size < 3000) {
+        throw new Error('فایل PDF نهایی به‌درستی ساخته نشد.');
+      }
+
+      return blob;
+    } finally {
+      blocker.remove();
+
+      if (oldStyle === null) element.removeAttribute('style');
+      else element.setAttribute('style', oldStyle);
+
+      if (oldClass === null) element.removeAttribute('class');
+      else element.setAttribute('class', oldClass);
+
+      if (oldAria === null) element.removeAttribute('aria-hidden');
+      else element.setAttribute('aria-hidden', oldAria);
+    }
+  }
+
   async function createReportBlob(teamName, captainPhone, players) {
     const reportElement = buildReport(teamName, captainPhone, players);
     try {
-      if (document.fonts?.ready) await document.fonts.ready;
-      await nextPaint();
-
-      const blob = await window.html2pdf().set({
-        margin: 8,
-        filename: 'registration-summary.pdf',
-        image: { type: 'jpeg', quality: 0.97 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          backgroundColor: '#ffffff',
-          logging: false,
-          windowWidth: 900,
-          onclone: clonedDocument => {
-            const clonedRoot = clonedDocument.getElementById('report-root');
-            if (clonedRoot) {
-              clonedRoot.className = '';
-              clonedRoot.style.position = 'static';
-              clonedRoot.style.left = 'auto';
-              clonedRoot.style.top = 'auto';
-              clonedRoot.style.display = 'block';
-              clonedRoot.style.visibility = 'visible';
-              clonedRoot.style.zIndex = 'auto';
-            }
-          }
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
-        pagebreak: { mode: ['css', 'legacy'] }
-      }).from(reportElement).toPdf().outputPdf('blob');
-
-      if (!(blob instanceof Blob) || blob.size < 1500) {
-        throw new Error('فایل خلاصه ثبت‌نام به‌درستی ساخته نشد. صفحه را تازه‌سازی و دوباره تلاش کنید.');
-      }
-      return blob;
+      return await renderElementToPdfBlob(reportElement);
     } finally {
       reportElement.className = 'hidden';
       reportElement.removeAttribute('style');
@@ -388,8 +530,13 @@
 
       K.setMessage(message, 'در حال ساخت فایل خلاصه ثبت‌نام...', 'info');
       const reportBlob = await createReportBlob(teamName, captainPhone, players);
-      const reportPath = `${user.id}/reports/registration-summary.pdf`;
-      await uploadFile(reportPath, new File([reportBlob], 'registration-summary.pdf', { type: 'application/pdf' }));
+      const reportPath = `${user.id}/reports/registration-summary-${Date.now()}.pdf`;
+      const reportUpload = await K.client.storage.from(K.config.storageBucket).upload(
+        reportPath,
+        new File([reportBlob], 'registration-summary.pdf', { type: 'application/pdf' }),
+        { upsert: false, contentType: 'application/pdf', cacheControl: '0' }
+      );
+      if (reportUpload.error) throw reportUpload.error;
 
       const complete = await K.client.rpc('gol_complete_registration', { p_report_path: reportPath });
       if (complete.error) throw complete.error;
