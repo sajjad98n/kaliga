@@ -5,6 +5,24 @@
   const message = document.getElementById('message');
   const submitButton = document.getElementById('submit-button');
   let settings;
+  let isSubmitting = false;
+  const progressBox = document.getElementById('registration-progress');
+  const progressLabel = document.getElementById('progress-label');
+  const progressStep = document.getElementById('progress-step');
+  const progressFill = document.getElementById('progress-fill');
+
+  function setProgress(step, label) {
+    progressBox?.classList.remove('hidden');
+    if (progressLabel) progressLabel.textContent = label;
+    if (progressStep) progressStep.textContent = `${K.toPersianDigits(step)} از ۴`;
+    if (progressFill) progressFill.style.width = `${Math.max(0, Math.min(4, step)) * 25}%`;
+  }
+
+  window.addEventListener('beforeunload', event => {
+    if (!isSubmitting) return;
+    event.preventDefault();
+    event.returnValue = '';
+  });
 
 
   try {
@@ -409,8 +427,10 @@
       return;
     }
 
+    isSubmitting = true;
     submitButton.disabled = true;
     submitButton.textContent = 'در حال ثبت اطلاعات...';
+    setProgress(1, 'مرحله ۱: بررسی اطلاعات و ساخت حساب تیم')
     K.setMessage(message, 'لطفاً صفحه را نبندید؛ فایل‌های بیمه در حال بارگذاری هستند.', 'info');
 
     try {
@@ -444,6 +464,7 @@
       }
       if (!user) throw new Error('ورود تیم ایجاد نشد. دوباره تلاش کنید.');
 
+      setProgress(2, 'مرحله ۲: ذخیره اطلاعات اصلی تیم');
       let { data: team, error: teamReadError } = await K.client.from('gol_teams').select('*').eq('owner_id', user.id).maybeSingle();
       if (teamReadError) throw teamReadError;
       if (team && !['incomplete', 'needs_correction'].includes(team.status)) {
@@ -467,6 +488,7 @@
       const removeOld = await K.client.from('gol_players').delete().eq('team_id', team.id);
       if (removeOld.error) throw removeOld.error;
 
+      setProgress(3, 'مرحله ۳: بارگذاری مدارک و ثبت پنج بازیکن');
       const uploadedInsurancePaths = [];
 
       try {
@@ -528,6 +550,7 @@
         throw playerError;
       }
 
+      setProgress(4, 'مرحله ۴: ساخت و ذخیره فایل خلاصه ثبت‌نام');
       K.setMessage(message, 'در حال ساخت فایل خلاصه ثبت‌نام...', 'info');
       const reportBlob = await createReportBlob(teamName, captainPhone, players);
       const reportPath = `${user.id}/reports/registration-summary-${Date.now()}.pdf`;
@@ -541,9 +564,12 @@
       const complete = await K.client.rpc('gol_complete_registration', { p_report_path: reportPath });
       if (complete.error) throw complete.error;
 
+      isSubmitting = false;
+      setProgress(4, 'ثبت‌نام با موفقیت کامل شد');
       K.setMessage(message, 'ثبت‌نام تیم با موفقیت انجام شد. در حال انتقال به صفحه تیم...', 'success');
       setTimeout(() => window.location.replace('team/'), 900);
     } catch (error) {
+      isSubmitting = false;
       console.error(error);
       K.setMessage(message, friendlyRegistrationError(error), 'error');
       submitButton.disabled = false;

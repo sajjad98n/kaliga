@@ -3,199 +3,65 @@
   const K = window.KaligaGol;
   const session = await K.requireSession('../login.html');
   if (!session) return;
-  if (session.user.user_metadata?.account_type !== 'gol_team') {
-    await K.client.auth.signOut();
-    window.location.replace('../login.html');
-    return;
-  }
+  if (session.user.user_metadata?.account_type !== 'gol_team') { await K.client.auth.signOut(); location.replace('../login.html'); return; }
+  const el = id => document.getElementById(id);
+  const teamTitle=el('team-title'),subtitle=el('team-subtitle'),statusBadge=el('status-badge'),statusNotice=el('status-notice'),receiptForm=el('receipt-form'),receiptButton=el('receipt-button'),receiptMessage=el('receipt-message'),playerMessage=el('player-message');
+  let team=null,settings=null;
 
-  const teamTitle = document.getElementById('team-title');
-  const subtitle = document.getElementById('team-subtitle');
-  const statusBadge = document.getElementById('status-badge');
-  const statusNotice = document.getElementById('status-notice');
-  const receiptForm = document.getElementById('receipt-form');
-  const receiptButton = document.getElementById('receipt-button');
-  const receiptMessage = document.getElementById('receipt-message');
-  let team;
-  let settings;
+  function cleanNumber(value){return K.toEnglishDigits(value).replace(/\D/g,'');}
+  function validNationalId(value){const code=cleanNumber(value);if(!/^\d{10}$/.test(code)||/^(\d)\1{9}$/.test(code))return false;const sum=code.slice(0,9).split('').reduce((a,d,i)=>a+Number(d)*(10-i),0),r=sum%11,e=r<2?r:11-r;return Number(code[9])===e;}
+  function validDate(y,m,d){if(!Number.isInteger(y)||y<1300||y>1500||!Number.isInteger(m)||m<1||m>12)return false;return Number.isInteger(d)&&d>=1&&d<=(m<=6?31:30);}
+  function oldEnough(y,m,d){const latest=[Number(settings.age_reference_year)-Number(settings.min_age),Number(settings.age_reference_month),Number(settings.age_reference_day)],birth=[y,m,d];for(let i=0;i<3;i++){if(birth[i]<latest[i])return true;if(birth[i]>latest[i])return false;}return true;}
+  function maskNationalId(v){const t=String(v||'');return t.length===10?`${K.toPersianDigits(t.slice(0,3))}***${K.toPersianDigits(t.slice(-4))}`:K.toPersianDigits(t);}
+  function statusDescription(status){return({incomplete:'ثبت‌نام تیم هنوز کامل نشده است.',awaiting_payment:'اطلاعات تیم کامل است؛ فیش واریزی را ارسال کنید.',payment_submitted:'فیش دریافت شده و در انتظار بررسی مدیر است.',approved:'ثبت‌نام تیم تأیید شده و ویرایش اعضا قفل است.',needs_correction:'اطلاعات یا مدارک نیازمند اصلاح است.',rejected:'ثبت‌نام رد شده و ویرایش اعضا قفل است.'})[status]||'وضعیت در حال بررسی است.';}
+  function cell(text){const td=document.createElement('td');td.textContent=text;return td;}
+  async function openPrivate(path){const url=await K.signedUrl(path,180);window.open(url,'_blank','noopener');}
+  function privateButton(path,label='مشاهده'){const b=document.createElement('button');b.type='button';b.className='mini-link';b.textContent=path?label:'ثبت نشده';b.disabled=!path;if(path)b.addEventListener('click',()=>openPrivate(path).catch(()=>alert('بازکردن فایل ممکن نشد.')));return b;}
+  function input(value,max,inputMode=''){const x=document.createElement('input');x.value=value??'';x.maxLength=max;if(inputMode)x.inputMode=inputMode;return x;}
+  function field(label,node){const d=document.createElement('div');d.className='field';const l=document.createElement('label');l.textContent=label;d.append(l,node);return d;}
 
+  function nextPaint() { return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))); }
 
-  function maskNationalId(value) {
-    const text = String(value || '');
-    return text.length === 10 ? `${K.toPersianDigits(text.slice(0, 3))}***${K.toPersianDigits(text.slice(-4))}` : K.toPersianDigits(text);
-  }
-
-  function statusDescription(status) {
-    const map = {
-      incomplete: 'ثبت‌نام تیم هنوز کامل نشده است. فرم ثبت‌نام را دوباره تکمیل کنید.',
-      awaiting_payment: 'اطلاعات پنج بازیکن ثبت شده است. برای ادامه، مبلغ ثبت‌نام را واریز و فیش را از همین صفحه ارسال کنید.',
-      payment_submitted: 'فیش واریزی دریافت شده و در انتظار بررسی مسئول برگزاری است. نتیجه بررسی در همین صفحه نمایش داده می‌شود.',
-      approved: 'ثبت‌نام تیم شما تأیید شده است. اطلاعیه‌های بعدی مسابقات را از سایت دنبال کنید.',
-      needs_correction: 'مدارک یا فیش واریزی نیاز به اصلاح دارد. توضیح مسئول برگزاری را بررسی و فایل صحیح را دوباره ارسال کنید.',
-      rejected: 'ثبت‌نام این تیم تأیید نشده است. برای پیگیری با مسئول برگزاری تماس بگیرید.'
-    };
-    return map[status] || 'وضعیت ثبت‌نام در حال بررسی است.';
-  }
-
-  function createCell(text) {
-    const td = document.createElement('td');
-    td.textContent = text;
-    return td;
-  }
-
-  async function addPrivateLink(cell, path, label) {
-    if (!path) {
-      cell.textContent = 'ثبت نشده';
-      return;
-    }
-    const button = document.createElement('button');
-    button.className = 'mini-link';
-    button.type = 'button';
-    button.textContent = label;
-    button.addEventListener('click', async () => {
-      button.disabled = true;
-      try {
-        const url = await K.signedUrl(path, 180);
-        window.open(url, '_blank', 'noopener');
-      } catch (error) {
-        console.error(error);
-        alert('بازکردن فایل ممکن نشد. دوباره تلاش کنید.');
-      } finally {
-        button.disabled = false;
-      }
-    });
-    cell.appendChild(button);
-  }
-
-  async function render() {
+  async function renderElementToPdfBlob(element) {
+    if (typeof window.html2canvas !== 'function') throw new Error('کتابخانه ساخت تصویر گزارش بارگذاری نشده است.');
+    const JsPdf = window.jspdf?.jsPDF || window.jsPDF;
+    if (!JsPdf) throw new Error('کتابخانه ساخت PDF بارگذاری نشده است.');
+    const blocker = document.createElement('div');
+    blocker.setAttribute('aria-hidden','true');
+    blocker.style.cssText='position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;background:#07111f;color:#fff;font-family:Tahoma,Arial,sans-serif;font-size:18px;text-align:center;padding:24px';
+    blocker.textContent='در حال ساخت فایل خلاصه ثبت‌نام…';
+    document.body.appendChild(blocker);
     try {
-      settings = await K.getSettings();
-      const result = await K.client.from('gol_teams').select('*, gol_players(*)').eq('owner_id', session.user.id).maybeSingle();
-      if (result.error) throw result.error;
-      if (!result.data) {
-        teamTitle.textContent = 'ثبت‌نام تیم کامل نشده است';
-        subtitle.textContent = 'برای تکمیل ثبت‌نام به فرم برگردید.';
-        statusNotice.className = 'notice danger';
-        statusNotice.textContent = 'حساب ورود ساخته شده، اما اطلاعات تیم هنوز ثبت نشده است.';
-        const back = document.createElement('a');
-        back.className = 'button primary';
-        back.href = '../register.html';
-        back.textContent = 'تکمیل فرم ثبت‌نام';
-        statusNotice.appendChild(document.createElement('br'));
-        statusNotice.appendChild(back);
-        receiptButton.disabled = true;
-        return;
-      }
-      team = result.data;
-      teamTitle.textContent = team.team_name;
-      subtitle.textContent = `ثبت‌شده در ${K.formatDateTime(team.created_at)}`;
-      statusBadge.textContent = K.statusLabels[team.status] || team.status;
-      statusBadge.className = `status-badge ${team.status}`;
-      statusNotice.textContent = statusDescription(team.status);
-      statusNotice.className = team.status === 'approved' ? 'notice success' : (['needs_correction','rejected'].includes(team.status) ? 'notice danger' : 'notice');
-      if (team.admin_note) {
-        const note = document.createElement('p');
-        note.style.margin = '8px 0 0';
-        const strong = document.createElement('strong');
-        strong.textContent = 'پیام مسئول برگزاری: ';
-        note.append(strong, document.createTextNode(team.admin_note));
-        statusNotice.appendChild(note);
-      }
-      if (team.status === 'needs_correction') {
-        const correctionLink = document.createElement('a');
-        correctionLink.className = 'button gold';
-        correctionLink.href = '../register.html';
-        correctionLink.textContent = 'اصلاح اطلاعات و بیمه‌ها';
-        correctionLink.style.marginTop = '10px';
-        statusNotice.appendChild(correctionLink);
-      }
-
-      document.getElementById('captain-phone').textContent = K.toPersianDigits(team.captain_phone);
-      document.getElementById('fee-value').textContent = K.formatToman(settings.fee_toman);
-      document.getElementById('deadline-value').textContent = settings.deadline_label;
-      document.getElementById('bank-value').textContent = settings.bank_account || '________________';
-      document.getElementById('holder-value').textContent = settings.account_holder || '________________';
-
-      const tbody = document.getElementById('players-body');
-      tbody.textContent = '';
-      const players = [...(team.gol_players || [])].sort((a, b) => a.player_order - b.player_order);
-      for (const player of players) {
-        const tr = document.createElement('tr');
-        tr.appendChild(createCell(K.toPersianDigits(player.player_order)));
-        tr.appendChild(createCell(player.is_captain ? 'کاپیتان' : 'بازیکن'));
-        tr.appendChild(createCell(player.full_name));
-        tr.appendChild(createCell(player.father_name));
-        tr.appendChild(createCell(maskNationalId(player.national_id)));
-        tr.appendChild(createCell(`${K.toPersianDigits(player.birth_year)}/${K.toPersianDigits(String(player.birth_month).padStart(2,'0'))}/${K.toPersianDigits(String(player.birth_day).padStart(2,'0'))}`));
-        const fileCell = document.createElement('td');
-        await addPrivateLink(fileCell, player.insurance_path, 'مشاهده');
-        tr.appendChild(fileCell);
-        tbody.appendChild(tr);
-      }
-
-      if (team.registration_report_path) {
-        const reportLink = document.getElementById('report-link');
-        reportLink.classList.remove('hidden');
-        reportLink.addEventListener('click', async event => {
-          event.preventDefault();
-          const url = await K.signedUrl(team.registration_report_path, 180);
-          window.open(url, '_blank', 'noopener');
-        }, { once: true });
-      }
-
-      if (team.payment_receipt_path) {
-        const currentReceipt = document.getElementById('current-receipt');
-        currentReceipt.classList.remove('hidden');
-        currentReceipt.addEventListener('click', async event => {
-          event.preventDefault();
-          const url = await K.signedUrl(team.payment_receipt_path, 180);
-          window.open(url, '_blank', 'noopener');
-        });
-      }
-
-      if (team.status === 'approved' || team.status === 'rejected' || team.status === 'incomplete') {
-        receiptButton.disabled = true;
-        receiptButton.textContent = team.status === 'approved' ? 'ثبت‌نام تأیید شده' : 'ارسال فیش در این وضعیت غیرفعال است';
-      }
-    } catch (error) {
-      console.error(error);
-      statusNotice.className = 'notice danger';
-      statusNotice.textContent = 'دریافت اطلاعات تیم انجام نشد. لطفاً صفحه را دوباره بارگذاری کنید.';
-    }
+      element.style.cssText='position:fixed;left:0;top:0;z-index:2147483646;display:block;visibility:visible;opacity:1;direction:rtl;background:#fff;color:#111;font-family:Tahoma,Arial,sans-serif;width:760px;padding:34px;line-height:1.8;box-sizing:border-box;overflow:visible';
+      document.body.appendChild(element);
+      if(document.fonts?.ready) await document.fonts.ready;
+      await nextPaint(); await new Promise(r=>setTimeout(r,180));
+      const width=Math.max(760,element.scrollWidth),height=Math.max(400,element.scrollHeight);
+      const canvas=await window.html2canvas(element,{scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false,width,height,windowWidth:Math.max(900,width),windowHeight:Math.max(1200,height)});
+      if(!canvas||canvas.width<100||canvas.height<100) throw new Error('تصویر گزارش ساخته نشد.');
+      const ctx=canvas.getContext('2d',{willReadFrequently:true}),pixels=ctx.getImageData(0,0,canvas.width,canvas.height).data,step=Math.max(4,Math.floor((canvas.width*canvas.height)/25000));let visible=0;
+      for(let p=0;p<pixels.length;p+=4*step){if(pixels[p+3]>20&&(pixels[p]<245||pixels[p+1]<245||pixels[p+2]<245)){visible++;if(visible>80)break;}}
+      if(visible<=80) throw new Error('محتوای گزارش سفید تشخیص داده شد.');
+      const pdf=new JsPdf({orientation:'portrait',unit:'mm',format:'a4',compress:true});
+      const pageWidth=210,pageHeight=297,margin=8,printableWidth=pageWidth-margin*2,printableHeight=pageHeight-margin*2,pagePixelHeight=Math.floor(canvas.width*printableHeight/printableWidth);let y=0,page=0;
+      while(y<canvas.height){const h=Math.min(pagePixelHeight,canvas.height-y),pc=document.createElement('canvas');pc.width=canvas.width;pc.height=h;const c=pc.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,pc.width,pc.height);c.drawImage(canvas,0,y,canvas.width,h,0,0,canvas.width,h);if(page>0)pdf.addPage();pdf.addImage(pc.toDataURL('image/jpeg',.96),'JPEG',margin,margin,printableWidth,h*printableWidth/canvas.width,undefined,'FAST');y+=h;page++;}
+      const blob=pdf.output('blob');if(!(blob instanceof Blob)||blob.size<3000)throw new Error('فایل PDF نهایی ساخته نشد.');return blob;
+    } finally { blocker.remove(); element.remove(); }
   }
 
-  receiptForm.addEventListener('submit', async event => {
-    event.preventDefault();
-    if (!team) return;
-    const file = document.getElementById('receipt-file').files[0];
-    const fileError = K.validateFile(file, 8);
-    if (fileError) {
-      K.setMessage(receiptMessage, fileError, 'error');
-      return;
-    }
-    receiptButton.disabled = true;
-    K.setMessage(receiptMessage, 'در حال بارگذاری فیش...', 'info');
-    try {
-      const path = `${session.user.id}/payment/receipt.${K.safeExtension(file)}`;
-      const upload = await K.client.storage.from(K.config.storageBucket).upload(path, file, {
-        upsert: true, contentType: file.type, cacheControl: '3600'
-      });
-      if (upload.error) throw upload.error;
-      const submit = await K.client.rpc('gol_submit_receipt', { p_receipt_path: path });
-      if (submit.error) throw submit.error;
-      K.setMessage(receiptMessage, 'فیش با موفقیت ارسال شد و در انتظار بررسی است.', 'success');
-      setTimeout(() => window.location.reload(), 900);
-    } catch (error) {
-      console.error(error);
-      K.setMessage(receiptMessage, 'ارسال فیش انجام نشد. دوباره تلاش کنید.', 'error');
-      receiptButton.disabled = false;
-    }
-  });
+  function buildReport(){const root=document.createElement('section');const h=document.createElement('h1');h.textContent='خلاصه ثبت‌نام مسابقات گل کوچک کالیگا';h.style.cssText='font-size:24px;text-align:center;margin:0 0 20px';root.appendChild(h);const meta=document.createElement('div');meta.style.cssText='border:1px solid #ccc;border-radius:12px;padding:14px;margin-bottom:18px';[['نام تیم',team.team_name],['شماره تماس کاپیتان',team.captain_phone],['هزینه ثبت‌نام',K.formatToman(settings.fee_toman)],['مهلت ثبت‌نام',settings.deadline_label],['آخرین بروزرسانی',new Date().toLocaleString('fa-IR')]].forEach(([l,v])=>{const p=document.createElement('p'),s=document.createElement('strong');p.style.margin='4px 0';s.textContent=`${l}: `;p.append(s,document.createTextNode(v));meta.appendChild(p)});root.appendChild(meta);const table=document.createElement('table');table.style.cssText='width:100%;border-collapse:collapse;font-size:13px';const hr=document.createElement('tr');['ردیف','نقش','نام و نام خانوادگی','نام پدر','شماره ملی','تاریخ تولد'].forEach(t=>{const th=document.createElement('th');th.textContent=t;th.style.cssText='border:1px solid #bbb;padding:8px;background:#eee';hr.appendChild(th)});const thead=document.createElement('thead');thead.appendChild(hr);table.appendChild(thead);const tbody=document.createElement('tbody');[...(team.gol_players||[])].sort((a,b)=>a.player_order-b.player_order).forEach(p=>{const tr=document.createElement('tr');[K.toPersianDigits(p.player_order),p.is_captain?'کاپیتان':'بازیکن',p.full_name,p.father_name,K.toPersianDigits(p.national_id),`${K.toPersianDigits(p.birth_year)}/${K.toPersianDigits(String(p.birth_month).padStart(2,'0'))}/${K.toPersianDigits(String(p.birth_day).padStart(2,'0'))}`].forEach(v=>{const td=document.createElement('td');td.textContent=v;td.style.cssText='border:1px solid #bbb;padding:8px;text-align:center';tr.appendChild(td)});tbody.appendChild(tr)});table.appendChild(tbody);root.appendChild(table);return root;}
+  async function rebuildReport(){const blob=await renderElementToPdfBlob(buildReport()),path=`${session.user.id}/reports/registration-summary-${Date.now()}.pdf`;const up=await K.client.storage.from(K.config.storageBucket).upload(path,new File([blob],'registration-summary.pdf',{type:'application/pdf'}),{upsert:false,contentType:'application/pdf',cacheControl:'0'});if(up.error)throw up.error;const saved=await K.client.rpc('gol_team_set_report_path',{p_report_path:path});if(saved.error)throw saved.error;team.registration_report_path=path;}
 
-  document.getElementById('logout-button').addEventListener('click', async () => {
-    await K.client.auth.signOut();
-    window.location.replace('../login.html');
-  });
+  function activityLabel(item){return({registration_completed:'ثبت‌نام تیم تکمیل شد',receipt_submitted:'فیش واریزی ارسال شد',admin_status_changed:'وضعیت توسط مدیر تغییر کرد',team_player_updated:'اطلاعات بازیکن توسط تیم ویرایش شد',admin_player_updated:'اطلاعات بازیکن توسط مدیر ویرایش شد',report_updated:'فایل خلاصه بروزرسانی شد',password_reset:'رمز ورود توسط مدیر بازیابی شد'})[item.action]||item.action;}
+  async function loadActivity(){const box=el('team-activity');const {data,error}=await K.client.from('gol_audit_log').select('*').eq('team_id',team.id).order('created_at',{ascending:false}).limit(30);if(error){box.innerHTML='<div class="empty">دریافت تاریخچه انجام نشد.</div>';return}box.textContent='';(data||[]).forEach(item=>{const d=document.createElement('div');d.className='activity-item';d.textContent=activityLabel(item);const t=document.createElement('time');t.textContent=K.formatDateTime(item.created_at);d.appendChild(t);box.appendChild(d)});if(!data?.length)box.innerHTML='<div class="empty">هنوز رویدادی ثبت نشده است.</div>';}
 
+  function createEditor(player){const wrap=document.createElement('section');wrap.className='player-editor hidden';wrap.dataset.playerId=player.id;const title=document.createElement('h3');title.textContent=`ویرایش ${player.is_captain?'کاپیتان':`بازیکن ${K.toPersianDigits(player.player_order)}`}`;wrap.appendChild(title);const note=document.createElement('p');note.className='editor-note';note.textContent=player.is_captain?'اطلاعات کاپیتان قابل اصلاح است، اما کد ملی و خود کاپیتان قابل تعویض نیست.':'تغییر کد ملی این بازیکن، یک تعویض محسوب می‌شود و برای بازیکن جدید باید بیمه تازه بارگذاری شود.';wrap.appendChild(note);const grid=document.createElement('div');grid.className='form-grid';const full=input(player.full_name,100),father=input(player.father_name,80),nid=input(player.national_id,10,'numeric'),year=input(player.birth_year,4,'numeric'),month=input(player.birth_month,2,'numeric'),day=input(player.birth_day,2,'numeric'),insurance=document.createElement('input');insurance.type='file';insurance.accept='image/jpeg,image/png,application/pdf';if(player.is_captain){nid.readOnly=true;nid.title='کد ملی کاپیتان قابل تعویض نیست';}grid.append(field('نام و نام خانوادگی',full),field('نام پدر',father),field('شماره ملی',nid),field('سال تولد',year),field('ماه تولد',month),field('روز تولد',day),field('بیمه ورزشی جدید ـ اختیاری',insurance));wrap.appendChild(grid);const actions=document.createElement('div');actions.className='admin-actions';const save=document.createElement('button');save.type='button';save.className='button primary';save.textContent='ذخیره تغییرات';const cancel=document.createElement('button');cancel.type='button';cancel.className='button';cancel.textContent='بستن';const msg=document.createElement('span');msg.className='message';cancel.addEventListener('click',()=>wrap.classList.add('hidden'));save.addEventListener('click',async()=>{save.disabled=true;K.setMessage(msg,'در حال بررسی و ذخیره...','info');try{const f=full.value.trim(),fa=father.value.trim(),n=cleanNumber(nid.value),y=Number(cleanNumber(year.value)),m=Number(cleanNumber(month.value)),d=Number(cleanNumber(day.value)),nationalChanged=n!==player.national_id,file=insurance.files[0];if(f.length<3)throw new Error('نام را کامل وارد کنید.');if(fa.length<2)throw new Error('نام پدر را وارد کنید.');if(!validNationalId(n))throw new Error('کد ملی معتبر نیست.');if(!validDate(y,m,d))throw new Error('تاریخ تولد معتبر نیست.');if(!oldEnough(y,m,d))throw new Error(`حداقل سن ${K.toPersianDigits(settings.min_age)} سال رعایت نشده است.`);if(player.is_captain&&nationalChanged)throw new Error('کاپیتان قابل تعویض نیست.');if(nationalChanged&&!file)throw new Error('برای بازیکن جایگزین، فایل بیمه جدید الزامی است.');let path=null;if(file){const fileError=K.validateFile(file,6);if(fileError)throw new Error(fileError);path=`${session.user.id}/insurance/player-${player.player_order}-${Date.now()}.${K.safeExtension(file)}`;const up=await K.client.storage.from(K.config.storageBucket).upload(path,file,{upsert:false,contentType:file.type,cacheControl:'0'});if(up.error)throw up.error;}const result=await K.client.rpc('gol_team_update_player',{p_player_id:player.id,p_full_name:f,p_father_name:fa,p_national_id:n,p_birth_year:y,p_birth_month:m,p_birth_day:d,p_insurance_path:path});if(result.error){const text=String(result.error.message||'');if(result.error.code==='23505'||text.toLowerCase().includes('duplicate'))throw new Error(`کد ملی ${f} قبلاً برای بازیکن دیگری ثبت شده است.`);throw result.error;}K.setMessage(msg,'اطلاعات ذخیره شد؛ فایل خلاصه در حال بروزرسانی است...','info');await loadTeamData();try{await rebuildReport();K.setMessage(msg,'اطلاعات و فایل خلاصه با موفقیت بروزرسانی شد.','success')}catch(e){console.error(e);K.setMessage(msg,'اطلاعات ذخیره شد، اما بروزرسانی PDF انجام نشد؛ با مدیر اطلاع دهید.','error')}setTimeout(render,700)}catch(e){console.error(e);K.setMessage(msg,e.message||'ذخیره انجام نشد.','error');save.disabled=false}});actions.append(save,cancel,msg);wrap.appendChild(actions);return wrap;}
+
+  async function loadTeamData(){const result=await K.client.from('gol_teams').select('*, gol_players(*)').eq('owner_id',session.user.id).maybeSingle();if(result.error)throw result.error;team=result.data;}
+  async function render(){try{settings=await K.getSettings();await loadTeamData();if(!team){teamTitle.textContent='ثبت‌نام تیم کامل نشده است';statusNotice.className='notice danger';statusNotice.innerHTML='حساب ساخته شده، اما فرم تیم کامل نیست. <a class="button primary" href="../register.html">تکمیل ثبت‌نام</a>';receiptButton.disabled=true;return;}teamTitle.textContent=team.team_name;subtitle.textContent=`ثبت‌شده در ${K.formatDateTime(team.created_at)}`;statusBadge.textContent=K.statusLabels[team.status]||team.status;statusBadge.className=`status-badge ${team.status}`;statusNotice.textContent=statusDescription(team.status);statusNotice.className=team.status==='approved'?'notice success':(['needs_correction','rejected'].includes(team.status)?'notice danger':'notice');if(team.admin_note){const p=document.createElement('p'),s=document.createElement('strong');s.textContent='پیام مسئول برگزاری: ';p.append(s,document.createTextNode(team.admin_note));statusNotice.appendChild(p)}if(team.changes_pending_review){const p=document.createElement('p');p.innerHTML='<strong>توجه:</strong> تغییرات بازیکنان پس از ثبت اولیه انجام شده و باید دوباره توسط مدیر بررسی شود.';statusNotice.appendChild(p)}el('captain-phone').textContent=K.toPersianDigits(team.captain_phone);el('fee-value').textContent=K.formatToman(settings.fee_toman);el('deadline-value').textContent=settings.deadline_label;el('bank-value').textContent=settings.bank_account||'________________';el('holder-value').textContent=settings.account_holder||'________________';el('replacement-value').textContent=`${K.toPersianDigits(team.replacement_count||0)} از ۲ استفاده شده`;const locked=['approved','rejected'].includes(team.status);const tbody=el('players-body'),editors=el('player-editors');tbody.textContent='';editors.textContent='';const players=[...(team.gol_players||[])].sort((a,b)=>a.player_order-b.player_order);for(const p of players){const tr=document.createElement('tr');if(locked)tr.classList.add('locked-row');tr.append(cell(K.toPersianDigits(p.player_order)),cell(p.is_captain?'کاپیتان':'بازیکن'),cell(p.full_name),cell(p.father_name),cell(maskNationalId(p.national_id)),cell(`${K.toPersianDigits(p.birth_year)}/${K.toPersianDigits(String(p.birth_month).padStart(2,'0'))}/${K.toPersianDigits(String(p.birth_day).padStart(2,'0'))}`));const fc=document.createElement('td');fc.appendChild(privateButton(p.insurance_path));tr.appendChild(fc);const ac=document.createElement('td'),edit=document.createElement('button');edit.type='button';edit.className='mini-link';edit.textContent=locked?'قفل شده':'ویرایش';edit.disabled=locked;const editor=createEditor(p);edit.addEventListener('click',()=>{editor.classList.toggle('hidden');edit.textContent=editor.classList.contains('hidden')?'ویرایش':'بستن'});ac.appendChild(edit);tr.appendChild(ac);tbody.appendChild(tr);editors.appendChild(editor)}const report=el('report-link');report.classList.toggle('hidden',!team.registration_report_path);report.onclick=team.registration_report_path?async e=>{e.preventDefault();await openPrivate(team.registration_report_path)}:null;const current=el('current-receipt');current.classList.toggle('hidden',!team.payment_receipt_path);current.onclick=team.payment_receipt_path?async e=>{e.preventDefault();await openPrivate(team.payment_receipt_path)}:null;if(['approved','rejected','incomplete'].includes(team.status)){receiptButton.disabled=true;receiptButton.textContent=team.status==='approved'?'ثبت‌نام تأیید شده':'ارسال فیش در این وضعیت غیرفعال است';}else{receiptButton.disabled=false;receiptButton.textContent='ارسال فیش واریزی';}await loadActivity();}catch(e){console.error(e);statusNotice.className='notice danger';statusNotice.textContent='دریافت اطلاعات تیم انجام نشد.';}}
+
+  receiptForm.addEventListener('submit',async e=>{e.preventDefault();if(!team)return;const file=el('receipt-file').files[0],err=K.validateFile(file,8);if(err){K.setMessage(receiptMessage,err,'error');return}receiptButton.disabled=true;K.setMessage(receiptMessage,'در حال بارگذاری فیش...','info');try{const path=`${session.user.id}/payment/receipt-${Date.now()}.${K.safeExtension(file)}`,up=await K.client.storage.from(K.config.storageBucket).upload(path,file,{upsert:false,contentType:file.type,cacheControl:'0'});if(up.error)throw up.error;const submit=await K.client.rpc('gol_submit_receipt',{p_receipt_path:path});if(submit.error)throw submit.error;K.setMessage(receiptMessage,'فیش ارسال شد و در انتظار بررسی است.','success');setTimeout(render,700)}catch(err2){console.error(err2);K.setMessage(receiptMessage,err2.message||'ارسال فیش انجام نشد.','error');receiptButton.disabled=false}});
+  el('password-form').addEventListener('submit',async e=>{e.preventDefault();const b=e.currentTarget.querySelector('button'),m=el('password-message'),p=el('new-password').value,c=el('new-password-confirm').value;if(p.length<8){K.setMessage(m,'رمز باید حداقل ۸ نویسه باشد.','error');return}if(p!==c){K.setMessage(m,'رمز و تکرار آن یکسان نیست.','error');return}b.disabled=true;K.setMessage(m,'در حال تغییر رمز...','info');const {error}=await K.client.auth.updateUser({password:p});if(error){K.setMessage(m,error.message||'تغییر رمز انجام نشد.','error');b.disabled=false;return}e.currentTarget.reset();K.setMessage(m,'رمز با موفقیت تغییر کرد.','success');b.disabled=false;});
+  el('logout-button').addEventListener('click',async()=>{await K.client.auth.signOut();location.replace('../login.html')});
   await render();
 })();

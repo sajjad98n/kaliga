@@ -12,7 +12,7 @@
   <section class="form-section"><h2>اطلاعات حساب تیم</h2><div class="form-grid">
     <div class="field"><label for="team-name">نام تیم</label><input id="team-name" required maxlength="60" autocomplete="username"><small>نام تیم، نام کاربری ورود خواهد بود و باید یکتا باشد.</small></div>
     <div class="field"><label for="captain-phone">شماره تماس کاپیتان</label><input id="captain-phone" required inputmode="tel" maxlength="11" placeholder="09xxxxxxxxx"></div>
-    <div class="field"><label for="password">رمز ورود تیم</label><input id="password" type="password" required minlength="8" maxlength="72" autocomplete="new-password"><small>حداقل ۸ نویسه؛ رمز را در اختیار اعضای غیرمسئول قرار ندهید.</small></div>
+    <div class="field"><label for="password">رمز ورود تیم</label><input id="password" type="password" required minlength="8" maxlength="72" autocomplete="new-password"><small>حداقل ۸ نویسه؛ رمزت را یادت نرود. در شرایط ضروریِ فراموشی، بازیابی فقط توسط مدیر انجام می‌شود؛ با مسئولین برگزاری ارتباط بگیر.</small></div>
     <div class="field"><label for="password-confirm">تکرار رمز ورود</label><input id="password-confirm" type="password" required minlength="8" maxlength="72" autocomplete="new-password"></div>
   </div></section>
   <section class="form-section"><h2>اطلاعات پنج بازیکن</h2><p>بازیکن شماره ۱ به‌عنوان کاپیتان و مسئول تیم ثبت می‌شود.</p>
@@ -66,7 +66,7 @@
           <div class="field full"><label for="insurance-5">تصویر بیمه ورزشی</label><input id="insurance-5" type="file" required accept="image/jpeg,image/png,application/pdf"><small>JPG، PNG یا PDF؛ حداکثر ۶ مگابایت</small></div>
         </div>
       </section></section>
-  <section class="form-section"><label class="checkbox"><input id="rules-accept" type="checkbox" required><span>تأیید می‌کنم اطلاعات واردشده صحیح است، شرایط سنی رعایت شده و مسئولیت ثبت‌نام این تیم را برعهده دارم.</span></label><div class="submit-row" style="margin-top:16px"><button id="submit-button" class="button primary" type="submit">ثبت نهایی تیم</button><div class="message" id="message" role="status"></div></div></section>
+  <section class="form-section"><label class="checkbox"><input id="rules-accept" type="checkbox" required><span>تأیید می‌کنم اطلاعات واردشده صحیح است، شرایط سنی رعایت شده و مسئولیت ثبت‌نام این تیم را برعهده دارم.</span></label><div id="registration-progress" class="progress-box hidden" aria-live="polite"><div class="progress-head"><span id="progress-label">آماده ثبت‌نام</span><strong id="progress-step">۰ از ۴</strong></div><div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div></div><div class="submit-row" style="margin-top:16px"><button id="submit-button" class="button primary" type="submit">ثبت نهایی تیم</button><div class="message" id="message" role="status"></div></div></section>
 </form>
 <div id="report-root" class="hidden"></div><footer>Desinged by Sajjad Nabavi</footer></main>
-<script src="config.js?v=8"></script><script src="common.js?v=8"></script><script src="register.js?v=13"></script></body></html>
+<script src="config.js?v=8"></script><script src="common.js?v=8"></script><script src="register.js?v=14"></script></body></html>
