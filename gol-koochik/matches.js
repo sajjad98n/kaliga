@@ -133,6 +133,12 @@
       return source ? (matchWinner(source) || `برنده بازی ${fa(winner[1])}`) : reference;
     }
 
+    const loser = /^LOSE:(\d+)$/.exec(reference);
+    if (loser) {
+      const source = state.matches.find(match => match.match_no === Number(loser[1]));
+      return source ? (matchLoser(source) || `بازنده بازی ${fa(loser[1])}`) : reference;
+    }
+
     return reference;
   }
 
@@ -145,9 +151,21 @@
     return null;
   }
 
+  function matchLoser(match) {
+    if (!isFinished(match)) return null;
+
+    if (match.home_score > match.away_score) return resolveMatchSide(match.away_ref);
+    if (match.away_score > match.home_score) return resolveMatchSide(match.home_ref);
+
+    if (match.winner_side === 'home') return resolveMatchSide(match.away_ref);
+    if (match.winner_side === 'away') return resolveMatchSide(match.home_ref);
+    return null;
+  }
+
   function stageLabel(match) {
     if (match.stage === 'group') return `گروه ${match.group_code}`;
     if (match.stage === 'semifinal') return `نیمه‌نهایی ${fa(match.round_no)}`;
+    if (match.stage === 'third_place') return 'رده‌بندی';
     return 'فینال';
   }
 
@@ -254,7 +272,9 @@
         if (winner) {
           const winnerLine = document.createElement('div');
           winnerLine.className = 'tournament-match-winner';
-          winnerLine.textContent = `برنده: ${winner}`;
+          winnerLine.textContent = match.stage === 'third_place'
+            ? `مقام سوم: ${winner}`
+            : `برنده: ${winner}`;
           card.appendChild(winnerLine);
         }
       }
