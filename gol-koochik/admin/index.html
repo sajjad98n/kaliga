@@ -1,15 +1,94 @@
 <!doctype html><html lang="fa" dir="rtl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>مدیریت ثبت‌نام‌ها | کالیگا</title>
-<link rel="stylesheet" href="../styles.css?v=14"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script></head>
+<link rel="stylesheet" href="../styles.css?v=15"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script></head>
 <body><main class="shell">
 <header class="topbar"><a class="brand" href="../"><img src="../../logo.png" alt="لوگوی کالیگا"><span><strong>مدیریت گل کوچک</strong><span>ثبت‌نام تیم‌ها</span></span></a><nav class="top-actions"><a class="link-button" href="../">صفحه مسابقات</a><button class="link-button hidden" id="logout-button" type="button">خروج</button></nav></header>
 <section class="auth-box" id="login-panel"><div class="panel"><h1>ورود مدیر</h1><p class="lead">این بخش فقط برای مسئول برگزاری مسابقات است.</p><form id="admin-login" class="form-shell" autocomplete="off"><div class="field"><label for="admin-username">نام کاربری</label><input id="admin-username" type="text" required autocomplete="off"></div><div class="field"><label for="admin-password">رمز ورود</label><input id="admin-password" type="password" required autocomplete="off" minlength="8"></div><div class="submit-row"><button class="button primary" type="submit">ورود به مدیریت</button><div class="message" id="login-message"></div></div></form></div></section>
 <section id="dashboard" class="hidden">
 <div class="dashboard-head"><div><h1>مدیریت ثبت‌نام تیم‌ها</h1><p>جست‌وجو، بررسی مدارک، بازیابی رمز و مدیریت کامل تیم‌ها</p></div><span class="status-badge approved" id="team-count">۰ تیم</span></div>
 <div class="stats-grid" id="admin-stats"></div>
+<section class="tournament-admin-section" id="tournament-admin">
+  <div class="dashboard-head">
+    <div>
+      <h2>بازی‌ها و برنامه مسابقات</h2>
+      <p>نام ده تیم، ساعت ۲۳ مسابقه و نتایج را از همین‌جا مدیریت کن.</p>
+    </div>
+    <span class="status-badge pending" id="tournament-publish-badge">منتشر نشده</span>
+  </div>
+
+  <div class="tournament-admin-top">
+    <form class="panel form-shell" id="tournament-settings-form">
+      <h3>اطلاعات روز مسابقات</h3>
+      <div class="field">
+        <label for="tournament-title">عنوان مسابقات</label>
+        <input id="tournament-title" maxlength="100" required>
+      </div>
+      <div class="field">
+        <label for="tournament-date-label">تاریخ نمایشی</label>
+        <input id="tournament-date-label" maxlength="60" placeholder="مثلاً ۱۶ مرداد ۱۴۰۵" required>
+      </div>
+      <div class="field">
+        <label for="tournament-venue">محل برگزاری</label>
+        <input id="tournament-venue" maxlength="150" required>
+      </div>
+      <label class="checkbox">
+        <input id="tournament-published" type="checkbox">
+        <span>برنامه در صفحه عمومی سایت نمایش داده شود</span>
+      </label>
+      <p class="editor-note">تمام مسابقات برای همین یک روز ثبت می‌شوند. در صورت انتشار، ساعت همه ۲۳ بازی باید وارد شده باشد.</p>
+    </form>
+
+    <div class="panel">
+      <div class="tournament-panel-head">
+        <div>
+          <h3>گروه‌بندی تیم‌ها</h3>
+          <p class="editor-note">نام واقعی تیم‌ها را جایگزین A1 تا B5 کن. نام‌های ثبت‌شده سایت به‌صورت پیشنهاد نمایش داده می‌شوند.</p>
+        </div>
+      </div>
+      <datalist id="registered-team-options"></datalist>
+      <div class="tournament-groups-editor">
+        <div class="tournament-group-editor">
+          <h4>گروه A</h4>
+          <div id="tournament-group-a-inputs"></div>
+        </div>
+        <div class="tournament-group-editor">
+          <h4>گروه B</h4>
+          <div id="tournament-group-b-inputs"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel tournament-standings-admin">
+    <div class="tournament-panel-head">
+      <div>
+        <h3>جدول زنده گروه‌ها</h3>
+        <p class="editor-note">رتبه‌بندی بر اساس امتیاز، تفاضل گل، گل زده و برد بیشتر محاسبه می‌شود.</p>
+      </div>
+    </div>
+    <div class="tournament-public-groups" id="tournament-admin-standings"></div>
+  </div>
+
+  <div class="panel">
+    <div class="tournament-panel-head">
+      <div>
+        <h3>زمان‌بندی و نتایج</h3>
+        <p class="editor-note">۲۰ بازی گروهی، دو نیمه‌نهایی و یک فینال. در سایت عمومی، بازی‌ها بر اساس ساعت مرتب می‌شوند.</p>
+      </div>
+      <button class="link-button" id="tournament-clear-results" type="button">پاک‌کردن همه نتایج</button>
+    </div>
+    <div class="tournament-matches-editor" id="tournament-matches-editor">
+      <div class="empty">در حال دریافت برنامه بازی‌ها...</div>
+    </div>
+    <div class="submit-row tournament-save-row">
+      <button class="button primary" id="tournament-save-button" type="button">ذخیره برنامه بازی‌ها</button>
+      <div class="message" id="tournament-message"></div>
+    </div>
+  </div>
+</section>
 <section class="panel" style="margin:16px 0"><div class="admin-toolbar"><div class="field"><label for="team-search">جست‌وجو</label><input id="team-search" placeholder="نام تیم، بازیکن، شماره ملی یا تلفن"></div><div class="field"><label for="status-filter">وضعیت</label><select id="status-filter"><option value="">همه وضعیت‌ها</option></select></div><div class="field"><label for="payment-filter">پرداخت</label><select id="payment-filter"><option value="">همه</option><option value="paid">فیش دارد</option><option value="unpaid">فیش ندارد</option></select></div><label class="toolbar-check"><input id="incomplete-only" type="checkbox"><span>فقط ثبت‌نام ناقص</span></label></div></section>
 <h2 class="section-title">تنظیمات ثبت‌نام</h2><div class="admin-layout"><aside class="panel sticky"><form id="settings-form" class="form-shell">
 <div class="field"><label class="checkbox"><input id="registration-open" type="checkbox"><span>ثبت‌نام فعال باشد</span></label></div><div class="field"><label for="deadline-input">مهلت ثبت‌نام</label><input id="deadline-input" type="datetime-local" required></div><div class="field"><label for="deadline-label">متن نمایشی مهلت</label><input id="deadline-label" required></div><div class="field"><label for="minimum-age">حداقل سن</label><input id="minimum-age" type="number" min="1" max="99" required></div><div class="field"><label for="fee-input">هزینه هر تیم ـ تومان</label><input id="fee-input" type="number" min="0" step="1000" required></div><div class="field"><label for="bank-account">شماره حساب یا کارت</label><input id="bank-account"></div><div class="field"><label for="account-holder">نام صاحب حساب</label><input id="account-holder"></div><div class="submit-row"><button class="button primary" type="submit">ذخیره تنظیمات</button><div class="message" id="settings-message"></div></div></form></aside>
 <div><div class="topbar" style="margin-bottom:10px"><div><strong>فهرست تیم‌ها</strong></div><div class="top-actions"><button class="link-button" id="refresh-button" type="button">تازه‌سازی</button><button class="link-button" id="export-button" type="button">خروجی کامل CSV</button></div></div><div id="teams-list"><div class="empty">در حال دریافت تیم‌ها...</div></div></div></div>
 </section><footer>Desinged by Sajjad Nabavi</footer></main>
-<script src="../config.js?v=8"></script><script src="../common.js?v=8"></script><script src="admin.js?v=14"></script><script defer src="kaliga-assistant-admin.js?v=1"></script></body></html>
+<script src="../config.js?v=8"></script><script src="../common.js?v=8"></script><script src="admin.js?v=14"></script><script src="matches-admin.js?v=1"></script><script defer src="kaliga-assistant-admin.js?v=1"></script></body></html>
