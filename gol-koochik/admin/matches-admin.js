@@ -162,6 +162,13 @@
       return resolved || `برنده بازی ${fa(winner[1])}`;
     }
 
+    const loser = /^LOSE:(\d+)$/.exec(reference);
+    if (loser) {
+      const sourceMatch = state.matches.find(match => match.match_no === Number(loser[1]));
+      const resolved = sourceMatch ? matchLoser(sourceMatch) : null;
+      return resolved || `بازنده بازی ${fa(loser[1])}`;
+    }
+
     return reference;
   }
 
@@ -176,12 +183,26 @@
     return null;
   }
 
+  function matchLoser(match) {
+    if (!isFinished(match)) return null;
+
+    if (match.home_score > match.away_score) return resolveMatchSide(match.away_ref);
+    if (match.away_score > match.home_score) return resolveMatchSide(match.home_ref);
+
+    if (match.winner_side === 'home') return resolveMatchSide(match.away_ref);
+    if (match.winner_side === 'away') return resolveMatchSide(match.home_ref);
+    return null;
+  }
+
   function stageLabel(match) {
     if (match.stage === 'group') {
       return `گروه ${match.group_code} ـ دور ${fa(match.round_no)}`;
     }
     if (match.stage === 'semifinal') {
       return `نیمه‌نهایی ${fa(match.round_no)}`;
+    }
+    if (match.stage === 'third_place') {
+      return 'رده‌بندی';
     }
     return 'فینال';
   }
@@ -434,7 +455,7 @@
     }
 
     if (settingsRow.published && matchRows.some(match => !match.match_time)) {
-      throw new Error('برای انتشار برنامه، ساعت هر ۲۳ مسابقه را وارد کنید.');
+      throw new Error('برای انتشار برنامه، ساعت هر ۲۴ مسابقه را وارد کنید.');
     }
   }
 
@@ -500,7 +521,7 @@
   }
 
   async function clearResults() {
-    const accepted = window.confirm('نتیجه تمام ۲۳ بازی پاک شود؟ نام تیم‌ها و ساعت‌ها باقی می‌ماند.');
+    const accepted = window.confirm('نتیجه تمام ۲۴ بازی پاک شود؟ نام تیم‌ها و ساعت‌ها باقی می‌ماند.');
     if (!accepted) return;
 
     state.matches.forEach(match => {
