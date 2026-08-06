@@ -5,7 +5,7 @@
   <title>کالیگا | مسابقات گل کوچک</title>
   <meta name="description" content="ثبت‌نام تیمی مسابقات گل کوچک روستای چاشم">
   <meta name="theme-color" content="#052616">
-  <link rel="stylesheet" href="styles.css?v=7">
+  <link rel="stylesheet" href="styles.css?v=15">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -54,6 +54,27 @@
     <p>پس از تکمیل فرم، مبلغ ثبت‌نام باید به شماره حساب اعلام‌شده واریز شود. سپس کاپیتان وارد صفحه اختصاصی تیم می‌شود و تصویر فیش واریزی را بارگذاری می‌کند. پس از ارسال فیش، وضعیت بررسی و تأیید ثبت‌نام در همان صفحه قابل مشاهده خواهد بود.</p>
   </section>
 
+<section class="tournament-public-section hidden" id="tournament-public">
+  <div class="tournament-public-head">
+    <div>
+      <span class="tag">🏆 برنامه رسمی مسابقات</span>
+      <h2 id="tournament-public-title">برنامه بازی‌ها</h2>
+      <p id="tournament-public-meta"></p>
+    </div>
+    <span class="status-badge approved">یک‌روزه</span>
+  </div>
+
+  <div class="tournament-public-groups" id="tournament-public-groups"></div>
+
+  <h3 class="section-title">جدول گروه‌ها</h3>
+  <div class="tournament-public-groups" id="tournament-public-standings"></div>
+
+  <h3 class="section-title">برنامه زمانی مسابقات</h3>
+  <div class="tournament-timeline" id="tournament-public-schedule"></div>
+
+  <div class="tournament-champion hidden" id="tournament-champion"></div>
+</section>
+
   <footer>Desinged by Sajjad Nabavi</footer>
 </main>
 <script src="config.js?v=7"></script><script src="common.js?v=7"></script>
@@ -73,5 +94,6 @@
   }catch(e){console.error(e)}
 })();
 </script>
+  <script src="matches.js?v=1"></script>
   <script defer src="/kaliga-assistant.js?v=1"></script>
 </body></html>
