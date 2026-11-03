@@ -7,7 +7,7 @@
   <meta name="description" content="فصل‌های لیگ فوتسال کالیگا، مسابقات گل کوچک و ارسال پیشنهاد برای مسابقات ورزشی روستای چاشم">
   <meta name="theme-color" content="#020817">
   <link rel="icon" type="image/png" href="/logo.png">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="preload" as="image" href="/assets/home-futsal.jpg?v=5" fetchpriority="high">
   <style>
     :root{
       color-scheme:dark;
@@ -50,6 +50,9 @@
     @media(max-width:900px){.choices{grid-template-columns:1fr 1fr}.choice-gol{grid-column:1/-1}.feedback{grid-template-columns:1fr}.hero{min-height:300px}}
     @media(max-width:620px){.page{padding:14px 10px 30px}.hero{border-radius:23px;padding:30px 20px;min-height:350px}.hero::before{background:linear-gradient(180deg,rgba(2,8,23,.35),rgba(2,8,23,.95) 56%),url("assets/home-futsal.jpg?v=5") 68% center/cover no-repeat}.hero-content{align-self:end}.brand-line img{width:62px;height:62px}.lead{font-size:13px}.choices{grid-template-columns:1fr}.choice-gol{grid-column:auto}.choice{min-height:230px}.section-head{align-items:flex-start;flex-direction:column}.feedback{padding:18px;border-radius:23px}.row{grid-template-columns:1fr}}
   </style>
+  <script defer src="/gol-koochik/config.js?v=8"></script>
+  <script defer src="/home-fast.js?v=1"></script>
+  <script defer src="/kaliga-assistant.js?v=1"></script>
 </head>
 <body>
   <main class="page">
@@ -57,14 +60,13 @@
       <div class="hero-content">
         <span class="eyebrow">🏆 خانه‌ی مسابقات ورزشی چاشم</span>
         <div class="brand-line">
-          <img src="logo.png" alt="لوگوی کالیگا" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+          <img src="logo.png" alt="لوگوی کالیگا" decoding="async" fetchpriority="high" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
           <span class="brand-fallback" style="display:none">⚽</span>
           <div><h1>کالیگا</h1><p class="subtitle">لیگ فوتسال روستای چاشم</p></div>
         </div>
         <p class="lead">آرشیو فصل گذشته، اخبار فصل جدید و مسابقات گل کوچک را از این صفحه دنبال کنید.</p>
       </div>
     </header>
-
     <section aria-labelledby="choice-title">
       <div class="section-head"><div><h2 id="choice-title">انتخاب بخش مسابقات</h2><p>برای ورود، یکی از بخش‌های زیر را انتخاب کنید.</p></div></div>
       <div class="choices">
@@ -88,7 +90,6 @@
         </a>
       </div>
     </section>
-
     <section class="feedback" id="feedback" aria-labelledby="feedback-title">
       <div class="feedback-copy">
         <div class="big-icon">💬</div><h2 id="feedback-title">پیشنهادات و نظرات شما</h2>
@@ -106,76 +107,7 @@
         <div class="status" id="form-status" role="status"></div>
       </form>
     </section>
-
     <footer>Desinged by Sajjad Nabavi</footer>
   </main>
-  <script>
-    const { createClient } = supabase;
-    const SUPABASE_URL = 'https://lznrwbrxzgnczfqgamxp.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx6bnJ3YnJ4emduY3pmcWdhbXhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5MjU5MTQsImV4cCI6MjA3OTUwMTkxNH0.lHjgbKJ90Mws5z5-jzJYqAoyRgjfMGikmJTuAi1Nxqk';
-    const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    const suggestionForm = document.getElementById('suggestion-form');
-    const submitButton = suggestionForm.querySelector('.submit');
-    const formStatus = document.getElementById('form-status');
-
-    suggestionForm.addEventListener('submit', async function (event) {
-      event.preventDefault();
-
-      const name = document.getElementById('name').value.trim();
-      const contact = document.getElementById('contact').value.trim();
-      const message = document.getElementById('message').value.trim();
-
-      formStatus.style.color = '#86efac';
-      formStatus.textContent = '';
-
-      if (!message) {
-        formStatus.style.color = '#fca5a5';
-        formStatus.textContent = 'لطفاً متن پیشنهاد را وارد کنید.';
-        return;
-      }
-
-      if (message.length > 1500) {
-        formStatus.style.color = '#fca5a5';
-        formStatus.textContent = 'متن پیشنهاد نباید بیشتر از ۱۵۰۰ نویسه باشد.';
-        return;
-      }
-
-      submitButton.disabled = true;
-      submitButton.textContent = 'در حال ثبت...';
-      formStatus.textContent = 'لطفاً چند لحظه صبر کنید.';
-
-      const feedbackBody = [
-        contact ? `راه ارتباطی: ${contact}` : null,
-        'بخش: صفحه اصلی سایت',
-        '',
-        message
-      ].filter(value => value !== null).join('\n');
-
-      try {
-        const { error } = await db
-          .from('feedbacks')
-          .insert({
-            username: name || null,
-            body: feedbackBody
-          });
-
-        if (error) throw error;
-
-        suggestionForm.reset();
-        formStatus.style.color = '#86efac';
-        formStatus.textContent = 'پیشنهاد شما با موفقیت ثبت شد. ممنون که به بهترشدن کالیگا کمک می‌کنید 💚';
-      } catch (error) {
-        console.error('Feedback submission failed:', error);
-        formStatus.style.color = '#fca5a5';
-        formStatus.textContent = 'ثبت پیشنهاد انجام نشد. لطفاً اتصال اینترنت را بررسی و دوباره تلاش کنید.';
-      } finally {
-        submitButton.disabled = false;
-        submitButton.textContent = 'ارسال پیشنهاد ✉️';
-      }
-    });
-  </script>
-  <script defer src="/page-views.js?v=1"></script>
-  <script defer src="/kaliga-assistant.js?v=1"></script>
 </body>
 </html>
