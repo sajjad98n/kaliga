@@ -7,48 +7,60 @@
   <meta name="description" content="فصل‌های لیگ فوتسال کالیگا، مسابقات گل کوچک و ارسال پیشنهاد برای مسابقات ورزشی روستای چاشم">
   <meta name="theme-color" content="#020817">
   <link rel="icon" type="image/png" href="/logo.png">
-  <link rel="preload" as="image" href="/assets/home-futsal.jpg?v=5" fetchpriority="high">
+
   <style>
-    :root{
-      color-scheme:dark;
-      --bg:#020817;--panel:#0a1425;--panel2:#101d31;--text:#f8fafc;--muted:#a7b4c8;
-      --green:#22c55e;--green2:#0f8d3d;--blue:#3b82f6;--gold:#f5bf42;--line:rgba(148,163,184,.22);
-      --shadow:0 24px 70px rgba(0,0,0,.48)
-    }
+
+    :root{color-scheme:dark;--bg:#050b16;--panel:#0c1829;--panel2:#102239;--text:#eef6fc;--muted:#a7b6c9;--green:#50e5aa;--blue:#87a8ff;--gold:#ffcc79;--line:rgba(159,192,213,.17)}
     *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;min-height:100vh;font-family:Tahoma,Arial,sans-serif;color:var(--text);background:
-      radial-gradient(circle at 80% 0%,rgba(37,99,235,.20),transparent 32%),
-      radial-gradient(circle at 10% 28%,rgba(34,197,94,.12),transparent 26%),var(--bg)}
-    a{color:inherit}
-    .page{width:min(1160px,100%);margin:auto;padding:30px 18px 42px}
-    .hero{position:relative;min-height:330px;border:1px solid var(--line);border-radius:32px;overflow:hidden;box-shadow:var(--shadow);display:flex;align-items:center;padding:44px 42px;background:#07101d}
-    .hero::before{content:"";position:absolute;inset:0;background:
-      linear-gradient(90deg,rgba(2,8,23,.98) 0%,rgba(2,8,23,.88) 38%,rgba(2,8,23,.30) 70%,rgba(2,8,23,.10) 100%),
-      url("assets/home-futsal.jpg?v=5") center/cover no-repeat}
-    .hero::after{content:"";position:absolute;inset:auto 0 0;height:90px;background:linear-gradient(transparent,rgba(2,8,23,.72))}
-    .hero-content{position:relative;z-index:2;max-width:570px}
-    .brand-line{display:flex;align-items:center;gap:14px}.brand-line img{width:78px;height:78px;object-fit:contain;filter:drop-shadow(0 10px 22px #000)}
-    .brand-fallback{width:68px;height:68px;border-radius:22px;display:grid;place-items:center;background:linear-gradient(145deg,#193252,#08111e);font-size:34px;border:1px solid var(--line)}
-    h1{font-size:clamp(34px,5vw,58px);margin:0 0 4px}.subtitle{margin:0;color:#d4deed;font-size:17px}.lead{font-size:15px;line-height:2;color:var(--muted);margin:24px 0 0}
-    .eyebrow{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(245,191,66,.35);background:rgba(245,191,66,.10);color:#ffd978;padding:6px 12px;border-radius:999px;font-size:12px;margin-bottom:16px}
-    .section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin:34px 2px 16px}.section-head h2{margin:0;font-size:23px}.section-head p{margin:0;color:var(--muted);font-size:12px}
-    .choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-    .choice{position:relative;display:flex;flex-direction:column;min-height:280px;padding:23px;border-radius:26px;text-decoration:none;overflow:hidden;border:1px solid var(--line);box-shadow:0 18px 45px rgba(0,0,0,.28);transition:transform .2s,border-color .2s,box-shadow .2s;background:linear-gradient(145deg,var(--panel2),var(--panel))}
-    .choice:hover{transform:translateY(-5px);box-shadow:0 26px 60px rgba(0,0,0,.42)}
-    .choice::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(circle at 100% 0%,var(--glow),transparent 52%)}
-    .choice::after{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,rgba(2,8,23,.18),rgba(2,8,23,.94) 86%),var(--card-image) center/cover no-repeat;opacity:.78;transition:transform .35s ease,opacity .25s ease}
-    .choice:hover::after{transform:scale(1.035);opacity:.9}
-    .choice>*{position:relative;z-index:1}.choice .icon{width:50px;height:50px;border-radius:16px;display:grid;place-items:center;background:rgba(255,255,255,.08);font-size:25px;border:1px solid rgba(255,255,255,.10)}
-    .choice h3{font-size:25px;margin:22px 0 8px}.choice p{margin:0;color:var(--muted);font-size:13px;line-height:1.9}.choice .meta{margin-top:14px;font-size:11px;color:#dbe7f8}.choice .go{margin-top:auto;padding-top:24px;font-weight:bold;color:var(--accent)}
-    .choice-1405{--glow:rgba(245,191,66,.36);--accent:#ffd36b;--card-image:url("assets/season-1405.jpg?v=5");border-color:rgba(245,191,66,.42)}.choice-1404{--glow:rgba(59,130,246,.34);--accent:#8cc0ff;--card-image:url("assets/season-1404.jpg?v=5");border-color:rgba(59,130,246,.38)}.choice-gol{--glow:rgba(34,197,94,.34);--accent:#82f2a7;--card-image:url("assets/gol-koochik-v5.jpg?v=5");border-color:rgba(34,197,94,.42);background:linear-gradient(145deg,rgba(5,52,29,.92),#07170f)}
-    .badge{display:inline-flex;align-self:flex-start;margin-top:14px;border-radius:999px;padding:5px 10px;font-size:11px;background:rgba(255,255,255,.08);color:#e7eef8}
-    .feedback{margin-top:34px;display:grid;grid-template-columns:.85fr 1.4fr;gap:20px;padding:26px;border:1px solid var(--line);border-radius:28px;background:linear-gradient(145deg,rgba(14,26,44,.97),rgba(6,14,26,.98));box-shadow:var(--shadow)}
-    .feedback-copy{padding:8px 4px}.feedback-copy .big-icon{font-size:54px}.feedback-copy h2{font-size:24px;margin:16px 0 8px}.feedback-copy p{color:var(--muted);font-size:13px;line-height:2;margin:0}.privacy{margin-top:18px;padding:10px 12px;border-radius:14px;background:rgba(34,197,94,.08);color:#a7efbd;font-size:11px;line-height:1.8}
-    form{display:grid;gap:11px}.row{display:grid;grid-template-columns:1fr 1fr;gap:11px}label{font-size:11px;color:#c5d1e2;margin-bottom:-4px}input,textarea{width:100%;border:1px solid rgba(148,163,184,.25);border-radius:15px;background:#081221;color:var(--text);padding:13px 14px;font:inherit;outline:none}input:focus,textarea:focus{border-color:rgba(34,197,94,.75);box-shadow:0 0 0 3px rgba(34,197,94,.10)}textarea{min-height:130px;resize:vertical}.submit{border:0;border-radius:15px;background:linear-gradient(135deg,var(--green),var(--green2));color:white;padding:13px 18px;font:bold 13px Tahoma,Arial,sans-serif;cursor:pointer}.submit:hover{filter:brightness(1.08)}.submit:disabled{opacity:.65;cursor:not-allowed;filter:none}.form-note{color:var(--muted);font-size:10px;line-height:1.7;margin:0}.status{min-height:20px;font-size:11px;color:#86efac}
-    footer{text-align:center;color:#718198;font-size:11px;padding:28px 0 0}
-    @media(max-width:900px){.choices{grid-template-columns:1fr 1fr}.choice-gol{grid-column:1/-1}.feedback{grid-template-columns:1fr}.hero{min-height:300px}}
-    @media(max-width:620px){.page{padding:14px 10px 30px}.hero{border-radius:23px;padding:30px 20px;min-height:350px}.hero::before{background:linear-gradient(180deg,rgba(2,8,23,.35),rgba(2,8,23,.95) 56%),url("assets/home-futsal.jpg?v=5") 68% center/cover no-repeat}.hero-content{align-self:end}.brand-line img{width:62px;height:62px}.lead{font-size:13px}.choices{grid-template-columns:1fr}.choice-gol{grid-column:auto}.choice{min-height:230px}.section-head{align-items:flex-start;flex-direction:column}.feedback{padding:18px;border-radius:23px}.row{grid-template-columns:1fr}}
+    html{scroll-behavior:smooth}body{margin:0;min-height:100vh;color:var(--text);font-family:Tahoma,Arial,sans-serif;background:radial-gradient(ellipse 70% 30% at 86% 0%,rgba(25,78,103,.18),transparent 72%),#050b16}
+    a{color:inherit}.page{width:min(1190px,100%);margin:auto;padding:clamp(12px,2.6vw,30px) clamp(13px,3vw,26px) 30px}
+    .hero{isolation:isolate;position:relative;overflow:hidden;min-height:300px;display:grid;grid-template-columns:1.1fr minmax(260px,.8fr);align-items:center;gap:18px;padding:clamp(25px,5vw,55px);border:1px solid rgba(95,165,165,.3);border-radius:30px;background:linear-gradient(126deg,#0c2230 5%,#0a192a 47%,#102b30 100%);box-shadow:0 20px 55px #0003}
+    .hero:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 85% 8%,#4be6a119,transparent 40%),linear-gradient(100deg,transparent 55%,#50e5aa06);z-index:-1}
+    .hero-content{position:relative;z-index:2;min-width:0}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid #50d6a44d;background:#1a473839;color:#96f0c7;border-radius:999px;padding:9px 14px;font-size:11px;font-weight:bold}
+    .brand-line{display:flex;gap:16px;align-items:center;margin-top:22px}
+    .brand-mark{position:relative;display:grid;place-items:center;flex:none;width:82px;height:82px;border-radius:22px;border:1px solid #6ac7a755;background:linear-gradient(145deg,#1c4848,#0a2334);box-shadow:inset 0 1px #ffffff13,0 10px 28px #0004}
+    .brand-logo{position:absolute;inset:6px;width:calc(100% - 12px);height:calc(100% - 12px);object-fit:contain;filter:drop-shadow(0 3px 6px #0007)}
+    .brand-fallback{font:900 34px Tahoma,Arial,sans-serif;color:#b8f7de;text-shadow:0 0 20px #34d99b44}
+    h1{font-size:clamp(34px,4.8vw,58px);letter-spacing:-1.2px;line-height:1.3;margin:0 0 5px}.subtitle{margin:0;color:#c9dcd9;font-size:clamp(12px,1.5vw,16px)}
+    .lead{font-size:13px;line-height:2.25;color:#bdd0d5;max-width:560px;margin:26px 0 0}
+    .hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-top:21px}
+    .hero-actions a{border:1px solid #4fae9266;background:#15514073;text-decoration:none;border-radius:12px;padding:10px 15px;color:#d4ffee;font-size:12px;font-weight:bold;transition:background .15s}
+    .hero-actions a:hover{background:#246a53a0}.hero-actions a.secondary{background:#132d3b7a;border-color:#6c8fa044}
+    .hero-art{position:relative;justify-self:stretch;width:100%;max-width:345px;margin-inline:auto;min-height:240px;display:grid;place-items:center}
+    .art-halo{position:absolute;width:245px;height:245px;border-radius:50%;background:radial-gradient(circle,#2ed99819 10%,#4a9fdc08 42%,transparent 67%);border:1px solid #6aafa020}
+    .art-pitch{position:relative;width:min(90%,275px);aspect-ratio:1.6;border:2px solid #76d3bd64;border-radius:12px;transform:rotate(-12deg);box-shadow:0 18px 40px #0004,inset 0 0 42px #4ce8ae16;background:repeating-linear-gradient(90deg,rgba(77,185,161,.045) 0 35px,transparent 35px 70px),linear-gradient(135deg,#0d383b,#0b2434)}
+    .art-pitch:before{content:"";position:absolute;top:0;bottom:0;left:50%;border-left:1px solid #79d9bd90}
+    .art-pitch:after{content:"";position:absolute;left:50%;top:50%;width:58px;height:58px;border:1.5px solid #82dac09c;border-radius:50%;transform:translate(-50%,-50%)}
+    .art-area{position:absolute;top:23%;bottom:23%;width:17%;border:1px solid #7fd7bd9c}.art-area.left{left:0;border-left:0;border-radius:0 4px 4px 0}.art-area.right{right:0;border-right:0;border-radius:4px 0 0 4px}
+    .art-ball{position:absolute;left:48%;top:29%;display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#99ffe2,#49cdad);color:#072325;font:900 30px Tahoma,Arial,sans-serif;box-shadow:0 9px 30px #44e5b454;transform:rotate(12deg)}
+    .art-label{position:absolute;bottom:-3px;left:0;color:#77c4af;letter-spacing:3px;font:bold 10px Tahoma,Arial,sans-serif}
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:15px;margin:36px 2px 17px}.section-head h2{margin:0;font-size:23px}.section-head p{margin:0;color:var(--muted);font-size:12px}
+    .choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+    .choice{--accent:var(--green);--card-edge:#48b28b45;position:relative;isolation:isolate;display:flex;flex-direction:column;min-width:0;min-height:273px;overflow:hidden;text-decoration:none;padding:22px 23px;border:1px solid var(--card-edge);border-radius:23px;background:linear-gradient(155deg,#102333,#0b1627);box-shadow:0 10px 27px #0002;transition:transform .18s,border-color .18s,box-shadow .18s}
+    .choice:before{content:"";position:absolute;z-index:-1;top:-85px;left:-65px;width:245px;height:245px;border-radius:50%;background:radial-gradient(circle,var(--ambient,#4dcda326),transparent 65%)}
+    .choice:after{content:attr(data-season);position:absolute;left:13px;bottom:-24px;font:900 clamp(70px,8vw,125px)/1 Tahoma,Arial,sans-serif;letter-spacing:-5px;color:#ffffff07;pointer-events:none;z-index:-1}
+    .choice:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 17px 35px #0005}
+    .choice:focus-visible,.hero-actions a:focus-visible{outline:3px solid #ffcd79;outline-offset:4px}
+    .choice-1405{--accent:#aaf9cc;--card-edge:#55dca66e;--ambient:#51dba444;background:linear-gradient(150deg,#0e3b38,#0b2631 77%)}
+    .choice-1404{--accent:#a6c0ff;--card-edge:#5a86ff4d;--ambient:#7199ff3a;background:linear-gradient(145deg,#10233e,#0b1830)}
+    .choice-gol{--accent:#a5e9b6;--card-edge:#51b7824d;--ambient:#59ce7c35;background:linear-gradient(145deg,#102c29,#0b1c25)}
+    .choice .icon{display:grid;place-items:center;flex:none;width:53px;height:53px;border:1px solid #ffffff1c;border-radius:16px;background:#ffffff0d;font-size:24px;line-height:1}
+    .badge{display:inline-flex;align-self:flex-start;margin-top:15px;border:1px solid #ffffff21;border-radius:999px;padding:5px 11px;background:#ffffff0c;color:#cadddd;font-size:11px}
+    .choice h3{margin:24px 0 8px;font-size:25px;letter-spacing:-.5px}.choice p{margin:0;color:#b4c4d6;font-size:12px;line-height:2.05;max-width:345px}
+    .choice .meta{margin-top:12px;font-size:11px;color:#b7ccce}.choice .go{margin-top:auto;padding-top:21px;color:var(--accent);font-weight:bold;font-size:12px}
+    .feedback{margin-top:35px;display:grid;grid-template-columns:.87fr 1.3fr;gap:25px;padding:27px;border-radius:26px;border:1px solid var(--line);background:linear-gradient(145deg,#0e2131,#0a1627);box-shadow:0 12px 31px #0002}
+    .feedback-copy{padding:5px}.feedback-copy .big-icon{font-size:38px}.feedback-copy h2{font-size:23px;line-height:1.6;margin:15px 0 7px}.feedback-copy p{color:#b5c4d3;font-size:12px;line-height:2.15;margin:0}
+    .privacy{margin-top:20px;padding:12px 13px;border:1px solid #51cf9652;border-radius:12px;background:#143c332b;color:#adf2ca;font-size:11px;line-height:1.95}
+    form{display:grid;gap:12px;min-width:0}.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}label{display:block;color:#c5d6e2;font-size:11px;margin-bottom:6px}
+    input,textarea{width:100%;border:1px solid #45637577;border-radius:12px;background:#081527;color:#effaff;padding:13px 14px;font:inherit;font-size:12px;outline:none}
+    input::placeholder,textarea::placeholder{color:#8d9eaf}input:focus,textarea:focus{border-color:#55e2aa;box-shadow:0 0 0 3px #55e2aa1c}
+    textarea{min-height:125px;resize:vertical}.submit{border:0;border-radius:13px;background:linear-gradient(135deg,#50e4a5,#27a77b);color:#062a22;padding:13px 18px;font:bold 13px Tahoma,Arial,sans-serif;cursor:pointer}
+    .submit:hover{filter:brightness(1.06)}.submit:disabled{opacity:.65;cursor:wait}.form-note{color:var(--muted);font-size:10px;line-height:1.9;margin:0}.status{min-height:20px;font-size:11px;color:#93f0bd}
+    footer{text-align:center;color:#78909f;font-size:11px;padding:26px 0 0}
+    @media(max-width:900px){.hero{grid-template-columns:1fr minmax(220px,.65fr);padding:28px}.choices{gap:10px}.choice{padding:19px}.feedback{grid-template-columns:1fr}.hero-art{min-height:210px}}
+    @media(max-width:650px){.page{padding:12px 12px 24px}.hero{min-height:auto;grid-template-columns:1fr;border-radius:21px;padding:27px 19px}.hero-art{min-height:124px;max-width:270px;margin-top:2px}.art-halo{width:172px;height:172px}.art-pitch{width:220px}.art-ball{width:44px;height:44px;font-size:23px}.art-label{bottom:0}.brand-line{margin-top:18px}.brand-mark{height:67px;width:67px;border-radius:17px}.brand-fallback{font-size:26px}h1{font-size:39px}.lead{font-size:12px;margin-top:19px}.choices{grid-template-columns:1fr}.choice{min-height:199px;padding:19px}.choice h3{font-size:23px;margin-top:16px}.choice .go{padding-top:13px}.section-head{align-items:flex-start;flex-direction:column;gap:4px;margin-top:29px}.section-head h2{font-size:20px}.feedback{padding:18px;border-radius:21px}.row{grid-template-columns:1fr}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.choice,.hero-actions a{transition:none}}
   </style>
   <script defer src="/gol-koochik/config.js?v=8"></script>
   <script defer src="/home-fast.js?v=2"></script>
@@ -58,35 +70,41 @@
   <main class="page">
     <header class="hero">
       <div class="hero-content">
-        <span class="eyebrow">🏆 خانه‌ی مسابقات ورزشی چاشم</span>
+        <span class="eyebrow">✦ پایگاه رسمی مسابقات ورزشی چاشم</span>
         <div class="brand-line">
-          <img src="logo.png" alt="لوگوی کالیگا" decoding="async" fetchpriority="high" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
-          <span class="brand-fallback" style="display:none">⚽</span>
-          <div><h1>کالیگا</h1><p class="subtitle">لیگ فوتسال روستای چاشم</p></div>
+          <span class="brand-mark"><span class="brand-fallback" aria-hidden="true">⚽</span><img class="brand-logo" src="logo.png" alt="لوگوی کالیگا" decoding="async" onerror="this.style.display='none'"></span>
+          <div><h1>کالیگا</h1><p class="subtitle">خانه فوتسال و رقابت‌های چاشم</p></div>
         </div>
-        <p class="lead">آرشیو فصل گذشته، اخبار فصل جدید و مسابقات گل کوچک را از این صفحه دنبال کنید.</p>
+        <p class="lead">از برنامه و پیش‌بینی مسابقات فصل جدید تا آرشیو فصل گذشته؛ همه بخش‌های کالیگا را از اینجا دنبال کنید.</p>
+        <div class="hero-actions"><a href="1405/">⚽ ورود به فصل ۱۴۰۵</a><a class="secondary" href="#feedback">✉️ ارتباط با کالیگا</a></div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="art-halo"></div>
+        <div class="art-pitch"><div class="art-area left"></div><div class="art-area right"></div><div class="art-ball">⚽</div></div>
+        <div class="art-label">KALIGA · FUTSAL</div>
       </div>
     </header>
+
     <section aria-labelledby="choice-title">
       <div class="section-head"><div><h2 id="choice-title">انتخاب بخش مسابقات</h2><p>برای ورود، یکی از بخش‌های زیر را انتخاب کنید.</p></div></div>
       <div class="choices">
-        <a class="choice choice-1405" href="1405/">
+        <a class="choice choice-1405" data-season="۱۴۰۵" href="1405/">
           <span class="icon">📅</span><span class="badge">فصل جدید</span>
           <h3>فصل ۱۴۰۵</h3>
-          <p>صفحه آغاز فصل جدید کالیگا، معرفی تیم‌ها و برنامه مسابقات آینده.</p>
-          <div class="meta">هنوز شروع نشده • به‌زودی</div><div class="go">مشاهده صفحه فصل ←</div>
+          <p>برنامه ۱۱ هفته، جدول تیم‌ها، نتایج و پیش‌بینی مسابقات.</p>
+          <div class="meta">۱۲ تیم • ۶۶ مسابقه • فصل دوم</div><div class="go">مشاهده صفحه فصل ←</div>
         </a>
-        <a class="choice choice-1404" href="1404/">
+        <a class="choice choice-1404" data-season="۱۴۰۴" href="1404/">
           <span class="icon">🏆</span><span class="badge">آرشیو کامل</span>
           <h3>فصل ۱۴۰۴</h3>
           <p>برنامه و نتایج ۶۶ مسابقه، جزئیات بازی‌ها، پیش‌بینی‌ها، تیم‌ها، آمار و جدول نهایی.</p>
           <div class="go">ورود به آرشیو ←</div>
         </a>
-        <a class="choice choice-gol" href="gol-koochik/">
+        <a class="choice choice-gol" data-season="🥅" href="gol-koochik/">
           <span class="icon">🥅</span><span class="badge">بخش جدید</span>
           <h3>مسابقات گل کوچک</h3>
           <p>ثبت‌نام تیم‌ها، اطلاعیه‌ها، قرعه‌کشی، برنامه بازی‌ها، نتایج و جدول مسابقات گل کوچک.</p>
-          <div class="meta">ثبت‌نام تیم‌ها تا ۶ مرداد ۱۴۰۵ فعال است.</div><div class="go">ورود به بخش مسابقات ←</div>
+          <div class="meta">اطلاعات و گزارش‌های مسابقات گل کوچک</div><div class="go">ورود به بخش مسابقات ←</div>
         </a>
       </div>
     </section>
@@ -107,7 +125,7 @@
         <div class="status" id="form-status" role="status"></div>
       </form>
     </section>
-    <footer>Desinged by Sajjad Nabavi</footer>
+    <footer>Designed by Sajjad Nabavi</footer>
   </main>
 </body>
 </html>
