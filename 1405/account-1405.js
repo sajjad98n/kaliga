@@ -3,7 +3,7 @@
   'use strict';
   const cfg=window.KALIGA_GOL_CONFIG,root=document.getElementById('kaliga-member-panel');
   if(!cfg||!window.supabase||!root)return;
-  const db=window.supabase.createClient(cfg.supabaseUrl,cfg.supabaseAnonKey);
+  const db=window.KALIGA_1405_DB||(window.KALIGA_1405_DB=window.supabase.createClient(cfg.supabaseUrl,cfg.supabaseAnonKey));
   window.KaligaMember={db,user:null,profile:null};
   const state=window.KaligaMember;
   const fa=v=>String(v??'').replace(/[0-9]/g,n=>'۰۱۲۳۴۵۶۷۸۹'[Number(n)]);

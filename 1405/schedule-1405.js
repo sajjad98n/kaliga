@@ -4,7 +4,7 @@
   const root = document.getElementById('match-list');
   const cfg = window.KALIGA_GOL_CONFIG;
   if (!root || !cfg || !window.supabase) return;
-  const db = window.KaligaMember?.db || window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
+  const db = window.KaligaMember?.db || window.KALIGA_1405_DB || (window.KALIGA_1405_DB=window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey));
   const bucket = db.storage.from('kaliga-1405-media');
   const weeks = ['','اول','دوم','سوم','چهارم','پنجم','ششم','هفتم','هشتم','نهم','دهم','یازدهم'];
   const fa = v => String(v ?? '').replace(/[0-9]/g, d => '۰۱۲۳۴۵۶۷۸۹'[Number(d)]);
@@ -128,11 +128,20 @@
   const observer=new MutationObserver(()=>{if(ready&&!root.querySelector('[data-kaliga-fixture]'))render();});observer.observe(root,{childList:true});
   async function load(){
     try{
-      const [mr,tr,ar]=await Promise.all([
-        db.from('season_1405_matches').select('*').order('week_number',{ascending:true}).order('match_number',{ascending:true}),
-        db.from('season_1405_teams').select('id,name,logo_path'),
-        db.rpc('kaliga_1405_poll')
+      // Match/standings/teams use the same cached table promises.
+      const shared=window.KALIGA_1405_TABLES||(window.KALIGA_1405_TABLES=new Map());
+      const records=table=>{
+        if(shared.has(table))return shared.get(table);
+        const promise=Promise.resolve(db.from(table).select('*')).then(r=>{
+          if(r.error)throw r.error;
+          return r.data||[];
+        }).catch(e=>{shared.delete(table);throw e;});
+        shared.set(table,promise);return promise;
+      };
+      const [matchRows,teamRows,ar]=await Promise.all([
+        records('season_1405_matches'),records('season_1405_teams'),db.rpc('kaliga_1405_poll')
       ]);
+      const mr={data:matchRows,error:null},tr={data:teamRows,error:null};
       if(mr.error)throw mr.error;if(tr.error)throw tr.error;
       games=(mr.data||[]).filter(m=>m.published);teams=new Map((tr.data||[]).map(t=>[t.id,t]));
       predictionReady=!ar.error;if(!ar.error)summaries=new Map((ar.data||[]).map(x=>[x.match_id,x]));await refreshMy();
