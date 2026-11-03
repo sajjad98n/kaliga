@@ -6,12 +6,18 @@
   <meta name="description" content="ثبت‌نام تیمی مسابقات گل کوچک روستای چاشم">
   <meta name="theme-color" content="#052616">
   <link rel="stylesheet" href="styles.css?v=15">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="config.js?v=7"></script>
+  <script defer src="common.js?v=7"></script>
+  <script defer src="landing-fast.js?v=1"></script>
+  <script defer src="matches.js?v=1"></script>
+  <script defer src="/page-views.js?v=1"></script>
+  <script defer src="/kaliga-assistant.js?v=1"></script>
 </head>
 <body>
 <main class="shell">
   <header class="topbar">
-    <a class="brand" href="../"><img src="../logo.png" alt="لوگوی کالیگا"><span><strong>کالیگا</strong><span>مسابقات گل کوچک</span></span></a>
+    <a class="brand" href="../"><img src="../logo.png" alt="لوگوی کالیگا" decoding="async"><span><strong>کالیگا</strong><span>مسابقات گل کوچک</span></span></a>
     <nav class="top-actions">
   <a class="link-button" href="login.html">ورود تیم‌ها</a>
 </nav>
@@ -31,7 +37,6 @@
     <article class="card"><div class="icon">🎂</div><h2>شرایط سنی</h2><p>شرکت در مسابقات برای بازیکنانی مجاز است که تا زمان اعلام‌شده حداقل پانزده سال تمام داشته باشند.</p><div class="value" id="age-value">بالای ۱۵ سال</div></article>
     <article class="card"><div class="icon">💳</div><h2>هزینه ثبت‌نام</h2><p>هزینه به‌صورت یکجا برای هر تیم پرداخت می‌شود و فیش واریزی از صفحه اختصاصی تیم بارگذاری خواهد شد.</p><div class="value" id="fee-value">۱٬۵۰۰٬۰۰۰ تومان</div></article>
     <article class="card"><div class="icon">💳</div><h2>رضایت نامه</h2><p>رضایتنامه ی والدین برای شرکت کنندگان زیر 18 سال الزامی می‌باشد.</p><div class="value" id="age-value">زیر 18 سال</div></article>
-
   </section>
 
   <h2 class="section-title">زمان و نحوه پرداخت</h2>
@@ -77,24 +82,4 @@
 
   <footer>Desinged by Sajjad Nabavi</footer>
 </main>
-<script src="config.js?v=7"></script><script src="common.js?v=7"></script>
-<script>
-(async()=>{
-  const K=window.KaligaGol;
-  try{
-    const s=await K.getSettings();
-    document.getElementById('fee-value').textContent=K.formatToman(s.fee_toman);
-    document.getElementById('age-value').textContent=`بالای ${K.toPersianDigits(s.min_age)} سال`;
-    document.getElementById('deadline-value').textContent=`تا ${s.deadline_label}`;
-    document.getElementById('bank-value').textContent=s.bank_account||'6393461052263270';
-    document.getElementById('holder-value').textContent=s.account_holder||'علی قادری چاشمی';
-    const open=K.registrationIsOpen(s);
-    document.getElementById('open-value').textContent=open?'فعال':'پایان یافته';
-    if(!open){const b=document.getElementById('register-button');b.removeAttribute('href');b.textContent='مهلت ثبت‌نام پایان یافته';b.classList.add('danger');}
-  }catch(e){console.error(e)}
-})();
-</script>
-  <script src="matches.js?v=1"></script>
-  <script defer src="/page-views.js?v=1"></script>
-  <script defer src="/kaliga-assistant.js?v=1"></script>
 </body></html>
