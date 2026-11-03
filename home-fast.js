@@ -81,3 +81,67 @@
   if ('requestIdleCallback' in window) requestIdleCallback(logView, {timeout:3500});
   else setTimeout(logView, 1200);
 })();
+
+(() => {
+  'use strict';
+
+  /* Prefetch only likely *public static pages*, never personal data or API calls.
+     Browser may use this hint for the next full-page navigation. */
+  const shouldAvoidPrefetch = () => {
+    const network = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    return Boolean(network?.saveData || /^(slow-2g|2g)$/.test(network?.effectiveType || ''));
+  };
+  if (!shouldAvoidPrefetch()) {
+    const destinations = new Set(['/1405/', '/1404/', '/gol-koochik/']);
+    const prefetched = new Set();
+    let fontsWarmed = false;
+    const prefetch = pathname => {
+      if (!destinations.has(pathname) || prefetched.has(pathname) || document.visibilityState !== 'visible') return;
+      prefetched.add(pathname);
+      const hint = document.createElement('link');
+      hint.rel = 'prefetch';
+      hint.href = pathname;
+      hint.as = 'document';
+      hint.fetchPriority = 'low';
+      document.head.appendChild(hint);
+    };
+    const warmFontsForSeason = () => {
+      if (fontsWarmed) return;
+      fontsWarmed = true;
+      // Only when the user shows interest in this destination: no global font requests.
+      for (const [origin, isCors] of [
+        ['https://fonts.googleapis.com', false],
+        ['https://fonts.gstatic.com', true]
+      ]) {
+        const hint = document.createElement('link');
+        hint.rel = 'preconnect';
+        hint.href = origin;
+        if (isCors) hint.crossOrigin = 'anonymous';
+        document.head.appendChild(hint);
+      }
+    };
+    document.querySelectorAll('.choices a[href]').forEach(anchor => {
+      const url = new URL(anchor.href, location.href);
+      if (url.origin !== location.origin || !destinations.has(url.pathname)) return;
+      const onIntent = () => {
+        prefetch(url.pathname);
+        if (url.pathname === '/1405/') warmFontsForSeason();
+      };
+      anchor.addEventListener('pointerenter', onIntent, {passive:true});
+      anchor.addEventListener('focus', onIntent, {passive:true});
+      anchor.addEventListener('touchstart', onIntent, {passive:true, once:true});
+    });
+    // Warm only the most likely next document when landing finishes loading.
+    // Low-priority and delayed: do not compete with first paint or landing images.
+    const warmPrimaryWhenIdle = () => {
+      const warm = () => prefetch('/1405/');
+      if (typeof window.requestIdleCallback === 'function') {
+        window.requestIdleCallback(warm, {timeout:3500});
+      } else {
+        window.setTimeout(warm, 1400);
+      }
+    };
+    if (document.readyState === 'complete') warmPrimaryWhenIdle();
+    else window.addEventListener('load', warmPrimaryWhenIdle, {once:true});
+  }
+})();
