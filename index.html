@@ -33,7 +33,7 @@
     .art-pitch:before{content:"";position:absolute;top:0;bottom:0;left:50%;border-left:1px solid #79d9bd90}
     .art-pitch:after{content:"";position:absolute;left:50%;top:50%;width:58px;height:58px;border:1.5px solid #82dac09c;border-radius:50%;transform:translate(-50%,-50%)}
     .art-area{position:absolute;top:23%;bottom:23%;width:17%;border:1px solid #7fd7bd9c}.art-area.left{left:0;border-left:0;border-radius:0 4px 4px 0}.art-area.right{right:0;border-right:0;border-radius:4px 0 0 4px}
-    .art-ball{position:absolute;left:48%;top:29%;display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#99ffe2,#49cdad);color:#072325;font:900 30px Tahoma,Arial,sans-serif;box-shadow:0 9px 30px #44e5b454;transform:rotate(12deg)}
+    .art-ball{position:absolute;left:50%;top:50%;display:grid;place-items:center;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#99ffe2,#49cdad);color:#072325;font:900 30px Tahoma,Arial,sans-serif;box-shadow:0 9px 30px #44e5b454;transform:translate(-50%,-50%) rotate(12deg)}
     .art-label{position:absolute;bottom:-3px;left:0;color:#77c4af;letter-spacing:3px;font:bold 10px Tahoma,Arial,sans-serif}
     .section-head{display:flex;align-items:end;justify-content:space-between;gap:15px;margin:36px 2px 17px}.section-head h2{margin:0;font-size:23px}.section-head p{margin:0;color:var(--muted);font-size:12px}
     .choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
@@ -64,7 +64,16 @@
   </style>
   <script defer src="/gol-koochik/config.js?v=8"></script>
   <script defer src="/home-fast.js?v=2"></script>
-  <script defer src="/kaliga-assistant.js?v=1"></script>
+  <script>
+(function(){
+  function start(){
+    var run=function(){var s=document.createElement('script');s.src='/kaliga-assistant.js?v=1';s.async=true;document.body.appendChild(s);};
+    if('requestIdleCallback' in window)requestIdleCallback(run,{timeout:2400});else setTimeout(run,1600);
+  }
+  if(document.readyState==='complete')start();else window.addEventListener('load',start,{once:true});
+})();
+</script>
+<!-- KALIGA-PERF-V8 / 2026-11-03 -->
 </head>
 <body>
   <main class="page">
@@ -72,7 +81,7 @@
       <div class="hero-content">
         <span class="eyebrow">✦ پایگاه رسمی مسابقات ورزشی چاشم</span>
         <div class="brand-line">
-          <span class="brand-mark"><span class="brand-fallback" aria-hidden="true">⚽</span><img class="brand-logo" src="logo.png" alt="لوگوی کالیگا" decoding="async" onerror="this.style.display='none'"></span>
+          <span class="brand-mark"><span class="brand-fallback" aria-hidden="true">⚽</span><img loading="lazy" fetchpriority="low" class="brand-logo" src="logo.png" alt="لوگوی کالیگا" decoding="async" onerror="this.style.display='none'"></span>
           <div><h1>کالیگا</h1><p class="subtitle">خانه فوتسال و رقابت‌های چاشم</p></div>
         </div>
         <p class="lead">از برنامه و پیش‌بینی مسابقات فصل جدید تا آرشیو فصل گذشته؛ همه بخش‌های کالیگا را از اینجا دنبال کنید.</p>
