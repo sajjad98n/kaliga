@@ -41,7 +41,7 @@
   .km-predict-help{font-size:11px;color:#c3d0c8;line-height:2}
   .km-predict-form{background:#19393c;border:1px solid #427267;border-radius:15px;padding:15px;display:grid;gap:11px}
   .km-predict-form label{font-size:12px;color:#e9f5f0;font-weight:650}.km-predict-form input{width:100%;margin-top:5px;border:1px solid #44655e;border-radius:10px;background:#10262c;color:#fff;padding:10px;font:inherit}
-  .km-predict-form input:focus{outline:2px solid #52d3a4;outline-offset:1px}.km-predict-form .km-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .km-predict-form input:focus{outline:2px solid #52d3a4;outline-offset:1px}.km-predict-form .km-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.km-predict-form .km-two label,.km-outcomes span{overflow-wrap:anywhere}
   .km-predict-form input[type=checkbox]{width:auto;margin:0;accent-color:#4bdca4}.km-consent{display:flex;gap:8px;align-items:flex-start;line-height:1.7;font-size:11px!important;color:#d0e0da!important}
   .km-form-actions{display:flex;gap:8px;flex-wrap:wrap}.km-form-actions button{border-radius:10px;padding:10px 15px;border:1px solid #3b6c5b;font:700 12px Vazirmatn,Tahoma;cursor:pointer;background:#2cdd9f;color:#072b1c}
   .km-form-actions button[type=button]{background:transparent;color:#d1e8e1}.km-form-actions button:disabled{opacity:.55;cursor:wait}
@@ -54,22 +54,26 @@
   function side(t){const d=el('div','km-side');d.append(teamLogo(t),el('span','',t?.name||'تیم نامشخص'));return d;}
   function canPredict(m){return predictionReady && m.published && m.status==='scheduled' && !m.predictions_locked && Boolean(m.kickoff_at) && Date.now()<new Date(m.kickoff_at).getTime();}
   function poll(m){
+    const homeName=teams.get(m.home_team_id)?.name||'تیم اول';
+    const awayName=teams.get(m.away_team_id)?.name||'تیم دوم';
     const info=summaries.get(m.id)||{total:0,home_wins:0,draws:0,away_wins:0};
     const total=Number(info.total)||0;const home=Number(info.home_wins)||0,draw=Number(info.draws)||0,away=Number(info.away_wins)||0;
     const per=n=>total?Math.round(n*100/total):0;
     const box=el('div','km-poll');const heading=el('div','km-pollhead');heading.append(el('b','', '📊 نظر کاربران'),el('span','',`${fa(total)} پیش‌بینی`));box.append(heading);
-    if(total){const bar=el('div','km-votebar');[[home,'km-homebar'],[draw,'km-drawbar'],[away,'km-awaybar']].forEach(([n,c])=>{const v=el('span',c);v.style.width=(n/total*100)+'%';bar.append(v);});bar.setAttribute('role','img');bar.setAttribute('aria-label',`${per(home)} درصد میزبان، ${per(draw)} درصد مساوی، ${per(away)} درصد میهمان`);box.append(bar);}
+    if(total){const bar=el('div','km-votebar');[[home,'km-homebar'],[draw,'km-drawbar'],[away,'km-awaybar']].forEach(([n,c])=>{const v=el('span',c);v.style.width=(n/total*100)+'%';bar.append(v);});bar.setAttribute('role','img');bar.setAttribute('aria-label',`${per(home)} درصد برد ${homeName}، ${per(draw)} درصد مساوی، ${per(away)} درصد برد ${awayName}`);box.append(bar);}
     else box.append(el('div','km-emptybar','اولین نفر باش که نتیجه این بازی رو پیش‌بینی می‌کنه'));
-    const captions=el('div','km-outcomes');[['برد میزبان',home],['مساوی',draw],['برد میهمان',away]].forEach(([label,n])=>{const span=el('span');span.append(el('b','',fa(per(n))+'٪'),el('div','',label));captions.append(span);});box.append(captions);
+    const captions=el('div','km-outcomes');[[`برد ${homeName}`,home],['مساوی',draw],[`برد ${awayName}`,away]].forEach(([label,n])=>{const span=el('span');span.append(el('b','',fa(per(n))+'٪'),el('div','',label));captions.append(span);});box.append(captions);
     return box;
   }
   function formFor(m){
     const existing=myGuesses.get(m.id);
-    const form=el('form','km-predict-form');form.append(el('strong','',`پیش‌بینی ${teams.get(m.home_team_id)?.name||'میزبان'} - ${teams.get(m.away_team_id)?.name||'میهمان'}`));
+    const homeName=teams.get(m.home_team_id)?.name||'تیم اول';
+    const awayName=teams.get(m.away_team_id)?.name||'تیم دوم';
+    const form=el('form','km-predict-form');form.append(el('strong','',`پیش‌بینی ${homeName} - ${awayName}`));
     const note=el('div','km-predict-help','هر حساب یک پیش‌بینی برای هر بازی دارد. تا قبل از شروع مسابقه می‌توانی نتیجه را ویرایش کنی.');form.append(note);
     const goals=el('div','km-two');
     const field=(label,name,current)=>{const l=el('label','',label),input=el('input');input.name=name;input.type='number';input.min='0';input.max='60';input.required=true;input.inputMode='numeric';input.placeholder='۰';input.value=current===undefined?'':String(current);l.append(input);return l;};
-    goals.append(field('گل میزبان','home',existing?.home_guess),field('گل میهمان','away',existing?.away_guess));form.append(goals);
+    goals.append(field(`گل‌های ${homeName}`,'home',existing?.home_guess),field(`گل‌های ${awayName}`,'away',existing?.away_guess));form.append(goals);
     const actions=el('div','km-form-actions'),submit=el('button','',existing?'ذخیره ویرایش پیش‌بینی':'ثبت پیش‌بینی');submit.type='submit';const cancel=el('button','','انصراف');cancel.type='button';cancel.addEventListener('click',()=>{selected=null;render();});actions.append(submit,cancel);form.append(actions);
     const msg=el('div','km-form-status');msg.setAttribute('role','status');form.append(msg);
     form.addEventListener('submit',async e=>{
